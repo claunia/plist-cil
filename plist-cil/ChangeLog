@@ -1,0 +1,7 @@
+2015-02-16  Natalia Portillo  <claunia@claunia.com>
+
+	* MyClass.cs:
+	* plist-cil.csproj:
+	* Properties/AssemblyInfo.cs:
+	  Initial commit
+
