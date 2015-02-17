@@ -36,6 +36,7 @@
     <Compile Include="NSObject.cs" />
     <Compile Include="NSNumber.cs" />
     <Compile Include="NSString.cs" />
+    <Compile Include="NSSet.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
