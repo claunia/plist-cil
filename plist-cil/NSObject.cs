@@ -62,7 +62,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="xml">The StringBuilder onto which the XML representation is appended.</param>
         /// <param name="level">The indentation level of the object.</param>
-        abstract void ToXml(StringBuilder xml, int level);
+        internal abstract void ToXml(StringBuilder xml, int level);
 
         /// <summary>
         /// Assigns IDs to all the objects in this NSObject subtree.
@@ -122,7 +122,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="xml">The string builder for the XML document.</param>
         /// <param name="level">The level of identation.</param>
-        void Indent(StringBuilder xml, int level) {
+        internal void Indent(StringBuilder xml, int level) {
             for (int i = 0; i < level; i++)
                 xml.Append(INDENT);
         }
@@ -132,33 +132,27 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
-        // TODO: Implement NSNumber class
-        /*
         public static NSNumber Wrap(long value) {
             return new NSNumber(value);
-        }*/
+        }
 
         /// <summary>
         /// Wraps the given value inside a NSObject.
         /// </summary>
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
-        // TODO: Implement NSNumber class
-        /*
         public static NSNumber Wrap(double value) {
             return new NSNumber(value);
-        }*/
+        }
 
         /// <summary>
         /// Wraps the given value inside a NSObject.
         /// </summary>
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
-        // TODO: Implement NSNumber class
-        /*
         public static NSNumber Wrap(bool value) {
             return new NSNumber(value);
-        }*/
+        }
 
         /// <summary>
         /// Wraps the given value inside a NSObject.

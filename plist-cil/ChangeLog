@@ -1,5 +1,12 @@
 2015-02-17  Natalia Portillo  <claunia@claunia.com>
 
+	* NSNumber.cs:
+	* NSObject.cs:
+	* plist-cil.csproj:
+	  Implement NSNumber.
+
+2015-02-17  Natalia Portillo  <claunia@claunia.com>
+
 	* MyClass.cs:
 	* NSObject.cs:
 	* plist-cil.csproj:
