@@ -1,5 +1,11 @@
 2015-02-17  Natalia Portillo  <claunia@claunia.com>
 
+	* UID.cs:
+	* plist-cil.csproj:
+	  Implement UID
+
+2015-02-17  Natalia Portillo  <claunia@claunia.com>
+
 	* NSSet.cs:
 	* NSObject.cs:
 	* plist-cil.csproj:
