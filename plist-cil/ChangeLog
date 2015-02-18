@@ -1,3 +1,9 @@
+2015-02-18  Natalia Portillo  <claunia@claunia.com>
+
+	* NSDate.cs:
+	* plist-cil.csproj:
+	  Implemented NSDate
+
 2015-02-17  Natalia Portillo  <claunia@claunia.com>
 
 	* UID.cs:
