@@ -91,29 +91,24 @@ namespace Claunia.PropertyList
             return null;
         }
 
-        // TODO: Implement NSObject.Wrap(Object)
-        /*
-        public boolean containsValue(Object value) {
-            if(value == null)
+        public bool ContainsValue(Object value) {
+            if (value == null)
                 return false;
-            NSObject wrap = NSObject.wrap(value);
-            return dict.containsValue(wrap);
-        }*
+            NSObject wrap = NSObject.Wrap(value);
+            return dict.ContainsValue(wrap);
+        }
 
-        **
-        * Puts a new key-value pair into this dictionary.
-        * If the value is null, no operation will be performed on the dictionary.
-        *
-        * @param key The key.
-        * @param obj The value. Supported object types are numbers, byte-arrays, dates, strings and arrays or sets of those.
-        * @return The value previously associated to the given key,
-            *         or null, if no value was associated to it.
-                *
-                public void Add(String key, Object obj) {
-                if(obj == null)
-                    return dict.get(key);
-                return Add(key, NSObject.wrap(obj));
-            }*/
+        /// <summary>
+        /// Puts a new key-value pair into this dictionary.
+        /// If the value is null, no operation will be performed on the dictionary.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="obj">The value. Supported object types are numbers, byte-arrays, dates, strings and arrays or sets of those.</param>
+        public void Add(String key, Object obj) {
+            if(obj == null)
+                return;
+            Add(key, NSObject.Wrap(obj));
+        }
 
         /// <summary>
         /// Puts a new key-value pair into this dictionary.

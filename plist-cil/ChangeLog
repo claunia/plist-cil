@@ -1,5 +1,14 @@
 2015-02-18  Natalia Portillo  <claunia@claunia.com>
 
+	* NSSet.cs:
+	* NSArray.cs:
+	* NSObject.cs:
+	* NSDictionary.cs:
+	  Implement NSObject to .NET Object and all methods on all
+	  classes that depended on NSObject<->Object
+
+2015-02-18  Natalia Portillo  <claunia@claunia.com>
+
 	* NSObject.cs:
 	  Implement .NET to NSObject castings
 

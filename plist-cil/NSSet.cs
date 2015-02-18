@@ -200,7 +200,7 @@ namespace Claunia.PropertyList
         /// Gets the underlying data structure in which this NSSets stores its content.
         /// </summary>
         /// <returns>A Set object.</returns>
-        List<NSObject> GetSet() {
+        internal List<NSObject> GetSet() {
             return set;
         }
 
@@ -286,7 +286,6 @@ namespace Claunia.PropertyList
         /// <param name="level">The indentation level</param>
         protected override void ToASCII(StringBuilder ascii, int level) {
             // TODO: Implement ASCIIPropertyListParse
-            // TODO: Implement NSDictionary
 /*            Indent(ascii, level);
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
@@ -324,7 +323,6 @@ namespace Claunia.PropertyList
         /// <param name="level">The indentation level</param>
         protected override void ToASCIIGnuStep(StringBuilder ascii, int level) {
             // TODO: Implement ASCIIPropertyListParse
-            // TODO: Implement NSDictionary
             /*
             indent(ascii, level);
             NSObject[] array = allObjects();

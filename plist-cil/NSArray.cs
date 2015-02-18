@@ -81,12 +81,9 @@ namespace Claunia.PropertyList
         /// <param name="key">The index where to store the object.</param>
         /// <param name="value">The object.</param>
         public void SetValue(int key, Object value) {
-            // TODO: Implement NSObject.Wrap(Object)
-            /*
             if(value == null)
                 throw new ArgumentNullException("Cannot add null values to an NSArray!");
             array[key] = NSObject.Wrap(value);
-            */
         }
 
         /// <summary>
@@ -116,14 +113,12 @@ namespace Claunia.PropertyList
         /// <returns><c>true</c>, when the object could be found. <c>false</c> otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
         public bool ContainsObject(Object obj) {
-            // TODO: Implement NSObject.Wrap(Object)
-            /*
             NSObject nso = NSObject.Wrap(obj);
-            for (NSObject elem : array) {
-                if (elem.equals(nso)) {
+            foreach (NSObject elem in array) {
+                if (elem.Equals(nso)) {
                     return true;
                 }
-            }*/
+            }
             return false;
         }
 
@@ -135,14 +130,12 @@ namespace Claunia.PropertyList
         /// <returns>The index of the object, if it was found. -1 otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
         public int IndexOfObject(Object obj) {
-            // TODO: Implement NSObject.Wrap(Object)
-            /*
-            NSObject nso = NSObject.wrap(obj);
-            for (int i = 0; i < array.length; i++) {
-                if (array[i].equals(nso)) {
+            NSObject nso = NSObject.Wrap(obj);
+            for (int i = 0; i < array.Length; i++) {
+                if (array[i].Equals(nso)) {
                     return i;
                 }
-            }*/
+            }
             return -1;
         }
 
@@ -155,14 +148,12 @@ namespace Claunia.PropertyList
         /// <returns>The index of the object, if it was found. -1 otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
         public int IndexOfIdenticalObject(Object obj) {
-            // TODO: Implement NSObject.Wrap(Object)
-            /*
             NSObject nso = NSObject.Wrap(obj);
-            for (int i = 0; i < array.length; i++) {
+            for (int i = 0; i < array.Length; i++) {
                 if (array[i] == nso) {
                     return i;
                 }
-            }*/
+            }
             return -1;
         }
 
@@ -189,17 +180,14 @@ namespace Claunia.PropertyList
         }
 
         public override bool Equals(Object obj) {
-            // TODO: Implement NSObject.Wrap(Object)
-            /*
-
-            if(obj.GetType().Equals(NSArray.GetType())) {
+            if(obj.GetType().Equals(typeof(NSArray))) {
                 return Array.Equals(((NSArray) obj).GetArray(), this.array);
             } else {
                 NSObject nso = NSObject.Wrap(obj);
-                if(nso.GetType().Equals(NSArray.GetType())) {
+                if(nso.GetType().Equals(typeof(NSArray))) {
                     return Array.Equals(((NSArray) nso).GetArray(), this.array);
                 }
-            }*/
+            }
             return false;
         }
 

@@ -171,15 +171,13 @@ namespace Claunia.PropertyList
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
         /// <exception cref="SystemException">When one of the objects contained in the array cannot be represented by a NSObject.</exception>
-        // TODO: Implement this.Wrap(Object)
-        /*
         public static NSArray Wrap(Object[] value) {
-            NSArray arr = new NSArray(value.length);
-            for (int i = 0; i < value.length; i++) {
-                arr.setValue(i, wrap(value[i]));
+            NSArray arr = new NSArray(value.Length);
+            for (int i = 0; i < value.Length; i++) {
+                arr.SetValue(i, Wrap(value[i]));
             }
             return arr;
-        }*/
+        }
 
         /// <summary>
         /// Creates a NSDictionary with the contents of the given map.
@@ -187,14 +185,12 @@ namespace Claunia.PropertyList
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
         /// <exception cref="SystemException">When one of the values contained in the map cannot be represented by a NSObject.</exception>
-        // TODO: Implement this.Wrap(Object)
-        /*
-        public static NSDictionary Wrap(Dictionary<String, Object> value) {
+        public static NSDictionary Wrap(Dictionary<string, Object> value) {
             NSDictionary dict = new NSDictionary();
-            for (String key : value.keySet())
-                dict.put(key, wrap(value.get(key)));
+            foreach (KeyValuePair<string, Object> kvp in value)
+                dict.Add(kvp.Key, Wrap(kvp.Value));
             return dict;
-        }*/
+        }
 
         /// <summary>
         /// Creates a NSSet with the contents of this set.
@@ -202,13 +198,12 @@ namespace Claunia.PropertyList
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
         /// <exception cref="SystemException">When one of the values contained in the map cannot be represented by a NSObject.</exception>
-        // TODO: Implement this.Wrap(Object)
-/*        public static NSSet Wrap(List<Object> value) {
+        public static NSSet Wrap(List<Object> value) {
             NSSet set = new NSSet();
             foreach (Object o in value)
                 set.AddObject(Wrap(o));
             return set;
-        }*/
+        }
 
         /// <summary>
         /// Creates a NSObject representing the given .NET Object.
@@ -227,8 +222,6 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="o">The object to represent.</param>
         ///<returns>A NSObject equivalent to the given object.</returns>
-        // TODO: Implement all classes
-
         public static NSObject Wrap(Object o) {
             if(o == null)
                 throw new NullReferenceException("A null object cannot be wrapped as a NSObject");
@@ -351,82 +344,74 @@ namespace Claunia.PropertyList
 
         /// <summary>
         /// Converts this NSObject into an equivalent object
-        /// of the Java Runtime Environment.
+        /// of the .NET Runtime Environment.
         /// <ul>
-        /// <li>NSArray objects are converted to arrays.</li>
-        /// <li>NSDictionary objects are converted to objects extending the java.util.Map class.</li>
-        /// <li>NSSet objects are converted to objects extending the java.util.Set class.</li>
-        /// <li>NSNumber objects are converted to primitive number values (int, long, double or bool).</li>
-        /// <li>NSString objects are converted to String objects.</li>
-        /// <li>NSData objects are converted to byte arrays.</li>
-        /// <li>NSDate objects are converted to java.util.Date objects.</li>
-        /// <li>UID objects are converted to byte arrays.</li>
+        /// <li><see cref="NSArray"/> objects are converted to arrays.</li>
+        /// <li><see cref="NSDictionary"/> objects are converted to objects extending the <see cref="System.Collections.Generic.Dictionary"/> class.</li>
+        /// <li><see cref="NSSet"/> objects are converted to objects extending the <see cref="System.Collections.Generic.List"/> class.</li>
+        /// <li><see cref="NSNumber"/> objects are converted to primitive number values (<see cref="int"/>, <see cref="long"/>, <see cref="double"/> or <see cref="bool"/>).</li>
+        /// <li><see cref="NSString"/> objects are converted to <see cref="string"/> objects.</li>
+        /// <li><see cref="NSData"/> objects are converted to <see cref="byte"/> arrays.</li>
+        /// <li><see cref="NSDate"/> objects are converted to <see cref="System.DateTime"/> objects.</li>
+        /// <li><see cref="UID"/> objects are converted to <see cref="byte"/> arrays.</li>
         /// </ul>
         /// </summary>
-        /// <returns>A native java object representing this NSObject's value.</returns>
-        // TODO: Implement all classes
-        /*
+        /// <returns>A native .NET object representing this NSObject's value.</returns>
         public Object ToObject() {
-            if(this instanceof NSArray) {
-                NSObject[] arrayA = ((NSArray)this).getArray();
-                Object[] arrayB = new Object[arrayA.length];
-                for(int i = 0; i < arrayA.length; i++) {
-                    arrayB[i] = arrayA[i].toJavaObject();
+            if(this is NSArray) {
+                NSObject[] arrayA = ((NSArray)this).GetArray();
+                Object[] arrayB = new Object[arrayA.Length];
+                for(int i = 0; i < arrayA.Length; i++) {
+                    arrayB[i] = arrayA[i].ToObject();
                 }
                 return arrayB;
-            } else if (this instanceof NSDictionary) {
-                HashMap<String, NSObject> hashMapA = ((NSDictionary)this).getHashMap();
-                HashMap<String, Object> hashMapB = new HashMap<String, Object>(hashMapA.size());
-                for(String key:hashMapA.keySet()) {
-                    hashMapB.put(key, hashMapA.get(key).toJavaObject());
+            } else if (this is NSDictionary) {
+                Dictionary<string, NSObject> dictA = ((NSDictionary)this).GetDictionary();
+                Dictionary<string, Object> dictB = new Dictionary<string, Object>(dictA.Count);
+                foreach(KeyValuePair<string, NSObject> kvp in dictA) {
+                    dictB.Add(kvp.Key, kvp.Value.ToObject());
                 }
-                return hashMapB;
-            } else if(this instanceof NSSet) {
-                Set<NSObject> setA = ((NSSet)this).getSet();
-                Set<Object> setB;
-                if(setA instanceof LinkedHashSet) {
-                    setB = new LinkedHashSet<Object>(setA.size());
-                } else {
-                    setB = new TreeSet<Object>();
-                }
-                for(NSObject o:setA) {
-                    setB.add(o.toJavaObject());
+                return dictB;
+            } else if(this is NSSet) {
+                List<NSObject> setA = ((NSSet)this).GetSet();
+                List<Object> setB = new List<Object>();
+                foreach(NSObject o in setA) {
+                    setB.Add(o.ToObject());
                 }
                 return setB;
-            } else if(this instanceof NSNumber) {
+            } else if(this is NSNumber) {
                 NSNumber num = (NSNumber)this;
-                switch(num.type()) {
+                switch(num.GetNSNumberType()) {
                     case NSNumber.INTEGER : {
-                            long longVal = num.longValue();
-                            if(longVal > Integer.MAX_VALUE || longVal < Integer.MIN_VALUE) {
+                            long longVal = num.ToLong();
+                            if(longVal > int.MaxValue || longVal < int.MinValue) {
                                 return longVal;
                             } else {
-                                return num.intValue();
+                                return num.ToInt();
                             }
                         }
                     case NSNumber.REAL : {
-                            return num.doubleValue();
+                            return num.ToDouble();
                         }
                     case NSNumber.BOOLEAN : {
-                            return num.boolValue();
+                            return num.ToBool();
                         }
                     default : {
-                            return num.doubleValue();
+                            return num.ToDouble();
                         }
                 }
-            } else if(this instanceof NSString) {
-                return ((NSString)this).getContent();
-            } else if(this instanceof NSData) {
-                return ((NSData)this).bytes();
-            } else if(this instanceof NSDate) {
-                return ((NSDate)this).getDate();
-            } else if(this instanceof UID) {
-                return ((UID)this).getBytes();
+            } else if(this is NSString) {
+                return ((NSString)this).GetContent();
+            } else if(this is NSData) {
+                return ((NSData)this).Bytes;
+            } else if(this is NSDate) {
+                return ((NSDate)this).Date;
+            } else if(this is UID) {
+                return ((UID)this).Bytes;
             } else {
                 return this;
             }
         }
-        */
     }
 }
 
