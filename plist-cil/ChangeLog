@@ -1,5 +1,12 @@
 2015-02-18  Natalia Portillo  <claunia@claunia.com>
 
+	* NSObject.cs:
+	* NSDictionary.cs:
+	* plist-cil.csproj:
+	  Implement NSDictionary
+
+2015-02-18  Natalia Portillo  <claunia@claunia.com>
+
 	* NSData.cs:
 	* NSObject.cs:
 	* plist-cil.csproj:

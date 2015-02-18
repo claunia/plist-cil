@@ -185,7 +185,7 @@ namespace Claunia.PropertyList
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
         /// <exception cref="SystemException">When one of the values contained in the map cannot be represented by a NSObject.</exception>
-        // TODO: Implement NSDictionary class
+        // TODO: Implement this.Wrap(Object)
         /*
         public static NSDictionary Wrap(Dictionary<String, Object> value) {
             NSDictionary dict = new NSDictionary();

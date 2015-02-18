@@ -41,6 +41,7 @@
     <Compile Include="NSDate.cs" />
     <Compile Include="NSArray.cs" />
     <Compile Include="NSData.cs" />
+    <Compile Include="NSDictionary.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
