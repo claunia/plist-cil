@@ -1,5 +1,10 @@
 2015-02-18  Natalia Portillo  <claunia@claunia.com>
 
+	* NSObject.cs:
+	  Implement .NET to NSObject castings
+
+2015-02-18  Natalia Portillo  <claunia@claunia.com>
+
 	* plist-cil.csproj:
 	* PropertyListFormatException.cs:
 	  Implement PropertyListFormatException

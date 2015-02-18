@@ -25,6 +25,8 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Claunia.PropertyList
 {
@@ -226,109 +228,106 @@ namespace Claunia.PropertyList
         /// <param name="o">The object to represent.</param>
         ///<returns>A NSObject equivalent to the given object.</returns>
         // TODO: Implement all classes
-        /*
+
         public static NSObject Wrap(Object o) {
             if(o == null)
-                throw new NullPointerException("A null object cannot be wrapped as a NSObject");
+                throw new NullReferenceException("A null object cannot be wrapped as a NSObject");
 
-            if(o instanceof NSObject)
+            if(o is NSObject)
                 return (NSObject)o;
 
-            Class<?> c = o.getClass();
-            if (Boolean.class.equals(c)) {
-                return wrap((boolean) (Boolean) o);
+            Type c = o.GetType();
+            if (typeof(bool).Equals(c)) {
+                return Wrap((bool)o);
             }
-            if (Byte.class.equals(c)) {
-                return wrap((int) (Byte) o);
+            if (typeof(Byte).Equals(c)) {
+                return Wrap((int) (Byte) o);
             }
-            if (Short.class.equals(c)) {
-                return wrap((int) (Short) o);
+            if (typeof(short).Equals(c)) {
+                return Wrap((int) (short) o);
             }
-            if (Integer.class.equals(c)) {
-                return wrap((int) (Integer) o);
+            if (typeof(int).Equals(c)) {
+                return Wrap((int) (int) o);
             }
-            if (Long.class.isAssignableFrom(c)) {
-                return wrap((long) (Long) o);
+            if (typeof(long).IsAssignableFrom(c)) {
+                return Wrap((long) (long) o);
             }
-            if (Float.class.equals(c)) {
-                return wrap((double) (Float) o);
+            if (typeof(float).Equals(c)) {
+                return Wrap((double) (float) o);
             }
-            if (Double.class.isAssignableFrom(c)) {
-                return wrap((double) (Double) o);
+            if (typeof(double).IsAssignableFrom(c)) {
+                return Wrap((double) (Double) o);
             }
-            if (String.class.equals(c)) {
-                return new NSString((String)o);
+            if (typeof(string).Equals(c)) {
+                return new NSString((string)o);
             }
-            if (Date.class.equals(c)) {
-                return new NSDate((Date)o);
+            if (typeof(DateTime).Equals(c)) {
+                return new NSDate((DateTime)o);
             }
-            if(c.isArray()) {
-                Class<?> cc = c.getComponentType();
-                if (cc.equals(byte.class)) {
-                    return wrap((byte[]) o);
+            if(c.IsArray) {
+                Type cc = c.GetElementType();
+                if (cc.Equals(typeof(byte))) {
+                    return Wrap((byte[]) o);
                 }
-                else if(cc.equals(boolean.class)) {
-                    boolean[] array = (boolean[])o;
-                    NSArray nsa = new NSArray(array.length);
-                    for(int i=0;i<array.length;i++)
-                        nsa.setValue(i, wrap(array[i]));
+                else if(cc.Equals(typeof(bool))) {
+                    bool[] array = (bool[])o;
+                    NSArray nsa = new NSArray(array.Length);
+                    for(int i=0;i<array.Length;i++)
+                        nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(float.class.equals(cc)) {
+                else if(cc.Equals(typeof(float))) {
                     float[] array = (float[])o;
-                    NSArray nsa = new NSArray(array.length);
-                    for(int i=0;i<array.length;i++)
-                        nsa.setValue(i, wrap(array[i]));
+                    NSArray nsa = new NSArray(array.Length);
+                    for(int i=0;i<array.Length;i++)
+                        nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(double.class.equals(cc)) {
+                else if(cc.Equals(typeof(double))) {
                     double[] array = (double[])o;
-                    NSArray nsa = new NSArray(array.length);
-                    for(int i=0;i<array.length;i++)
-                        nsa.setValue(i, wrap(array[i]));
+                    NSArray nsa = new NSArray(array.Length);
+                    for(int i=0;i<array.Length;i++)
+                        nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(short.class.equals(cc)) {
+                else if(cc.Equals(typeof(short))) {
                     short[] array = (short[])o;
-                    NSArray nsa = new NSArray(array.length);
-                    for(int i=0;i<array.length;i++)
-                        nsa.setValue(i, wrap(array[i]));
+                    NSArray nsa = new NSArray(array.Length);
+                    for(int i=0;i<array.Length;i++)
+                        nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(int.class.equals(cc)) {
+                else if(cc.Equals(typeof(int))) {
                     int[] array = (int[])o;
-                    NSArray nsa = new NSArray(array.length);
-                    for(int i=0;i<array.length;i++)
-                        nsa.setValue(i, wrap(array[i]));
+                    NSArray nsa = new NSArray(array.Length);
+                    for(int i=0;i<array.Length;i++)
+                        nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(long.class.equals(cc)) {
+                else if(cc.Equals(typeof(long))) {
                     long[] array = (long[])o;
-                    NSArray nsa = new NSArray(array.length);
-                    for(int i=0;i<array.length;i++)
-                        nsa.setValue(i, wrap(array[i]));
+                    NSArray nsa = new NSArray(array.Length);
+                    for(int i=0;i<array.Length;i++)
+                        nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
                 else {
-                    return wrap((Object[]) o);
+                    return Wrap((Object[]) o);
                 }
             }
-            if (Map.class.isAssignableFrom(c)) {
-                Map map = (Map)o;
-                Set keys = map.keySet();
+            if (typeof(Dictionary<string,Object>).IsAssignableFrom(c)) {
+                Dictionary<string,Object> netDict = (Dictionary<string,Object>)o;
                 NSDictionary dict = new NSDictionary();
-                for(Object key:keys) {
-                    Object val = map.get(key);
-                    dict.put(String.valueOf(key), wrap(val));
+                foreach(KeyValuePair<string, Object> kvp in netDict) {
+                    dict.Add(kvp.Key, Wrap(kvp.Value));
                 }
                 return dict;
             }
-            if (Collection.class.isAssignableFrom(c)) {
-                Collection coll = (Collection)o;
-                return wrap(coll.toArray());
+            if (typeof(List<Object>).IsAssignableFrom(c)) {
+                return Wrap(((List<Object>)o).ToArray());
             }
-            return wrapSerialized(o);
-        }*/
+            return WrapSerialized(o);
+        }
 
         /// <summary>
         /// Serializes the given object using Java's default object serialization
@@ -337,18 +336,18 @@ namespace Claunia.PropertyList
         /// <param name="o">The object to serialize and wrap.</param>
         /// <returns>A NSData object</returns>
         /// <exception cref="SystemException">When the object could not be serialized.</exception>
-        // TODO: Implement NSData class
-        /*
         public static NSData WrapSerialized(Object o) {
             try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(baos);
-                oos.writeObject(o);
-                return new NSData(baos.toByteArray());
+                BinaryFormatter bf = new BinaryFormatter();
+                using(MemoryStream ms = new MemoryStream())
+                {
+                    bf.Serialize(ms, o);
+                    return new NSData(ms.ToArray());
+                }
             } catch (IOException ex) {
-                throw new SystemException("The given object of class " + o.getClass().toString() + " could not be serialized and stored in a NSData object.");
+                throw new SystemException("The given object of class " + o.GetType() + " could not be serialized and stored in a NSData object.");
             }
-        }*/
+        }
 
         /// <summary>
         /// Converts this NSObject into an equivalent object
