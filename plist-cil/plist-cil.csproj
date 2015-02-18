@@ -43,6 +43,7 @@
     <Compile Include="NSData.cs" />
     <Compile Include="NSDictionary.cs" />
     <Compile Include="PropertyListFormatException.cs" />
+    <Compile Include="PropertyListParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

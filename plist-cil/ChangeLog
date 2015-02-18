@@ -1,5 +1,11 @@
 2015-02-18  Natalia Portillo  <claunia@claunia.com>
 
+	* plist-cil.csproj:
+	* PropertyListParser.cs:
+	  Implement PropertyListParser
+
+2015-02-18  Natalia Portillo  <claunia@claunia.com>
+
 	* NSSet.cs:
 	* NSArray.cs:
 	* NSObject.cs:
