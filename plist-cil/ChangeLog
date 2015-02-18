@@ -1,5 +1,12 @@
 2015-02-18  Natalia Portillo  <claunia@claunia.com>
 
+	* NSArray.cs:
+	* NSObject.cs:
+	* plist-cil.csproj:
+	  Implements NSArray
+
+2015-02-18  Natalia Portillo  <claunia@claunia.com>
+
 	* NSDate.cs:
 	* plist-cil.csproj:
 	  Implemented NSDate

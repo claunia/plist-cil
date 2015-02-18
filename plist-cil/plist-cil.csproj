@@ -39,6 +39,7 @@
     <Compile Include="NSSet.cs" />
     <Compile Include="UID.cs" />
     <Compile Include="NSDate.cs" />
+    <Compile Include="NSArray.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
