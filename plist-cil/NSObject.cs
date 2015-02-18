@@ -159,11 +159,9 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
-        // TODO: Implement NSData class
-        /*
         public static NSData Wrap(byte[] value) {
             return new NSData(value);
-        }*/
+        }
 
         /// <summary>
         /// Creates a NSArray with the contents of the given array.
