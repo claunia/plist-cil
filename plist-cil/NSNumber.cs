@@ -24,6 +24,7 @@
 // SOFTWARE.
 using System;
 using System.Text;
+using System.Globalization;
 
 namespace Claunia.PropertyList
 {
@@ -101,7 +102,7 @@ namespace Claunia.PropertyList
                 type = INTEGER;
             } catch (Exception ex) {
                 try {
-                    doubleValue = double.Parse(text);
+                    doubleValue = double.Parse(text, CultureInfo.InvariantCulture);
                     longValue = (long)Math.Round(doubleValue);
                     type = REAL;
                 } catch (Exception ex2) {
