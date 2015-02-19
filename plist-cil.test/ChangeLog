@@ -1,5 +1,11 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* ParseTest.cs:
+	* plist-cil.test.csproj:
+	  Implement ParseTest
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* plist-cil.test.csproj:
 	  Organize test-files in a folder
 
