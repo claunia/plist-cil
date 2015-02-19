@@ -143,8 +143,7 @@ namespace Claunia.PropertyList
             fis.Close();
             switch(type) {
                 case TYPE_BINARY:
-                    // TODO: Implement BinaryPropertyListParser
-                    //return BinaryPropertyListParser.parse(f);
+                    return BinaryPropertyListParser.Parse(f);
                 case TYPE_XML:
                     // TODO: Implement XMLPropertyListParser
                     //return XMLPropertyListParser.parse(f);
@@ -163,8 +162,7 @@ namespace Claunia.PropertyList
         public static NSObject Parse(byte[] bytes) {
             switch(DetermineType(bytes)) {
                 case TYPE_BINARY:
-                    // TODO: Implement BinaryPropertyListParser
-                    //return BinaryPropertyListParser.parse(bytes);
+                    return BinaryPropertyListParser.Parse(bytes);
                 case TYPE_XML:
                     // TODO: Implement XMLPropertyListParser
                     //return XMLPropertyListParser.parse(bytes);

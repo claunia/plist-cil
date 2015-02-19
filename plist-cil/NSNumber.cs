@@ -69,15 +69,13 @@ namespace Claunia.PropertyList
         /// <seealso cref="REAL"/>
         public NSNumber(byte[] bytes, int type) {
             switch (type) {
-                // TODO: Implement BinaryPropertyListParser class
                 case INTEGER: {
-                        //doubleValue = longValue = BinaryPropertyListParser.parseLong(bytes);
+                        doubleValue = longValue = BinaryPropertyListParser.ParseLong(bytes);
                         break;
                     }
-                // TODO: Implement BinaryPropertyListParser class
                 case REAL: {
-                        //doubleValue = BinaryPropertyListParser.parseDouble(bytes);
-                        //longValue = Math.Round(doubleValue);
+                        doubleValue = BinaryPropertyListParser.ParseDouble(bytes);
+                        longValue = (long)Math.Round(doubleValue);
                         break;
                     }
                 default: {

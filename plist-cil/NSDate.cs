@@ -35,7 +35,7 @@ namespace Claunia.PropertyList
     {
         DateTime date;
 
-        static readonly long EPOCH = 978307200000L;
+        static readonly DateTime EPOCH = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         static readonly string sdfDefault = "yyyy-MM-dd'T'HH:mm:ss'Z'";
         static readonly string sdfGnuStep = "yyyy-MM-dd HH:mm:ss zzz";
@@ -83,8 +83,7 @@ namespace Claunia.PropertyList
         /// <param name="bytes">bytes The date bytes</param>
         public NSDate(byte[] bytes) {
             //dates are 8 byte big-endian double, seconds since the epoch
-            // TODO: Implement BinaryPropertyListParser
-            //date = new Date(EPOCH + (long) (1000 * BinaryPropertyListParser.parseDouble(bytes)));
+            date = EPOCH.AddSeconds(BinaryPropertyListParser.ParseDouble(bytes));
         }
 
         /// <summary>

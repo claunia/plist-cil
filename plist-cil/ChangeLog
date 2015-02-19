@@ -1,5 +1,14 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* NSDate.cs:
+	* NSNumber.cs:
+	* plist-cil.csproj:
+	* PropertyListParser.cs:
+	* BinaryPropertyListParser.cs:
+	  Implement BinaryPropertyListParser.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* UID.cs:
 	* NSSet.cs:
 	* NSDate.cs:
