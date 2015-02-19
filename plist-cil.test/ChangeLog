@@ -1,5 +1,11 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* IssueTest.cs:
+	  Different API between JUnit and NUnit made TestIssue49()
+	  fail. Solved.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* ParseTest.cs:
 	  Should use a serializable object type.
 

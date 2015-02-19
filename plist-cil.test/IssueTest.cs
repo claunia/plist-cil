@@ -120,7 +120,7 @@ namespace plistcil.test
         public static void TestIssue49()
         {
             NSDictionary dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue49.plist"));
-            Assert.Equals(0, dict.Count);
+            Assert.AreEqual(0, dict.Count);
         }
     }
 }
