@@ -1,6 +1,11 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
 	* NSNumber.cs:
+	  More culture corrections.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
+	* NSNumber.cs:
 	  double.ToString() should be invariantculture also.
 
 2015-02-19  Natalia Portillo  <claunia@claunia.com>

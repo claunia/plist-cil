@@ -286,7 +286,7 @@ namespace Claunia.PropertyList
                     }
                 case REAL: {
                         xml.Append("<real>");
-                        xml.Append(ToDouble());
+                        xml.Append(ToDouble().ToString(CultureInfo.InvariantCulture));
                         xml.Append("</real>");
                         break;
                     }
