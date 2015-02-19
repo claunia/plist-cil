@@ -156,12 +156,13 @@ namespace Claunia.PropertyList
             byte[] byteBuf;
             lock (typeof(NSString)) {
                 if (asciiEncoder == null)
-                    asciiEncoder = Encoding.GetEncoding("ascii", EncoderExceptionFallback.ExceptionFallback, DecoderExceptionFallback.ExceptionFallback);
+                    // Not much use, because some characters do not fallback to exception, even if not ASCII
+                    asciiEncoder = Encoding.GetEncoding("ascii", EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback);
 
-                try {
+                if(IsASCIIEncodable(content)) {
                     kind = 0x5; // standard ASCII
                     byteBuf = asciiEncoder.GetBytes(content);
-                } catch {
+                } else {
                     if (utf16beEncoder == null)
                         utf16beEncoder = Encoding.BigEndianUnicode;
 
@@ -243,6 +244,14 @@ namespace Claunia.PropertyList
                 return false;
 
             return content == ((NSString)obj).content;
+        }
+
+        internal static bool IsASCIIEncodable(string text)
+        {
+            foreach(char c in text)
+                if((int)c > 0x7F)
+                    return false;
+            return true;
         }
     }
 }

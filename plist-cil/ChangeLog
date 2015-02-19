@@ -1,5 +1,12 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* NSString.cs:
+	  Mono encoding fallback for ASCII is not failing on all
+	  non-ASCII characters (as in issue4.plist test file).
+	  Implemented a simple checker.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* PropertyListParser.cs:
 	  Solve upstream bug, does not recognize UTF-8 XML with
 	  byte-order-mask as XML.
