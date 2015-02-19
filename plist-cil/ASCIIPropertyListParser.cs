@@ -470,7 +470,7 @@ namespace Claunia.PropertyList
                 int numBytes = dataString.Length / 2;
                 byte[] bytes = new byte[numBytes];
                 for (int i = 0; i < bytes.Length; i++) {
-                    string byteString = dataString.Substring(i * 2, i * 2 + 2);
+                    string byteString = dataString.Substring(i * 2, 2);
                     int byteValue = Convert.ToInt32(byteString, 16);
                     bytes[i] = (byte) byteValue;
                 }
@@ -579,7 +579,7 @@ namespace Claunia.PropertyList
                 i++;
             }
             //Build string
-            string result = Encoding.UTF8.GetString(bytArr);
+            string result = Encoding.BigEndianUnicode.GetString(bytArr);
             //emoryStream charBuf = CharBuffer.wrap(result);
 
             //If the string can be represented in the ASCII codepage
@@ -587,7 +587,7 @@ namespace Claunia.PropertyList
             try{
                 if (asciiEncoder == null)
                     asciiEncoder = Encoding.GetEncoding("ascii", EncoderExceptionFallback.ExceptionFallback, DecoderExceptionFallback.ExceptionFallback);
-                return asciiEncoder.GetString(Encoding.Convert(Encoding.UTF8, asciiEncoder, bytArr));
+                return asciiEncoder.GetString(Encoding.Convert(Encoding.BigEndianUnicode, asciiEncoder, bytArr));
             }
             catch
             {

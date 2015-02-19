@@ -1,5 +1,17 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* NSData.cs:
+	* NSArray.cs:
+	* NSObject.cs:
+	* NSDictionary.cs:
+	* ASCIIPropertyListParser.cs:
+	  Convert unix date to .net dates.
+	Array.Equals() does not compare array internals but object
+	  reference, implement substitute.
+	String.Substring() has a different API than Java, correct.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* plist-cil.csproj:
 	* PropertyListParser.cs:
 	* XmlPropertyListParser.cs:

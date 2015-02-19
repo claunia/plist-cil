@@ -226,7 +226,7 @@ namespace Claunia.PropertyList
             foreach (NSObject o in dict.Values) {
                 if (o.GetType().Equals(typeof(NSData))) {
                     NSData dat = (NSData) o;
-                    if (Array.Equals(dat.Bytes, val))
+                    if (ArrayEquals(dat.Bytes, val))
                         return true;
                 }
             }

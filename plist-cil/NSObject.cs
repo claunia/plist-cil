@@ -409,6 +409,39 @@ namespace Claunia.PropertyList
                 return this;
             }
         }
+
+        internal static bool ArrayEquals(byte[] arrayA, byte[] arrayB)
+        {
+            if (arrayA.Length == arrayB.Length)
+            {
+                for (int i = 0; i < arrayA.Length; i++)
+                {
+                    if (arrayA[i] != arrayB[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        internal static bool ArrayEquals(NSObject[] arrayA, NSObject[] arrayB)
+        {
+            if (arrayA.Length == arrayB.Length)
+            {
+                for (int i = 0; i < arrayA.Length; i++)
+                {
+                    if (arrayA[i] != arrayB[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
     }
 }
 

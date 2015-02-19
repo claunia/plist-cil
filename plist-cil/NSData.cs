@@ -114,7 +114,7 @@ namespace Claunia.PropertyList
         }
 
         public override bool Equals(Object obj) {
-            return obj.GetType().Equals(GetType()) && Array.Equals(((NSData) obj).bytes, bytes);
+            return obj.GetType().Equals(GetType()) && ArrayEquals(((NSData) obj).bytes, bytes);
         }
 
         public override int GetHashCode() {

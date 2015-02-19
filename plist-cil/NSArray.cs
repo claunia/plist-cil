@@ -201,14 +201,14 @@ namespace Claunia.PropertyList
         {
             if (obj.GetType().Equals(typeof(NSArray)))
             {
-                return Array.Equals(((NSArray)obj).GetArray(), this.array);
+                return ArrayEquals(((NSArray)obj).GetArray(), this.array);
             }
             else
             {
                 NSObject nso = NSObject.Wrap(obj);
                 if (nso.GetType().Equals(typeof(NSArray)))
                 {
-                    return Array.Equals(((NSArray)nso).GetArray(), this.array);
+                    return ArrayEquals(((NSArray)nso).GetArray(), this.array);
                 }
             }
             return false;

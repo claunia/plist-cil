@@ -48,7 +48,7 @@ namespace plistcil.test
             Assert.True(((NSString)d.ObjectForKey("keyA")).ToString().Equals("valueA"));
             Assert.True(((NSString)d.ObjectForKey("key&B")).ToString().Equals("value&B"));
             Assert.True(((NSDate)d.ObjectForKey("date")).Date.Equals(new DateTime(2011, 11, 28, 9, 21, 30, DateTimeKind.Utc)));
-            Assert.True(Array.Equals(((NSData)d.ObjectForKey("data")).Bytes,
+            Assert.True(ArrayEquals(((NSData)d.ObjectForKey("data")).Bytes,
                 new byte[]{ 0x00, 0x00, 0x00, 0x04, 0x10, 0x41, 0x08, 0x20, (byte)0x82 }));
             NSArray a = (NSArray)d.ObjectForKey("array");
             Assert.True(a.Count == 4);
@@ -112,8 +112,8 @@ namespace plistcil.test
             Assert.True(d.Count == 5);
             Assert.True(((NSString)d.ObjectForKey("keyA")).ToString().Equals("valueA"));
             Assert.True(((NSString)d.ObjectForKey("key&B")).ToString().Equals("value&B"));
-            Assert.True(((NSDate)d.ObjectForKey("date")).Date.Equals(new DateTime(1322472090000L)));
-            Assert.True(Array.Equals(((NSData)d.ObjectForKey("data")).Bytes,
+            Assert.True(((NSDate)d.ObjectForKey("date")).Date.Equals(new DateTime(2011, 11, 28, 9, 21, 30, DateTimeKind.Utc)));
+            Assert.True(ArrayEquals(((NSData)d.ObjectForKey("data")).Bytes,
                 new byte[]{ 0x00, 0x00, 0x00, 0x04, 0x10, 0x41, 0x08, 0x20, (byte)0x82 }));
             NSArray a = (NSArray)d.ObjectForKey("array");
             Assert.True(a.Count == 4);
@@ -131,8 +131,8 @@ namespace plistcil.test
             Assert.True(d.Count == 5);
             Assert.True(((NSString)d.ObjectForKey("keyA")).ToString().Equals("valueA"));
             Assert.True(((NSString)d.ObjectForKey("key&B")).ToString().Equals("value&B"));
-            Assert.True(((NSDate)d.ObjectForKey("date")).Date.Equals(new DateTime(1322472090000L)));
-            Assert.True(Array.Equals(((NSData)d.ObjectForKey("data")).Bytes,
+            Assert.True(((NSDate)d.ObjectForKey("date")).Date.Equals(new DateTime(2011, 11, 28, 9, 21, 30, DateTimeKind.Utc)));
+            Assert.True(ArrayEquals(((NSData)d.ObjectForKey("data")).Bytes,
                 new byte[]{ 0x00, 0x00, 0x00, 0x04, 0x10, 0x41, 0x08, 0x20, (byte)0x82 }));
             NSArray a = (NSArray)d.ObjectForKey("array");
             Assert.True(a.Count == 4);
@@ -266,6 +266,23 @@ namespace plistcil.test
         Assert.True(((long)map.get("long")) == lng);
         Assert.True(((DateTime)map.get("date")).Equals(date));*/
         }
+
+        static bool ArrayEquals(byte[] arrayA, byte[] arrayB)
+        {
+            if (arrayA.Length == arrayB.Length)
+            {
+                for (int i = 0; i < arrayA.Length; i++)
+                {
+                    if (arrayA[i] != arrayB[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
     }
 }
 
