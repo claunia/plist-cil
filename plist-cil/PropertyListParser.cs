@@ -99,6 +99,11 @@ namespace Claunia.PropertyList
             while(b != -1 && b == ' ' || b == '\t' || b == '\r' || b == '\n' || b == '\f');
             magicBytes[0] = (byte)b;
             int read = fs.Read(magicBytes, 1, 7);
+
+            // Check for UTF-8 BOM prefixed XMLs first.
+            if (magicBytes[0] == 0xEF && magicBytes[1] == 0xBB && magicBytes[2] == 0xBF && magicBytes[3] == (byte)'<')
+                return TYPE_XML;
+
             int type = DetermineType(Encoding.ASCII.GetString(magicBytes, 0, read));
             fs.Seek(mark, SeekOrigin.Begin);
             //if(fs.markSupported())
