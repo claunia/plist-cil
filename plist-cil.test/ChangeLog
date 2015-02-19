@@ -1,5 +1,11 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* IssueTest.cs:
+	* plist-cil.test.csproj:
+	  Implement IssueTest.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* ParseTest.cs:
 	* plist-cil.test.csproj:
 	  Implement ParseTest
