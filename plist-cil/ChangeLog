@@ -1,5 +1,12 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* plist-cil.csproj:
+	* PropertyListParser.cs:
+	* XmlPropertyListParser.cs:
+	  Implement XmlPropertyListParser
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* UID.cs:
 	* NSData.cs:
 	* NSDate.cs:

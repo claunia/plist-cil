@@ -145,8 +145,7 @@ namespace Claunia.PropertyList
                 case TYPE_BINARY:
                     return BinaryPropertyListParser.Parse(f);
                 case TYPE_XML:
-                    // TODO: Implement XMLPropertyListParser
-                    //return XMLPropertyListParser.parse(f);
+                    return XmlPropertyListParser.Parse(f);
                 case TYPE_ASCII:
                     return ASCIIPropertyListParser.Parse(f);
                 default:
@@ -164,8 +163,7 @@ namespace Claunia.PropertyList
                 case TYPE_BINARY:
                     return BinaryPropertyListParser.Parse(bytes);
                 case TYPE_XML:
-                    // TODO: Implement XMLPropertyListParser
-                    //return XMLPropertyListParser.parse(bytes);
+                    return XmlPropertyListParser.Parse(bytes);
                 case TYPE_ASCII:
                     return ASCIIPropertyListParser.Parse(bytes);
                 default:
