@@ -188,7 +188,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The new array containing the objects stored at the given indices.</returns>
         /// <param name="indexes">The indices of the objects.</param>
-        public NSObject[] objectsAtIndexes(params int[] indexes)
+        public NSObject[] ObjectsAtIndexes(params int[] indexes)
         {
             NSObject[] result = new NSObject[indexes.Length];
             Array.Sort(indexes);
@@ -346,6 +346,21 @@ namespace Claunia.PropertyList
                 }
             }
             ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
+        }
+
+        public override bool Equals(NSObject obj)
+        {
+            if (!(obj is NSArray))
+                return false;
+
+            if (array.Length != ((NSArray)obj).array.Length)
+                return false;
+
+            for (int i = 0; i < array.Length; i++)
+                if (!array[i].Equals(((NSArray)obj).ObjectAtIndex(i)))
+                    return false;
+
+            return true;
         }
     }
 }

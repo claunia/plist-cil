@@ -162,6 +162,14 @@ namespace Claunia.PropertyList
         internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
             ToASCII(ascii, level);
         }
+
+        public override bool Equals(NSObject obj)
+        {
+            if(!(obj is NSData))
+                return false;
+
+            return ArrayEquals(bytes, ((NSData)obj).Bytes);
+        }
     }
 }
 

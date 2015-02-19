@@ -236,6 +236,14 @@ namespace Claunia.PropertyList
                 return -1;
             }
         }
+
+        public override bool Equals(NSObject obj)
+        {
+            if(!(obj is NSString))
+                return false;
+
+            return content == ((NSString)obj).content;
+        }
     }
 }
 

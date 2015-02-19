@@ -234,7 +234,31 @@ namespace Claunia.PropertyList
         }
 
         public override bool Equals(Object obj) {
+            bool foo = this.Equals((NSDictionary) obj);
             return (obj.GetType().Equals(GetType()) && ((NSDictionary) obj).dict.Equals(dict));
+        }
+
+        public override bool Equals(NSObject obj)
+        {
+            if (!(obj is NSDictionary))
+                return false;
+
+            if (((NSDictionary)obj).dict.Count != dict.Count)
+                return false;
+
+            bool found;
+
+            foreach (KeyValuePair<string, NSObject> kvp in dict)
+            {
+                NSObject nsoB;
+                found = ((NSDictionary)obj).dict.TryGetValue(kvp.Key, out nsoB);
+                if (!found)
+                    return false;
+                if (!kvp.Value.Equals(nsoB))
+                    return false;
+            }
+
+            return true;
         }
 
         public override int GetHashCode() {

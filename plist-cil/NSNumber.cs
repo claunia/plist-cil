@@ -431,6 +431,27 @@ namespace Claunia.PropertyList
 
             return (double)0;
         }
+
+        public override bool Equals(NSObject obj)
+        {
+            if (!(obj is NSNumber))
+                return false;
+
+            if (((NSNumber)obj).GetNSNumberType() != type)
+                return false;
+
+            switch (type)
+            {
+                case INTEGER:
+                    return (longValue == ((NSNumber)obj).ToLong());
+                case REAL:
+                    return (doubleValue == ((NSNumber)obj).ToDouble());
+                case BOOLEAN:
+                    return (boolValue == ((NSNumber)obj).ToBool());
+                default:
+                    return false;
+            }
+        }
     }
 }
 

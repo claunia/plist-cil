@@ -367,6 +367,21 @@ namespace Claunia.PropertyList
             }
             ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
         }
+
+        public override bool Equals(NSObject obj)
+        {
+            if (!(obj is NSSet))
+                return false;
+
+            if (set.Count != ((NSSet)obj).Count)
+                return false;
+
+            foreach (NSObject objS in (NSSet)obj)
+                if (!set.Contains(objS))
+                    return false;
+
+            return true;
+        }
     }
 }
 

@@ -1,5 +1,18 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* UID.cs:
+	* NSSet.cs:
+	* NSDate.cs:
+	* NSData.cs:
+	* NSArray.cs:
+	* NSString.cs:
+	* NSNumber.cs:
+	* NSObject.cs:
+	* NSDictionary.cs:
+	  Implement correct equality comparisors.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* XmlPropertyListParser.cs:
 	  Typo.
 

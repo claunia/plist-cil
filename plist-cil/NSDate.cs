@@ -159,6 +159,16 @@ namespace Claunia.PropertyList
             ascii.Append(MakeDateStringGnuStep(date));
             ascii.Append(">");
         }
+
+        public override bool Equals(NSObject obj)
+        {
+            if (!(obj is NSDate))
+                return false;
+
+            int equality = DateTime.Compare(date, ((NSDate)obj).Date);
+
+            return equality == 0;
+        }
     }
 }
 

@@ -442,6 +442,7 @@ namespace Claunia.PropertyList
             return false;
         }
 
+        public abstract bool Equals(NSObject obj);
     }
 }
 
