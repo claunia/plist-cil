@@ -1,5 +1,10 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* XmlPropertyListParser.cs:
+	  Typo.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* NSNumber.cs:
 	  Parse decimal comma always as '.'.
 

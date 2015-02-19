@@ -154,7 +154,7 @@ namespace Claunia.PropertyList
         /// <param name="list">The list of nodes to search.</param>
         private static List<XmlNode> FilterElementNodes(XmlNodeList list) {
             List<XmlNode> result = new List<XmlNode>();
-            foreach (XmlNode child in result) {
+            foreach (XmlNode child in list) {
                 if (child.NodeType == XmlNodeType.Element) {
                     result.Add(child);
                 }
