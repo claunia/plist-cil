@@ -40,72 +40,72 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="..\test-files\test1-ascii-gnustep.plist">
-      <Link>test1-ascii-gnustep.plist</Link>
+      <Link>test-files\test1-ascii-gnustep.plist</Link>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\test-files\test1-ascii.plist">
-      <Link>test1-ascii.plist</Link>
+      <Link>test-files\test1-ascii.plist</Link>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\test-files\test1.plist">
-      <Link>test1.plist</Link>
+      <Link>test-files\test1.plist</Link>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\test-files\testNegative-bin.plist">
-      <Link>testNegative-bin.plist</Link>
+      <Link>test-files\testNegative-bin.plist</Link>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\test-files\testNegative-xml.plist">
-      <Link>testNegative-xml.plist</Link>
+      <Link>test-files\testNegative-xml.plist</Link>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\test-files\issue4.plist">
-      <Link>issue4.plist</Link>
+      <Link>test-files\issue4.plist</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
     </None>
     <None Include="..\test-files\issue16.plist">
-      <Link>issue16.plist</Link>
+      <Link>test-files\issue16.plist</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
     </None>
     <None Include="..\test-files\issue21.plist">
-      <Link>issue21.plist</Link>
+      <Link>test-files\issue21.plist</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
     </None>
     <None Include="..\test-files\issue22-emoji-xml.plist">
-      <Link>issue22-emoji-xml.plist</Link>
+      <Link>test-files\issue22-emoji-xml.plist</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
     </None>
     <None Include="..\test-files\issue22-emoji.plist">
-      <Link>issue22-emoji.plist</Link>
+      <Link>test-files\issue22-emoji.plist</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
     </None>
     <None Include="..\test-files\issue30.plist">
-      <Link>issue30.plist</Link>
+      <Link>test-files\issue30.plist</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
     </None>
     <None Include="..\test-files\issue33.pbxproj">
-      <Link>issue33.pbxproj</Link>
+      <Link>test-files\issue33.pbxproj</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
     </None>
     <None Include="..\test-files\issue49.plist">
-      <Link>issue49.plist</Link>
+      <Link>test-files\issue49.plist</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
     </None>
     <None Include="..\test-files\test-ascii.plist">
-      <Link>test-ascii.plist</Link>
+      <Link>test-files\test-ascii.plist</Link>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -115,5 +115,8 @@
       <Project>{5EA40CD5-CB98-4FD5-8628-3B399EACB38B}</Project>
       <Name>plist-cil</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="test-files\" />
   </ItemGroup>
 </Project>

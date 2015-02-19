@@ -1,5 +1,10 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* plist-cil.test.csproj:
+	  Organize test-files in a folder
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* packages.config:
 	* plist-cil.test.csproj:
 	* Properties/AssemblyInfo.cs:
