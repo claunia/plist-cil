@@ -182,7 +182,7 @@ namespace plistcil.test
             DateTime date = new DateTime();
             string strg = "Hello World";
             byte[] bytes = new byte[] { (byte)0x00, (byte)0xAF, (byte)0xAF };
-            ArgIterator netObject = new ArgIterator();
+            DirectoryInfo netObject = new DirectoryInfo(Environment.CurrentDirectory);
             Object[] array = new Object[] { bl, byt, shrt, i, lng, flt, dbl, date, strg, bytes };
             int[] array2 = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 3000 };
             List<Object> list = new List<Object>(array);

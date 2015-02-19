@@ -1,6 +1,11 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
 	* ParseTest.cs:
+	  Should use a serializable object type.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
+	* ParseTest.cs:
 	  Convert unix date to .net dates.
 	Array.Equals() does not compare array internals but object
 	  reference, implement substitute.
