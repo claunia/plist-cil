@@ -299,41 +299,38 @@ namespace Claunia.PropertyList
             }
         }
 
-        // TODO: Implement BinaryPropertyListWriter class
-        /*
-        @Override
-        void toBinary(BinaryPropertyListWriter out) throws IOException {
-            switch (type()) {
+        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+            switch (GetNSNumberType()) {
                 case INTEGER: {
-                        if (longValue() < 0) {
-                            out.write(0x13);
-                            out.writeBytes(longValue(), 8);
-                        } else if (longValue() <= 0xff) {
-                            out.write(0x10);
-                            out.writeBytes(longValue(), 1);
-                        } else if (longValue() <= 0xffff) {
-                            out.write(0x11);
-                            out.writeBytes(longValue(), 2);
-                        } else if (longValue() <= 0xffffffffL) {
-                            out.write(0x12);
-                            out.writeBytes(longValue(), 4);
+                        if (ToLong() < 0) {
+                            outPlist.Write(0x13);
+                            outPlist.WriteBytes(ToLong(), 8);
+                        } else if (ToLong() <= 0xff) {
+                            outPlist.Write(0x10);
+                            outPlist.WriteBytes(ToLong(), 1);
+                        } else if (ToLong() <= 0xffff) {
+                            outPlist.Write(0x11);
+                            outPlist.WriteBytes(ToLong(), 2);
+                        } else if (ToLong() <= 0xffffffffL) {
+                            outPlist.Write(0x12);
+                            outPlist.WriteBytes(ToLong(), 4);
                         } else {
-                            out.write(0x13);
-                            out.writeBytes(longValue(), 8);
+                            outPlist.Write(0x13);
+                            outPlist.WriteBytes(ToLong(), 8);
                         }
                         break;
                     }
                 case REAL: {
-                        out.write(0x23);
-                        out.writeDouble(doubleValue());
+                        outPlist.Write(0x23);
+                        outPlist.WriteDouble(ToDouble());
                         break;
                     }
                 case BOOLEAN: {
-                        out.write(boolValue() ? 0x09 : 0x08);
+                        outPlist.Write(ToBool() ? 0x09 : 0x08);
                         break;
                     }
             }
-        }*/
+        }
 
         internal override void ToASCII(StringBuilder ascii, int level) {
             Indent(ascii, level);

@@ -70,18 +70,15 @@ namespace Claunia.PropertyList
         /// Assigns IDs to all the objects in this NSObject subtree.
         /// </summary>
         /// <param name="out">The writer object that handles the binary serialization.</param>
-        // TODO: Port BinaryPropertyListWriter class
-        /*
-        void assignIDs(BinaryPropertyListWriter out) {
-            out.assignID(this);
-        }*/
+        internal virtual void AssignIDs(BinaryPropertyListWriter outPlist) {
+            outPlist.AssignID(this);
+        }
 
         /// <summary>
         /// Generates the binary representation of the object.
         /// </summary>
         /// <param name="out">The output stream to serialize the object to.</param>
-        // TODO: Port BinaryPropertyListWriter class
-        //abstract void toBinary(BinaryPropertyListWriter out);
+        internal abstract void ToBinary(BinaryPropertyListWriter outPlist);
 
         /// <summary>
         /// Generates a valid XML property list including headers using this object as root.

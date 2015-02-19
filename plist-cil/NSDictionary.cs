@@ -268,26 +268,23 @@ namespace Claunia.PropertyList
             xml.Append("</dict>");
         }
 
-        // TODO: BinaryPropertyListWriter
-        /*
-        override void assignIDs(BinaryPropertyListWriter out) {
-            super.assignIDs(out);
-            for (Map.Entry<String, NSObject> entry : dict.entrySet()) {
-                new NSString(entry.getKey()).assignIDs(out);
-                entry.getValue().assignIDs(out);
+        internal override void AssignIDs(BinaryPropertyListWriter outPlist) {
+            base.AssignIDs(outPlist);
+            foreach (KeyValuePair<string, NSObject> entry in dict) {
+                new NSString(entry.Key).AssignIDs(outPlist);
+                entry.Value.AssignIDs(outPlist);
             }
         }
 
-        override void toBinary(BinaryPropertyListWriter out) throws IOException {
-            out.writeIntHeader(0xD, dict.size());
-            Set<Map.Entry<String, NSObject>> entries = dict.entrySet();
-            for (Map.Entry<String, NSObject> entry : entries) {
-                out.writeID(out.getID(new NSString(entry.getKey())));
+        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+            outPlist.WriteIntHeader(0xD, dict.Count);
+            foreach (KeyValuePair<String, NSObject> entry in dict) {
+                outPlist.WriteID(outPlist.GetID(new NSString(entry.Key)));
             }
-            for (Map.Entry<String, NSObject> entry : entries) {
-                out.writeID(out.getID(entry.getValue()));
+            foreach (KeyValuePair<String, NSObject> entry in dict) {
+                outPlist.WriteID(outPlist.GetID(entry.Value));
             }
-        }*/
+        }
 
         /// <summary>
         /// Generates a valid ASCII property list which has this NSDictionary as its

@@ -74,12 +74,10 @@ namespace Claunia.PropertyList
             xml.Append("</string>");
         }
 
-        // TODO: Implement BinaryPropertyListWriter
-        /*
-        void override toBinary(BinaryPropertyListWriter out) throws IOException {
-            out.write(0x80 + bytes.length - 1);
-            out.write(bytes);
-        }*/
+        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+            outPlist.Write(0x80 + bytes.Length - 1);
+            outPlist.Write(bytes);
+        }
 
         internal override void ToASCII(StringBuilder ascii, int level) {
             Indent(ascii, level);

@@ -40,8 +40,7 @@ namespace Claunia.PropertyList
     {
         List<NSObject> set;
 
-        // No need for this. It's easier in C# to just follow NSSet unordered as-is
-        // private bool ordered = false;
+        private bool ordered = false;
 
         /// <summary>
         /// Creates an empty unordered set.
@@ -66,6 +65,12 @@ namespace Claunia.PropertyList
             else
                 set = new TreeSet<NSObject>();
         }*/
+
+        public NSSet(bool ordered) {
+            this.ordered = ordered;
+            set = new List<NSObject>();
+        }
+
 
         /// <summary>
         /// Create a set and fill it with the given objects.
@@ -93,6 +98,13 @@ namespace Claunia.PropertyList
             set.addAll(Arrays.asList(objects));
         }*/
 
+        public NSSet(bool ordered, params NSObject[] objects) {
+            this.ordered = ordered;
+            set = new List<NSObject>(objects);
+            if (ordered)
+                set.Sort();
+        }
+
         /// <summary>
         /// Adds an object to the set.
         /// </summary>
@@ -100,6 +112,8 @@ namespace Claunia.PropertyList
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddObject(NSObject obj) {
             set.Add(obj);
+            if (ordered)
+                set.Sort();
         }
 
         /// <summary>
@@ -109,6 +123,8 @@ namespace Claunia.PropertyList
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void RemoveObject(NSObject obj) {
             set.Remove(obj);
+            if (ordered)
+                set.Sort();
         }
 
         /// <summary>
@@ -247,6 +263,8 @@ namespace Claunia.PropertyList
             Indent(xml, level);
             xml.Append("<array>");
             xml.Append(NSObject.NEWLINE);
+            if (ordered)
+                set.Sort();
             foreach (NSObject o in set) {
                 o.ToXml(xml, level + 1);
                 xml.Append(NSObject.NEWLINE);
@@ -255,27 +273,24 @@ namespace Claunia.PropertyList
             xml.Append("</array>");
         }
 
-        // TODO: Implement BinaryPropertyListWriter
-        /*
-        @Override
-        void assignIDs(BinaryPropertyListWriter out) {
-            super.assignIDs(out);
-            for (NSObject obj : set) {
-                obj.assignIDs(out);
+        internal override void AssignIDs(BinaryPropertyListWriter outPlist) {
+            base.AssignIDs(outPlist);
+            foreach (NSObject obj in set) {
+                obj.AssignIDs(outPlist);
             }
         }
 
-        @Override
-        void toBinary(BinaryPropertyListWriter out) throws IOException {
+        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
             if (ordered) {
-                out.writeIntHeader(0xB, set.size());
+                set.Sort();
+                outPlist.WriteIntHeader(0xB, set.Count);
             } else {
-                out.writeIntHeader(0xC, set.size());
+                outPlist.WriteIntHeader(0xC, set.Count);
             }
-            for (NSObject obj : set) {
-                out.writeID(out.getID(obj));
+            foreach (NSObject obj in set) {
+                outPlist.WriteID(outPlist.GetID(obj));
             }
-        }*/
+        }
 
         /// <summary>
         /// Returns the ASCII representation of this set.
@@ -286,6 +301,8 @@ namespace Claunia.PropertyList
         /// <param name="level">The indentation level</param>
         internal override void ToASCII(StringBuilder ascii, int level) {
             Indent(ascii, level);
+            if (ordered)
+                set.Sort();
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
             int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
@@ -322,6 +339,8 @@ namespace Claunia.PropertyList
         /// <param name="level">The indentation level</param>
         internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
             Indent(ascii, level);
+            if (ordered)
+                set.Sort();
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
             int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);

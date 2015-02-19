@@ -229,8 +229,7 @@ namespace Claunia.PropertyList
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
-            // TODO: Implement BinaryPropertyListWriter
-            //BinaryPropertyListWriter.write(out, root);
+            BinaryPropertyListWriter.Write(outFile, root);
         }
 
         /// <summary>
@@ -240,8 +239,7 @@ namespace Claunia.PropertyList
         /// <param name="outStream">The output stream.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
         public static void SaveAsBinary(NSObject root, Stream outStream) {
-            // TODO: Implement BinaryPropertyListWriter
-            //BinaryPropertyListWriter.write(out, root);
+            //BinaryPropertyListWriter.write(outStream, root);
         }
 
         /// <summary>

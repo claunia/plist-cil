@@ -46,6 +46,7 @@
     <Compile Include="PropertyListParser.cs" />
     <Compile Include="ASCIIPropertyListParser.cs" />
     <Compile Include="BinaryPropertyListParser.cs" />
+    <Compile Include="BinaryPropertyListWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

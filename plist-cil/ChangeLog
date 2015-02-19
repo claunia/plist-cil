@@ -1,5 +1,25 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* UID.cs:
+	* NSData.cs:
+	* NSDate.cs:
+	* NSArray.cs:
+	* NSNumber.cs:
+	* NSString.cs:
+	* NSObject.cs:
+	* NSDictionary.cs:
+	* plist-cil.csproj:
+	* PropertyListParser.cs:
+	* BinaryPropertyListWriter.cs:
+	  Implement BinaryPropertyListWriter.
+
+	* NSSet.cs:
+	* BinaryPropertyListParser.cs:
+	  Implement BinaryPropertyListWriter.
+	Add way to make ordered NSSet.
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* NSDate.cs:
 	* NSNumber.cs:
 	* plist-cil.csproj:

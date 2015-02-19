@@ -151,37 +151,27 @@ namespace Claunia.PropertyList
             xml.Append("</string>");
         }
 
-        // TODO: Implement BinaryPropertyListWriter
-        /*
-        @Override
-        public void toBinary(BinaryPropertyListWriter out) throws IOException {
-            CharBuffer charBuf = CharBuffer.wrap(content);
+        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
             int kind;
-            ByteBuffer byteBuf;
-            synchronized (NSString.class) {
+            byte[] byteBuf;
+            lock (typeof(NSString)) {
                 if (asciiEncoder == null)
-                    asciiEncoder = Charset.forName("ASCII").newEncoder();
-                else
-                    asciiEncoder.reset();
+                    asciiEncoder = Encoding.GetEncoding("ascii", EncoderExceptionFallback.ExceptionFallback, DecoderExceptionFallback.ExceptionFallback);
 
-                if (asciiEncoder.canEncode(charBuf)) {
+                try {
                     kind = 0x5; // standard ASCII
-                    byteBuf = asciiEncoder.encode(charBuf);
-                } else {
+                    byteBuf = asciiEncoder.GetBytes(content);
+                } catch {
                     if (utf16beEncoder == null)
-                        utf16beEncoder = Charset.forName("UTF-16BE").newEncoder();
-                    else
-                        utf16beEncoder.reset();
+                        utf16beEncoder = Encoding.BigEndianUnicode;
 
                     kind = 0x6; // UTF-16-BE
-                    byteBuf = utf16beEncoder.encode(charBuf);
+                    byteBuf = utf16beEncoder.GetBytes(content);
                 }
             }
-            byte[] bytes = new byte[byteBuf.remaining()];
-            byteBuf.get(bytes);
-            out.writeIntHeader(kind, content.length());
-            out.write(bytes);
-        }*/
+            outPlist.WriteIntHeader(kind, content.Length);
+            outPlist.Write(byteBuf);
+        }
 
         internal override void ToASCII(StringBuilder ascii, int level) {
             Indent(ascii, level);

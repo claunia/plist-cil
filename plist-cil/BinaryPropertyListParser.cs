@@ -304,7 +304,7 @@ namespace Claunia.PropertyList
                         int length = lenAndoffset[0];
                         int contentOffset = lenAndoffset[1];
 
-                        NSSet set = new NSSet();
+                        NSSet set = new NSSet(true);
                         for (int i = 0; i < length; i++) {
                             int objRef = (int) ParseUnsignedInt(CopyOfRange(bytes,
                                 offset + contentOffset + i * objectRefSize,

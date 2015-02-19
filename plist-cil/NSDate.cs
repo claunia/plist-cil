@@ -133,12 +133,10 @@ namespace Claunia.PropertyList
             xml.Append("</date>");
         }
 
-        // TODO: ImplementBinaryPropertyListWriter
-        /*
-        public override void toBinary(BinaryPropertyListWriter out) throws IOException {
-            out.write(0x33);
-            out.writeDouble((date.getTime() - EPOCH) / 1000.0);
-        }*/
+        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+            outPlist.Write(0x33);
+            outPlist.WriteDouble((date - EPOCH).TotalSeconds);
+        }
 
         /// <summary>
         /// Generates a string representation of the date.

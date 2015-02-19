@@ -235,22 +235,19 @@ namespace Claunia.PropertyList
             xml.Append("</array>");
         }
 
-        // TODO: Implement BinaryPropertyListWriter
-        /*
-        override void assignIDs(BinaryPropertyListWriter out) {
-            super.assignIDs(out);
-            for (NSObject obj : array) {
-                obj.assignIDs(out);
+        internal override void AssignIDs(BinaryPropertyListWriter outPlist) {
+            base.AssignIDs(outPlist);
+            foreach (NSObject obj in array) {
+                obj.AssignIDs(outPlist);
             }
         }
 
-        override void toBinary(BinaryPropertyListWriter out) throws IOException {
-            out.writeIntHeader(0xA, array.length);
-            for (NSObject obj : array) {
-                out.writeID(out.getID(obj));
+        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+            outPlist.WriteIntHeader(0xA, array.Length);
+            foreach (NSObject obj in array) {
+                outPlist.WriteID(outPlist.GetID(obj));
             }
-        }*/
-
+        }
 
         /// <summary>
         /// Generates a valid ASCII property list which has this NSArray as its
