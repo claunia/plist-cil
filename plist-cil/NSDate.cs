@@ -149,14 +149,14 @@ namespace Claunia.PropertyList
             return date.ToString();
         }
 
-        protected override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level) {
             Indent(ascii, level);
             ascii.Append("\"");
             ascii.Append(MakeDateString(date));
             ascii.Append("\"");
         }
 
-        protected override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
             Indent(ascii, level);
             ascii.Append("<*D");
             ascii.Append(MakeDateStringGnuStep(date));

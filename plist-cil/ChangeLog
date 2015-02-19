@@ -1,3 +1,19 @@
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
+	* UID.cs:
+	* NSSet.cs:
+	* NSDate.cs:
+	* NSData.cs:
+	* NSArray.cs:
+	* NSNumber.cs:
+	* NSObject.cs:
+	* NSString.cs:
+	* NSDictionary.cs:
+	* plist-cil.csproj:
+	* PropertyListParser.cs:
+	* ASCIIPropertyListParser.cs:
+	  Implement ASCIIPropertyListParser
+
 2015-02-18  Natalia Portillo  <claunia@claunia.com>
 
 	* plist-cil.csproj:

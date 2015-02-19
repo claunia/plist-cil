@@ -145,28 +145,24 @@ namespace Claunia.PropertyList
             out.write(bytes);
         }*/
 
-        protected override void ToASCII(StringBuilder ascii, int level) {
-            // TODO: Implement ASCIIPropertyListParser
-            /*
-            indent(ascii, level);
-            ascii.append(ASCIIPropertyListParser.DATA_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.lastIndexOf(NEWLINE);
-            for (int i = 0; i < bytes.length; i++) {
+        internal override void ToASCII(StringBuilder ascii, int level) {
+            Indent(ascii, level);
+            ascii.Append(ASCIIPropertyListParser.DATA_BEGIN_TOKEN);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
+            for (int i = 0; i < bytes.Length; i++) {
                 int b = bytes[i] & 0xFF;
-                if (b < 16)
-                    ascii.append("0");
-                ascii.append(Integer.toHexString(b));
-                if (ascii.length() - indexOfLastNewLine > ASCII_LINE_LENGTH) {
-                    ascii.append(NEWLINE);
-                    indexOfLastNewLine = ascii.length();
-                } else if ((i + 1) % 2 == 0 && i != bytes.length - 1) {
-                    ascii.append(" ");
+                ascii.Append(String.Format("{0:x2}", b));
+                    if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH) {
+                    ascii.Append(NEWLINE);
+                    indexOfLastNewLine = ascii.Length;
+                } else if ((i + 1) % 2 == 0 && i != bytes.Length - 1) {
+                    ascii.Append(" ");
                 }
             }
-            ascii.append(ASCIIPropertyListParser.DATA_END_TOKEN);*/
+            ascii.Append(ASCIIPropertyListParser.DATA_END_TOKEN);
         }
 
-        protected override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
             ToASCII(ascii, level);
         }
     }

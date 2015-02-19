@@ -111,7 +111,7 @@ namespace Claunia.PropertyList
         /// a maximum count.
         /// </summary>
         /// <param name="fs">The Stream pointing to the data that should be stored in the array.</param>
-        static byte[] ReadAll(Stream fs) {
+        internal static byte[] ReadAll(Stream fs) {
             MemoryStream outputStream = new MemoryStream();
             byte[] buf = new byte[512];
             int read = 512;
@@ -149,8 +149,7 @@ namespace Claunia.PropertyList
                     // TODO: Implement XMLPropertyListParser
                     //return XMLPropertyListParser.parse(f);
                 case TYPE_ASCII:
-                    // TODO: Implement ASCIIPropertyListParser
-                    //return ASCIIPropertyListParser.parse(f);
+                    return ASCIIPropertyListParser.Parse(f);
                 default:
                     throw new PropertyListFormatException("The given file is not a property list of a supported format.");
             }
@@ -170,8 +169,7 @@ namespace Claunia.PropertyList
                     // TODO: Implement XMLPropertyListParser
                     //return XMLPropertyListParser.parse(bytes);
                 case TYPE_ASCII:
-                    // TODO: Implement ASCIIPropertyListParser
-                    //return ASCIIPropertyListParser.parse(bytes);
+                    return ASCIIPropertyListParser.Parse(bytes);
                 default:
                     throw new PropertyListFormatException("The given data is not a property list of a supported format.");
             }
@@ -287,8 +285,7 @@ namespace Claunia.PropertyList
                 Directory.CreateDirectory(parent);
             Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
             StreamWriter w = new StreamWriter(fous, Encoding.ASCII);
-            // TODO: Implement ASCIIPropertyListParser
-            //w.Write(root.ToASCIIPropertyList());
+            w.Write(root.ToASCIIPropertyList());
             w.Close();
             fous.Close();
         }
@@ -341,8 +338,7 @@ namespace Claunia.PropertyList
                 Directory.CreateDirectory(parent);
             Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
             StreamWriter w = new StreamWriter(fous, Encoding.ASCII);
-            // TODO: Implement ASCIIPropertyListParser
-            //w.Write(root.toGnuStepASCIIPropertyList());
+            w.Write(root.ToGnuStepASCIIPropertyList());
             w.Close();
             fous.Close();
         }

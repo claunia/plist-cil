@@ -317,60 +317,54 @@ namespace Claunia.PropertyList
             return ascii.ToString();
         }
 
-        protected override void ToASCII(StringBuilder ascii, int level) {
-            // TODO: Implement ASCIIPropertyListParser
-            /*
-            indent(ascii, level);
-            ascii.append(ASCIIPropertyListParser.DICTIONARY_BEGIN_TOKEN);
-            ascii.append(NEWLINE);
-            String[] keys = allKeys();
-            for (String key : keys) {
-                NSObject val = objectForKey(key);
-                indent(ascii, level + 1);
-                ascii.append("\"");
-                ascii.append(NSString.escapeStringForASCII(key));
-                ascii.append("\" =");
-                Class<?> objClass = val.getClass();
-                if (objClass.equals(NSDictionary.class) || objClass.equals(NSArray.class) || objClass.equals(NSData.class)) {
-                    ascii.append(NEWLINE);
-                    val.toASCII(ascii, level + 2);
+        internal override void ToASCII(StringBuilder ascii, int level) {
+            Indent(ascii, level);
+            ascii.Append(ASCIIPropertyListParser.DICTIONARY_BEGIN_TOKEN);
+            ascii.Append(NEWLINE);
+            foreach (string key in Keys) {
+                NSObject val = ObjectForKey(key);
+                Indent(ascii, level + 1);
+                ascii.Append("\"");
+                ascii.Append(NSString.EscapeStringForASCII(key));
+                ascii.Append("\" =");
+                Type objClass = val.GetType();
+                if (objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData))) {
+                    ascii.Append(NEWLINE);
+                    val.ToASCII(ascii, level + 2);
                 } else {
-                    ascii.append(" ");
-                    val.toASCII(ascii, 0);
+                    ascii.Append(" ");
+                    val.ToASCII(ascii, 0);
                 }
-                ascii.append(ASCIIPropertyListParser.DICTIONARY_ITEM_DELIMITER_TOKEN);
-                ascii.append(NEWLINE);
+                ascii.Append(ASCIIPropertyListParser.DICTIONARY_ITEM_DELIMITER_TOKEN);
+                ascii.Append(NEWLINE);
             }
-            indent(ascii, level);
-            ascii.append(ASCIIPropertyListParser.DICTIONARY_END_TOKEN);*/
+            Indent(ascii, level);
+            ascii.Append(ASCIIPropertyListParser.DICTIONARY_END_TOKEN);
         }
 
-        protected override void ToASCIIGnuStep(StringBuilder ascii, int level) {
-            // TODO: Implement ASCIIPropertyListParser
-            /*
-            indent(ascii, level);
-            ascii.append(ASCIIPropertyListParser.DICTIONARY_BEGIN_TOKEN);
-            ascii.append(NEWLINE);
-            String[] keys = dict.keySet().toArray(new String[dict.size()]);
-            for (String key : keys) {
-                NSObject val = objectForKey(key);
-                indent(ascii, level + 1);
-                ascii.append("\"");
-                ascii.append(NSString.escapeStringForASCII(key));
-                ascii.append("\" =");
-                Class<?> objClass = val.getClass();
-                if (objClass.equals(NSDictionary.class) || objClass.equals(NSArray.class) || objClass.equals(NSData.class)) {
-                    ascii.append(NEWLINE);
-                    val.toASCIIGnuStep(ascii, level + 2);
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+            Indent(ascii, level);
+            ascii.Append(ASCIIPropertyListParser.DICTIONARY_BEGIN_TOKEN);
+            ascii.Append(NEWLINE);
+            foreach (string key in Keys) {
+                NSObject val = ObjectForKey(key);
+                Indent(ascii, level + 1);
+                ascii.Append("\"");
+                ascii.Append(NSString.EscapeStringForASCII(key));
+                ascii.Append("\" =");
+                Type objClass = val.GetType();
+                if (objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData))) {
+                    ascii.Append(NEWLINE);
+                    val.ToASCIIGnuStep(ascii, level + 2);
                 } else {
-                    ascii.append(" ");
-                    val.toASCIIGnuStep(ascii, 0);
+                    ascii.Append(" ");
+                    val.ToASCIIGnuStep(ascii, 0);
                 }
-                ascii.append(ASCIIPropertyListParser.DICTIONARY_ITEM_DELIMITER_TOKEN);
-                ascii.append(NEWLINE);
+                ascii.Append(ASCIIPropertyListParser.DICTIONARY_ITEM_DELIMITER_TOKEN);
+                ascii.Append(NEWLINE);
             }
-            indent(ascii, level);
-            ascii.append(ASCIIPropertyListParser.DICTIONARY_END_TOKEN);*/
+            Indent(ascii, level);
+            ascii.Append(ASCIIPropertyListParser.DICTIONARY_END_TOKEN);
         }
 
         #region IDictionary implementation

@@ -81,7 +81,7 @@ namespace Claunia.PropertyList
             out.write(bytes);
         }*/
 
-        protected override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level) {
             Indent(ascii, level);
             ascii.Append("\"");
             for (int i = 0; i < bytes.Length; i++) {
@@ -91,7 +91,7 @@ namespace Claunia.PropertyList
             ascii.Append("\"");
         }
 
-        protected override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
             ToASCII(ascii, level);
         }
     }

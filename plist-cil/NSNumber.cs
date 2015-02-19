@@ -337,7 +337,7 @@ namespace Claunia.PropertyList
             }
         }*/
 
-        protected override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level) {
             Indent(ascii, level);
             if (type == BOOLEAN) {
                 ascii.Append(boolValue ? "YES" : "NO");
@@ -346,7 +346,7 @@ namespace Claunia.PropertyList
             }
         }
 
-        protected override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
             Indent(ascii, level);
             switch (type) {
                 case INTEGER: {

@@ -39,7 +39,8 @@ namespace Claunia.PropertyList
         /// Creates an empty array of the given length.
         /// </summary>
         /// <param name="length">The number of elements this array will be able to hold.</param>
-        public NSArray(int length) {
+        public NSArray(int length)
+        {
             array = new NSObject[length];
         }
 
@@ -47,7 +48,8 @@ namespace Claunia.PropertyList
         /// Creates a array from an existing one
         /// </summary>
         /// <param name="a">The array which should be wrapped by the NSArray</param>
-        public NSArray(params NSObject[] a) {
+        public NSArray(params NSObject[] a)
+        {
             array = a;
         }
 
@@ -56,7 +58,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The object at the given index.</returns>
         /// <param name="i">The index of the object.</param>
-        public NSObject ObjectAtIndex(int i) {
+        public NSObject ObjectAtIndex(int i)
+        {
             return array[i];
         }
 
@@ -65,7 +68,8 @@ namespace Claunia.PropertyList
         /// The array will be resized.
         /// </summary>
         /// <param name="i">The index of the object</param>
-        public void Remove(int i) {
+        public void Remove(int i)
+        {
             if ((i >= array.Length) || (i < 0))
                 throw new IndexOutOfRangeException("invalid index:" + i + ";the array length is " + array.Length);
             NSObject[] newArray = new NSObject[array.Length - 1];
@@ -80,8 +84,9 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="key">The index where to store the object.</param>
         /// <param name="value">The object.</param>
-        public void SetValue(int key, Object value) {
-            if(value == null)
+        public void SetValue(int key, Object value)
+        {
+            if (value == null)
                 throw new ArgumentNullException("Cannot add null values to an NSArray!");
             array[key] = NSObject.Wrap(value);
         }
@@ -91,7 +96,8 @@ namespace Claunia.PropertyList
         /// Any changes to the values of this array will also affect the NSArray.
         /// </summary>
         /// <returns>The actual array represented by this NSArray.</returns>
-        public NSObject[] GetArray() {
+        public NSObject[] GetArray()
+        {
             return array;
         }
 
@@ -99,7 +105,8 @@ namespace Claunia.PropertyList
         /// Returns the size of the array.
         /// </summary>
         /// <value>The number of elements that this array can store.</value>
-        public int Count {
+        public int Count
+        {
             get
             {
                 return array.Length;
@@ -112,10 +119,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns><c>true</c>, when the object could be found. <c>false</c> otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
-        public bool ContainsObject(Object obj) {
+        public bool ContainsObject(Object obj)
+        {
             NSObject nso = NSObject.Wrap(obj);
-            foreach (NSObject elem in array) {
-                if (elem.Equals(nso)) {
+            foreach (NSObject elem in array)
+            {
+                if (elem.Equals(nso))
+                {
                     return true;
                 }
             }
@@ -129,10 +139,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The index of the object, if it was found. -1 otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
-        public int IndexOfObject(Object obj) {
+        public int IndexOfObject(Object obj)
+        {
             NSObject nso = NSObject.Wrap(obj);
-            for (int i = 0; i < array.Length; i++) {
-                if (array[i].Equals(nso)) {
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i].Equals(nso))
+                {
                     return i;
                 }
             }
@@ -147,10 +160,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The index of the object, if it was found. -1 otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
-        public int IndexOfIdenticalObject(Object obj) {
+        public int IndexOfIdenticalObject(Object obj)
+        {
             NSObject nso = NSObject.Wrap(obj);
-            for (int i = 0; i < array.Length; i++) {
-                if (array[i] == nso) {
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == nso)
+                {
                     return i;
                 }
             }
@@ -161,7 +177,8 @@ namespace Claunia.PropertyList
         /// Returns the last object contained in this array.
         /// </summary>
         /// <returns>The value of the highest index in the array.</returns>
-        public NSObject LastObject() {
+        public NSObject LastObject()
+        {
             return array[array.Length - 1];
         }
 
@@ -171,7 +188,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The new array containing the objects stored at the given indices.</returns>
         /// <param name="indexes">The indices of the objects.</param>
-        public NSObject[] objectsAtIndexes(params int[] indexes) {
+        public NSObject[] objectsAtIndexes(params int[] indexes)
+        {
             NSObject[] result = new NSObject[indexes.Length];
             Array.Sort(indexes);
             for (int i = 0; i < indexes.Length; i++)
@@ -179,29 +197,37 @@ namespace Claunia.PropertyList
             return result;
         }
 
-        public override bool Equals(Object obj) {
-            if(obj.GetType().Equals(typeof(NSArray))) {
-                return Array.Equals(((NSArray) obj).GetArray(), this.array);
-            } else {
+        public override bool Equals(Object obj)
+        {
+            if (obj.GetType().Equals(typeof(NSArray)))
+            {
+                return Array.Equals(((NSArray)obj).GetArray(), this.array);
+            }
+            else
+            {
                 NSObject nso = NSObject.Wrap(obj);
-                if(nso.GetType().Equals(typeof(NSArray))) {
-                    return Array.Equals(((NSArray) nso).GetArray(), this.array);
+                if (nso.GetType().Equals(typeof(NSArray)))
+                {
+                    return Array.Equals(((NSArray)nso).GetArray(), this.array);
                 }
             }
             return false;
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             int hash = 7;
             hash = 89 * hash + array.GetHashCode();
             return hash;
         }
 
-        internal override void ToXml(StringBuilder xml, int level) {
+        internal override void ToXml(StringBuilder xml, int level)
+        {
             Indent(xml, level);
             xml.Append("<array>");
             xml.Append(NSObject.NEWLINE);
-            foreach (NSObject o in array) {
+            foreach (NSObject o in array)
+            {
                 o.ToXml(xml, level + 1);
                 xml.Append(NSObject.NEWLINE);
             }
@@ -226,96 +252,103 @@ namespace Claunia.PropertyList
         }*/
 
 
-        /**
-     * Generates a valid ASCII property list which has this NSArray as its
-     * root object. The generated property list complies with the format as
-     * described in <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html">
-     * Property List Programming Guide - Old-Style ASCII Property Lists</a>.
-     *
-     * @return ASCII representation of this object.
-     *
-        public string toASCIIPropertyList() {
+        /// <summary>
+        /// Generates a valid ASCII property list which has this NSArray as its
+        /// root object. The generated property list complies with the format as
+        /// described in <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html">
+        /// Property List Programming Guide - Old-Style ASCII Property Lists</a>.
+        /// </summary>
+        /// <returns>ASCII representation of this object.</returns>
+        public string ToASCIIPropertyList()
+        {
             StringBuilder ascii = new StringBuilder();
             ToASCII(ascii, 0);
             ascii.Append(NEWLINE);
             return ascii.ToString();
         }
 
-        /**
-     * Generates a valid ASCII property list in GnuStep format which has this
-     * NSArray as its root object. The generated property list complies with
-     * the format as described in <a href="http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html">
-     * GnuStep - NSPropertyListSerialization class documentation
-     * </a>
-     *
-     * @return GnuStep ASCII representation of this object.
-     *
-        public string ToGnuStepASCIIPropertyList() {
+        /// <summary>
+        /// Generates a valid ASCII property list in GnuStep format which has this
+        /// NSArray as its root object. The generated property list complies with
+        /// the format as described in <a href="http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html">
+        /// GnuStep - NSPropertyListSerialization class documentation
+        /// </a>
+        /// </summary>
+        /// <returns>GnuStep ASCII representation of this object.</returns>
+        public string ToGnuStepASCIIPropertyList()
+        {
             StringBuilder ascii = new StringBuilder();
             ToASCIIGnuStep(ascii, 0);
             ascii.Append(NEWLINE);
             return ascii.ToString();
-        }*/
-
-        protected override void ToASCII(StringBuilder ascii, int level) {
-                // TODO: Implement ASCIIPropertyListParser
-                /*
-
-            indent(ascii, level);
-            ascii.append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.lastIndexOf(NEWLINE);
-            for (int i = 0; i < array.length; i++) {
-                Class<?> objClass = array[i].getClass();
-                if ((objClass.equals(NSDictionary.class) || objClass.equals(NSArray.class) || objClass.equals(NSData.class))
-                    && indexOfLastNewLine != ascii.length()) {
-                    ascii.append(NEWLINE);
-                    indexOfLastNewLine = ascii.length();
-                    array[i].toASCII(ascii, level + 1);
-                } else {
-                    if (i != 0)
-                        ascii.append(" ");
-                    array[i].toASCII(ascii, 0);
-                }
-
-                if (i != array.length - 1)
-                    ascii.append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
-
-                if (ascii.length() - indexOfLastNewLine > ASCII_LINE_LENGTH) {
-                    ascii.append(NEWLINE);
-                    indexOfLastNewLine = ascii.length();
-                }
-            }
-            ascii.append(ASCIIPropertyListParser.ARRAY_END_TOKEN);*/
         }
 
-        protected override void ToASCIIGnuStep(StringBuilder ascii, int level) {
-                // TODO: Implement ASCIIPropertyListParser
-                /*
-            indent(ascii, level);
-            ascii.append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.lastIndexOf(NEWLINE);
-            for (int i = 0; i < array.length; i++) {
-                Class<?> objClass = array[i].getClass();
-                if ((objClass.equals(NSDictionary.class) || objClass.equals(NSArray.class) || objClass.equals(NSData.class))
-                    && indexOfLastNewLine != ascii.length()) {
-                    ascii.append(NEWLINE);
-                    indexOfLastNewLine = ascii.length();
-                    array[i].toASCIIGnuStep(ascii, level + 1);
-                } else {
+        internal override void ToASCII(StringBuilder ascii, int level)
+        {
+            Indent(ascii, level);
+            ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
+            for (int i = 0; i < array.Length; i++)
+            {
+                Type objClass = array[i].GetType();
+                if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
+                        && indexOfLastNewLine != ascii.Length)
+                {
+                    ascii.Append(NEWLINE);
+                    indexOfLastNewLine = ascii.Length;
+                    array[i].ToASCII(ascii, level + 1);
+                }
+                else
+                {
                     if (i != 0)
-                        ascii.append(" ");
-                    array[i].toASCIIGnuStep(ascii, 0);
+                        ascii.Append(" ");
+                    array[i].ToASCII(ascii, 0);
                 }
 
-                if (i != array.length - 1)
-                    ascii.append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
+                if (i != array.Length - 1)
+                    ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
 
-                if (ascii.length() - indexOfLastNewLine > ASCII_LINE_LENGTH) {
-                    ascii.append(NEWLINE);
-                    indexOfLastNewLine = ascii.length();
+                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
+                {
+                    ascii.Append(NEWLINE);
+                    indexOfLastNewLine = ascii.Length;
                 }
             }
-            ascii.append(ASCIIPropertyListParser.ARRAY_END_TOKEN);*/
+            ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
+        }
+
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
+        {
+            Indent(ascii, level);
+            ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
+            for (int i = 0; i < array.Length; i++)
+            {
+                Type objClass = array[i].GetType();
+                if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
+                        && indexOfLastNewLine != ascii.Length)
+                {
+                    ascii.Append(NEWLINE);
+                    indexOfLastNewLine = ascii.Length;
+                    array[i].ToASCIIGnuStep(ascii, level + 1);
+                }
+                else
+                {
+                    if (i != 0)
+                        ascii.Append(" ");
+                    array[i].ToASCIIGnuStep(ascii, 0);
+                }
+
+                if (i != array.Length - 1)
+                    ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
+
+                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
+                {
+                    ascii.Append(NEWLINE);
+                    indexOfLastNewLine = ascii.Length;
+                }
+            }
+            ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
         }
     }
 }

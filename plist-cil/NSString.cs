@@ -183,7 +183,7 @@ namespace Claunia.PropertyList
             out.write(bytes);
         }*/
 
-        protected override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level) {
             Indent(ascii, level);
             ascii.Append("\"");
             //According to https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html
@@ -194,25 +194,19 @@ namespace Claunia.PropertyList
             ascii.Append("\"");
         }
 
-        protected override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
             Indent(ascii, level);
             ascii.Append("\"");
             ascii.Append(EscapeStringForASCII(content));
             ascii.Append("\"");
         }
 
-        /**
-     * 
-     *
-     * @param s 
-     * @return The unescaped string.
-     */
         /// <summary>
         /// Escapes a string for use in ASCII property lists.
         /// </summary>
         /// <returns>The unescaped string.</returns>
         /// <param name="s">S.</param>
-        static string EscapeStringForASCII(string s) {
+        internal static string EscapeStringForASCII(string s) {
             string outString = "";
             char[] cArray = s.ToCharArray();
             for (int i = 0; i < cArray.Length; i++) {

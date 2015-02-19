@@ -284,15 +284,14 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="ascii">The ASCII file string builder</param>
         /// <param name="level">The indentation level</param>
-        protected override void ToASCII(StringBuilder ascii, int level) {
-            // TODO: Implement ASCIIPropertyListParse
-/*            Indent(ascii, level);
+        internal override void ToASCII(StringBuilder ascii, int level) {
+            Indent(ascii, level);
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.lastIndexOf(NEWLINE);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
             for (int i = 0; i < array.Length; i++) {
                 Type objClass = array[i].GetType();
-                if ((objClass.Equals(NSDictionary.GetType()) || objClass.Equals(NSArray.GetType()) || objClass.Equals(NSData.GetType()))
+                if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
                     && indexOfLastNewLine != ascii.Length) {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
@@ -311,7 +310,7 @@ namespace Claunia.PropertyList
                     indexOfLastNewLine = ascii.Length;
                 }
             }
-            ascii.append(ASCIIPropertyListParser.ARRAY_END_TOKEN);*/
+            ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
         }
 
         /// <summary>
@@ -321,35 +320,33 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="ascii">The ASCII file string builder</param>
         /// <param name="level">The indentation level</param>
-        protected override void ToASCIIGnuStep(StringBuilder ascii, int level) {
-            // TODO: Implement ASCIIPropertyListParse
-            /*
-            indent(ascii, level);
-            NSObject[] array = allObjects();
-            ascii.append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.lastIndexOf(NEWLINE);
-            for (int i = 0; i < array.length; i++) {
-                Class<?> objClass = array[i].getClass();
-                if ((objClass.equals(NSDictionary.class) || objClass.equals(NSArray.class) || objClass.equals(NSData.class))
-                    && indexOfLastNewLine != ascii.length()) {
-                    ascii.append(NEWLINE);
-                    indexOfLastNewLine = ascii.length();
-                    array[i].toASCIIGnuStep(ascii, level + 1);
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+            Indent(ascii, level);
+            NSObject[] array = AllObjects();
+            ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
+            for (int i = 0; i < array.Length; i++) {
+                Type objClass = array[i].GetType();
+                if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
+                    && indexOfLastNewLine != ascii.Length) {
+                    ascii.Append(NEWLINE);
+                    indexOfLastNewLine = ascii.Length;
+                    array[i].ToASCIIGnuStep(ascii, level + 1);
                 } else {
                     if (i != 0)
-                        ascii.append(" ");
-                    array[i].toASCIIGnuStep(ascii, 0);
+                        ascii.Append(" ");
+                    array[i].ToASCIIGnuStep(ascii, 0);
                 }
 
-                if (i != array.length - 1)
-                    ascii.append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
+                if (i != array.Length - 1)
+                    ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
 
-                if (ascii.length() - indexOfLastNewLine > ASCII_LINE_LENGTH) {
-                    ascii.append(NEWLINE);
-                    indexOfLastNewLine = ascii.length();
+                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH) {
+                    ascii.Append(NEWLINE);
+                    indexOfLastNewLine = ascii.Length;
                 }
             }
-            ascii.append(ASCIIPropertyListParser.ARRAY_END_TOKEN);*/
+            ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
         }
     }
 }

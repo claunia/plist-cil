@@ -57,7 +57,7 @@ namespace Claunia.PropertyList
         /// ASCII property lists. But this number is only a guideline it is not
         /// guaranteed that it will not be overstepped.
         /// </summary>
-        readonly static int ASCII_LINE_LENGTH = 80;
+        internal readonly static int ASCII_LINE_LENGTH = 80;
 
         /// <summary>
         /// Generates the XML representation of the object (without XML headers or enclosing plist-tags).
@@ -107,7 +107,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="ascii">The StringBuilder onto which the ASCII representation is appended.</param>
         /// <param name="level">The indentation level of the object.</param>
-        protected abstract void ToASCII(StringBuilder ascii, int level);
+        internal abstract void ToASCII(StringBuilder ascii, int level);
 
         /// <summary>
         /// Generates the ASCII representation of this object in the GnuStep format.
@@ -115,7 +115,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="ascii">The StringBuilder onto which the ASCII representation is appended.</param>
         /// <param name="level">The indentation level of the object.</param>
-        protected abstract void ToASCIIGnuStep(StringBuilder ascii, int level);
+        internal abstract void ToASCIIGnuStep(StringBuilder ascii, int level);
 
         /// <summary>
         /// Helper method that adds correct identation to the xml output.
