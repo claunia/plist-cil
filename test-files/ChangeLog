@@ -1,0 +1,18 @@
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
+	* test1.plist:
+	* issue4.plist:
+	* issue49.plist:
+	* issue16.plist:
+	* issue30.plist:
+	* issue21.plist:
+	* issue33.pbxproj:
+	* test-ascii.plist:
+	* test1-ascii.plist:
+	* issue22-emoji.plist:
+	* testNegative-bin.plist:
+	* testNegative-xml.plist:
+	* issue22-emoji-xml.plist:
+	* test1-ascii-gnustep.plist:
+	  Added test files
+
