@@ -1,0 +1,7 @@
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
+	* packages.config:
+	* plist-cil.test.csproj:
+	* Properties/AssemblyInfo.cs:
+	  Add test skeleton.
+
