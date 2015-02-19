@@ -264,7 +264,7 @@ namespace Claunia.PropertyList
                         return ToLong().ToString();
                     }
                 case REAL: {
-                        return ToDouble().ToString();
+                        return ToDouble().ToString(CultureInfo.InvariantCulture);
                     }
                 case BOOLEAN: {
                         return ToBool().ToString();
