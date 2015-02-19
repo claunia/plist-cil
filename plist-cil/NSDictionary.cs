@@ -36,6 +36,8 @@ namespace Claunia.PropertyList
     /// to the objects stored for each key is given through the function
     /// <code>ObjectoForKey(String key)</code>.
     /// </summary>
+    /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class NSDictionary : NSObject, IDictionary<string, NSObject>
     {
         Dictionary<string, NSObject> dict;

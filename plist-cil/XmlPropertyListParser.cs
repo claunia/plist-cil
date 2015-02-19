@@ -33,6 +33,7 @@ namespace Claunia.PropertyList
     /// Parses XML property lists.
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public static class XmlPropertyListParser
     {
         /// <summary>

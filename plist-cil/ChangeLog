@@ -1,5 +1,24 @@
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
+	* UID.cs:
+	* NSSet.cs:
+	* NSDate.cs:
+	* NSData.cs:
+	* NSArray.cs:
+	* NSString.cs:
+	* NSObject.cs:
+	* NSNumber.cs:
+	* NSDictionary.cs:
+	* PropertyListParser.cs:
+	* XmlPropertyListParser.cs:
+	* ASCIIPropertyListParser.cs:
+	* BinaryPropertyListWriter.cs:
+	* BinaryPropertyListParser.cs:
+	* PropertyListFormatException.cs:
+	  me is @author also :p
+
+2015-02-19  Natalia Portillo  <claunia@claunia.com>
+
 	* NSString.cs:
 	  Mono encoding fallback for ASCII is not failing on all
 	  non-ASCII characters (as in issue4.plist test file).

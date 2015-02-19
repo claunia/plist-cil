@@ -31,6 +31,7 @@ namespace Claunia.PropertyList
     /// Represents an Array.
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class NSArray : NSObject
     {
         NSObject[] array;

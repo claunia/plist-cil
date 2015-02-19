@@ -32,6 +32,7 @@ namespace Claunia.PropertyList
     /// A number whose value is either an integer, a real number or bool.
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class NSNumber : NSObject, IComparable
     {
         /// <summary>

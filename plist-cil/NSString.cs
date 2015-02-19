@@ -31,6 +31,7 @@ namespace Claunia.PropertyList
     /// A NSString contains a string.
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class NSString : NSObject, IComparable
     {
         string content;

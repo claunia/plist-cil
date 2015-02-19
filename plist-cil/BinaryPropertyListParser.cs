@@ -37,6 +37,7 @@ namespace Claunia.PropertyList
     ///
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class BinaryPropertyListParser
     {
         private int majorVersion, minorVersion;

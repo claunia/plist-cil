@@ -31,6 +31,7 @@ namespace Claunia.PropertyList
     /// A UID. Only found in binary property lists that are keyed archives.
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class UID : NSObject
     {
         byte[] bytes;

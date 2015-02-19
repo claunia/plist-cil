@@ -31,6 +31,7 @@ namespace Claunia.PropertyList
     /// Represents a date
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class NSDate : NSObject
     {
         DateTime date;

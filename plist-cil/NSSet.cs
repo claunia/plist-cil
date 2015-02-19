@@ -36,6 +36,7 @@ namespace Claunia.PropertyList
     /// data structure.
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class NSSet : NSObject, IEnumerable
     {
         List<NSObject> set;

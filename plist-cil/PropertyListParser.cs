@@ -33,9 +33,9 @@ namespace Claunia.PropertyList
     /// input streams and byte arrays. All known property list formats are supported.
     ///
     /// This class also provides methods to save and convert property lists.
-    ///
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public static class PropertyListParser
     {
         const int TYPE_XML = 0;

@@ -35,6 +35,7 @@ namespace Claunia.PropertyList
     /// already been serialized, and where they were put in the file.
     /// </summary>
     /// @author Keith Randall
+    /// @author Natalia Portillo
     public class BinaryPropertyListWriter
     {
         public const int VERSION_00 = 0;

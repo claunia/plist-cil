@@ -31,6 +31,7 @@ namespace Claunia.PropertyList
     /// when an error in the format of the given property list is encountered.
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class PropertyListFormatException : Exception
     {
         /// <summary>

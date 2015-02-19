@@ -32,6 +32,7 @@ namespace Claunia.PropertyList
     /// NSData objects are wrappers for byte buffers
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class NSData : NSObject
     {
         byte[] bytes;

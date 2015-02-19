@@ -51,6 +51,7 @@ namespace Claunia.PropertyList
     /// </ul>
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public class ASCIIPropertyListParser
     {
         /// <summary>

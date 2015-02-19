@@ -36,6 +36,7 @@ namespace Claunia.PropertyList
     /// towards Apple's Cocoa API.
     /// </summary>
     /// @author Daniel Dreibrodt
+    /// @author Natalia Portillo
     public abstract class NSObject
     {
         /// <summary>
