@@ -1,6 +1,12 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
 	* plist-cil.csproj:
+	  Added automatic HTML and MonoDoc documentation generation
+	  for Release.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
+	* plist-cil.csproj:
 	  Add ChangeLog so it is copied on build.
 
 2015-02-20  Natalia Portillo  <claunia@claunia.com>

@@ -26,6 +26,12 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <DocumentationFile>bin\Release\plist-cil.xml</DocumentationFile>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="monodocer -pretty -importslashdoc:plist-cil.xml -assembly:plist-cil.dll -path:docs/mono" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="mdoc export-html -o docs/html docs/mono" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
