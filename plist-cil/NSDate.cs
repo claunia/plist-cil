@@ -34,7 +34,7 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class NSDate : NSObject
     {
-        DateTime date;
+        readonly DateTime date;
 
         static readonly DateTime EPOCH = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -49,7 +49,7 @@ namespace Claunia.PropertyList
         /// <returns>The parsed Date</returns>
         /// <param name="textRepresentation">The date string as found in the XML property list</param>
         /// <exception cref="FormatException">Given string cannot be parsed</exception>
-        private static DateTime ParseDateString(string textRepresentation)
+        static DateTime ParseDateString(string textRepresentation)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="date">The date which should be represented.</param>
         /// <returns>The string representation of the date.</returns>
-        private static string MakeDateString(DateTime date)
+        static string MakeDateString(DateTime date)
         {
             return date.ToString(sdfDefault);
         }
@@ -79,7 +79,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="date">The date which should be represented.</param>
         /// <returns>The string representation of the date.</returns>
-        private static string MakeDateStringGnuStep(DateTime date)
+        static string MakeDateStringGnuStep(DateTime date)
         {
             return date.ToString(sdfGnuStep);
         }

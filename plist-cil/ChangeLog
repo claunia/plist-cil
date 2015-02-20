@@ -1,5 +1,27 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
+	* ASCIIPropertyListParser.cs:
+	  Remove redundant items.
+	Correct same ASCII exceptionfallback issue that appeared in
+	  NSString.
+
+	* UID.cs:
+	* NSSet.cs:
+	* NSDate.cs:
+	* NSData.cs:
+	* NSArray.cs:
+	* NSObject.cs:
+	* NSNumber.cs:
+	* NSString.cs:
+	* NSDictionary.cs:
+	* PropertyListParser.cs:
+	* XmlPropertyListParser.cs:
+	* BinaryPropertyListWriter.cs:
+	* BinaryPropertyListParser.cs:
+	  Remove redundant items.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
 	* UID.cs:
 	* NSSet.cs:
 	* NSDate.cs:

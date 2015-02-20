@@ -55,11 +55,11 @@ namespace Claunia.PropertyList
         public const int BOOLEAN = 2;
 
         //Holds the current type of this number
-        int type;
+        readonly int type;
 
-        long longValue;
-        double doubleValue;
-        bool boolValue;
+        readonly long longValue;
+        readonly double doubleValue;
+        readonly bool boolValue;
 
         /// <summary>
         /// Parses integers and real numbers from their binary representation.
@@ -225,8 +225,7 @@ namespace Claunia.PropertyList
         {
             if (type == BOOLEAN)
                 return boolValue;
-            else
-                return longValue != 0;
+            return longValue != 0;
         }
 
         /// <summary>
@@ -285,8 +284,8 @@ namespace Claunia.PropertyList
         public override int GetHashCode()
         {
             int hash = type;
-            hash = 37 * hash + (int)(this.longValue ^ ((uint)this.longValue >> 32));
-            hash = 37 * hash + (int)(BitConverter.DoubleToInt64Bits(this.doubleValue) ^ ((uint)(BitConverter.DoubleToInt64Bits(this.doubleValue) >> 32)));
+            hash = 37 * hash + (int)(longValue ^ ((uint)longValue >> 32));
+            hash = 37 * hash + (int)(BitConverter.DoubleToInt64Bits(doubleValue) ^ ((uint)(BitConverter.DoubleToInt64Bits(doubleValue) >> 32)));
             hash = 37 * hash + (ToBool() ? 1 : 0);
             return hash;
         }
@@ -448,15 +447,12 @@ namespace Claunia.PropertyList
                 y = num.ToDouble();
                 return (x < y) ? -1 : ((x == y) ? 0 : 1);
             }
-            else if (IsNumber(o))
+            if (IsNumber(o))
             {
                 y = GetDoubleFromObject(o);
                 return (x < y) ? -1 : ((x == y) ? 0 : 1);
             }
-            else
-            {
-                return -1;
-            }
+            return -1;
         }
 
         /// <summary>

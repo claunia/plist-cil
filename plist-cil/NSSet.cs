@@ -24,7 +24,6 @@
 // SOFTWARE.
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Collections;
 using System.Text;
 
@@ -39,9 +38,9 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class NSSet : NSObject, IEnumerable
     {
-        List<NSObject> set;
+        readonly List<NSObject> set;
 
-        private bool ordered = false;
+        bool ordered;
 
         /// <summary>
         /// Creates an empty unordered set.
@@ -114,34 +113,40 @@ namespace Claunia.PropertyList
         /// Adds an object to the set.
         /// </summary>
         /// <param name="obj">The object to add.</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddObject(NSObject obj)
         {
-            set.Add(obj);
-            if (ordered)
-                set.Sort();
+            lock (set)
+            {
+                set.Add(obj);
+                if (ordered)
+                    set.Sort();
+            }
         }
 
         /// <summary>
         /// Removes an object from the set.
         /// </summary>
         /// <param name="obj">The object to remove.</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void RemoveObject(NSObject obj)
         {
-            set.Remove(obj);
-            if (ordered)
-                set.Sort();
+            lock (set)
+            {
+                set.Remove(obj);
+                if (ordered)
+                    set.Sort();
+            }
         }
 
         /// <summary>
         /// Returns all objects contained in the set.
         /// </summary>
         /// <returns>An array of all objects in the set.</returns>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public NSObject[] AllObjects()
         {
-            return set.ToArray();
+            lock (set)
+            {
+                return set.ToArray();
+            }
         }
 
         /// <summary>
@@ -149,13 +154,12 @@ namespace Claunia.PropertyList
         /// if the set contains no objects.
         /// </summary>
         /// <returns>The first object in the set, or <code>null</code> if the set is empty.</returns>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public NSObject AnyObject()
         {
-            if (set.Count == 0)
-                return null;
-            else
-                return set[0];
+            lock (set)
+            {
+                return set.Count == 0 ? null : set[0];
+            }
         }
 
         /// <summary>
@@ -174,15 +178,17 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="obj">The object to look for.</param>
         /// <returns>The object if it is present, <code>null</code> otherwise.</returns>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public NSObject Member(NSObject obj)
         {
-            foreach (NSObject o in set)
+            lock (set)
             {
-                if (o.Equals(obj))
-                    return o;
+                foreach (NSObject o in set)
+                {
+                    if (o.Equals(obj))
+                        return o;
+                }
+                return null;
             }
-            return null;
         }
 
         /// <summary>
@@ -190,15 +196,17 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns><c>true</c> if the intersection of both sets is empty, <c>false</c> otherwise.</returns>
         /// <param name="otherSet">The other set.</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public bool IntersectsSet(NSSet otherSet)
         {
-            foreach (NSObject o in set)
+            lock (set)
             {
-                if (otherSet.ContainsObject(o))
-                    return true;
+                foreach (NSObject o in set)
+                {
+                    if (otherSet.ContainsObject(o))
+                        return true;
+                }
+                return false;
             }
-            return false;
         }
 
         /// <summary>
@@ -206,15 +214,17 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns><c>true</c> if all elements in this set are also present in the other set, <c>false</c>otherwise.</returns>
         /// <param name="otherSet">The other set.</param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public bool IsSubsetOfSet(NSSet otherSet)
         {
-            foreach (NSObject o in set)
+            lock (set)
             {
-                if (!otherSet.ContainsObject(o))
-                    return false;
+                foreach (NSObject o in set)
+                {
+                    if (!otherSet.ContainsObject(o))
+                        return false;
+                }
+                return true;
             }
-            return true;
         }
 
         /// <summary>
@@ -223,10 +233,12 @@ namespace Claunia.PropertyList
         /// of NSSet.
         /// </summary>
         /// <returns>The iterator for the set.</returns>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public IEnumerator GetEnumerator()
         {
-            return set.GetEnumerator();
+            lock (set)
+            {
+                return set.GetEnumerator();
+            }
         }
 
         /// <summary>
@@ -241,7 +253,7 @@ namespace Claunia.PropertyList
         public override int GetHashCode()
         {
             int hash = 7;
-            hash = 29 * hash + (this.set != null ? this.set.GetHashCode() : 0);
+            hash = 29 * hash + (set != null ? set.GetHashCode() : 0);
             return hash;
         }
 
@@ -256,7 +268,7 @@ namespace Claunia.PropertyList
                 return false;
             }
             NSSet other = (NSSet)obj;
-            return !(this.set != other.set && (this.set == null || !this.set.Equals(other.set)));
+            return !(set != other.set && (set == null || !set.Equals(other.set)));
         }
 
         /// <summary>
@@ -337,7 +349,7 @@ namespace Claunia.PropertyList
                 set.Sort();
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE, StringComparison.Ordinal);
             for (int i = 0; i < array.Length; i++)
             {
                 Type objClass = array[i].GetType();
@@ -381,7 +393,7 @@ namespace Claunia.PropertyList
                 set.Sort();
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE, StringComparison.Ordinal);
             for (int i = 0; i < array.Length; i++)
             {
                 Type objClass = array[i].GetType();

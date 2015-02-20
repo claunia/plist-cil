@@ -70,7 +70,7 @@ namespace Claunia.PropertyList
         /// <summary>
         /// Assigns IDs to all the objects in this NSObject subtree.
         /// </summary>
-        /// <param name="out">The writer object that handles the binary serialization.</param>
+        /// <param name="outPlist">The writer object that handles the binary serialization.</param>
         internal virtual void AssignIDs(BinaryPropertyListWriter outPlist)
         {
             outPlist.AssignID(this);
@@ -79,7 +79,7 @@ namespace Claunia.PropertyList
         /// <summary>
         /// Generates the binary representation of the object.
         /// </summary>
-        /// <param name="out">The output stream to serialize the object to.</param>
+        /// <param name="outPlist">The output stream to serialize the object to.</param>
         internal abstract void ToBinary(BinaryPropertyListWriter outPlist);
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="xml">The string builder for the XML document.</param>
         /// <param name="level">The level of identation.</param>
-        internal void Indent(StringBuilder xml, int level)
+        internal static void Indent(StringBuilder xml, int level)
         {
             for (int i = 0; i < level; i++)
                 xml.Append(INDENT);
@@ -258,7 +258,7 @@ namespace Claunia.PropertyList
             }
             if (typeof(long).IsAssignableFrom(c))
             {
-                return Wrap((long)(long)o);
+                return Wrap((long)o);
             }
             if (typeof(float).Equals(c))
             {
@@ -266,7 +266,7 @@ namespace Claunia.PropertyList
             }
             if (typeof(double).IsAssignableFrom(c))
             {
-                return Wrap((double)(Double)o);
+                return Wrap((double)o);
             }
             if (typeof(string).Equals(c))
             {
@@ -283,7 +283,7 @@ namespace Claunia.PropertyList
                 {
                     return Wrap((byte[])o);
                 }
-                else if (cc.Equals(typeof(bool)))
+                if (cc.Equals(typeof(bool)))
                 {
                     bool[] array = (bool[])o;
                     NSArray nsa = new NSArray(array.Length);
@@ -291,7 +291,7 @@ namespace Claunia.PropertyList
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if (cc.Equals(typeof(float)))
+                if (cc.Equals(typeof(float)))
                 {
                     float[] array = (float[])o;
                     NSArray nsa = new NSArray(array.Length);
@@ -299,7 +299,7 @@ namespace Claunia.PropertyList
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if (cc.Equals(typeof(double)))
+                if (cc.Equals(typeof(double)))
                 {
                     double[] array = (double[])o;
                     NSArray nsa = new NSArray(array.Length);
@@ -307,7 +307,7 @@ namespace Claunia.PropertyList
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if (cc.Equals(typeof(short)))
+                if (cc.Equals(typeof(short)))
                 {
                     short[] array = (short[])o;
                     NSArray nsa = new NSArray(array.Length);
@@ -315,7 +315,7 @@ namespace Claunia.PropertyList
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if (cc.Equals(typeof(int)))
+                if (cc.Equals(typeof(int)))
                 {
                     int[] array = (int[])o;
                     NSArray nsa = new NSArray(array.Length);
@@ -323,7 +323,7 @@ namespace Claunia.PropertyList
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if (cc.Equals(typeof(long)))
+                if (cc.Equals(typeof(long)))
                 {
                     long[] array = (long[])o;
                     NSArray nsa = new NSArray(array.Length);
@@ -331,10 +331,7 @@ namespace Claunia.PropertyList
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else
-                {
                     return Wrap((Object[])o);
-                }
             }
             if (typeof(Dictionary<string,Object>).IsAssignableFrom(c))
             {
@@ -347,9 +344,7 @@ namespace Claunia.PropertyList
                 return dict;
             }
             if (typeof(List<Object>).IsAssignableFrom(c))
-            {
                 return Wrap(((List<Object>)o).ToArray());
-            }
             return WrapSerialized(o);
         }
 
@@ -404,7 +399,7 @@ namespace Claunia.PropertyList
                 }
                 return arrayB;
             }
-            else if (this is NSDictionary)
+            if (this is NSDictionary)
             {
                 Dictionary<string, NSObject> dictA = ((NSDictionary)this).GetDictionary();
                 Dictionary<string, Object> dictB = new Dictionary<string, Object>(dictA.Count);
@@ -414,7 +409,7 @@ namespace Claunia.PropertyList
                 }
                 return dictB;
             }
-            else if (this is NSSet)
+            if (this is NSSet)
             {
                 List<NSObject> setA = ((NSSet)this).GetSet();
                 List<Object> setB = new List<Object>();
@@ -424,7 +419,7 @@ namespace Claunia.PropertyList
                 }
                 return setB;
             }
-            else if (this is NSNumber)
+            if (this is NSNumber)
             {
                 NSNumber num = (NSNumber)this;
                 switch (num.GetNSNumberType())
@@ -433,48 +428,34 @@ namespace Claunia.PropertyList
                         {
                             long longVal = num.ToLong();
                             if (longVal > int.MaxValue || longVal < int.MinValue)
-                            {
                                 return longVal;
-                            }
-                            else
-                            {
-                                return num.ToInt();
-                            }
+                            return num.ToInt();
                         }
                     case NSNumber.REAL:
-                        {
                             return num.ToDouble();
-                        }
                     case NSNumber.BOOLEAN:
-                        {
                             return num.ToBool();
-                        }
                     default :
-                        {
                             return num.ToDouble();
-                        }
                 }
             }
-            else if (this is NSString)
+            if (this is NSString)
             {
                 return ((NSString)this).GetContent();
             }
-            else if (this is NSData)
+            if (this is NSData)
             {
                 return ((NSData)this).Bytes;
             }
-            else if (this is NSDate)
+            if (this is NSDate)
             {
                 return ((NSDate)this).Date;
             }
-            else if (this is UID)
+            if (this is UID)
             {
                 return ((UID)this).Bytes;
             }
-            else
-            {
                 return this;
-            }
         }
 
         internal static bool ArrayEquals(byte[] arrayA, byte[] arrayB)
@@ -482,12 +463,8 @@ namespace Claunia.PropertyList
             if (arrayA.Length == arrayB.Length)
             {
                 for (int i = 0; i < arrayA.Length; i++)
-                {
                     if (arrayA[i] != arrayB[i])
-                    {
                         return false;
-                    }
-                }
                 return true;
             }
             return false;

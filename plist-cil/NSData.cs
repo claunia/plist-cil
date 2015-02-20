@@ -35,7 +35,7 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class NSData : NSObject
     {
-        byte[] bytes;
+        readonly byte[] bytes;
 
         /// <summary>
         /// Creates the NSData object from the binary representation of it.
@@ -162,7 +162,7 @@ namespace Claunia.PropertyList
         {
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.DATA_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE, StringComparison.Ordinal);
             for (int i = 0; i < bytes.Length; i++)
             {
                 int b = bytes[i] & 0xFF;

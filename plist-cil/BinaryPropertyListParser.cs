@@ -40,43 +40,43 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class BinaryPropertyListParser
     {
-        private int majorVersion, minorVersion;
+        int majorVersion, minorVersion;
 
         /**
      * property list in bytes *
      */
-        private byte[] bytes;
+        byte[] bytes;
         /**
      * Length of an offset definition in bytes *
      */
-        private int offsetSize;
+        int offsetSize;
         /**
      * Length of an object reference in bytes *
      */
-        private int objectRefSize;
+        int objectRefSize;
         /**
      * Number of objects stored in this property list *
      */
-        private int numObjects;
+        int numObjects;
         /**
      * Reference to the top object of the property list *
      */
-        private int topObject;
+        int topObject;
         /**
      * Offset of the offset table from the beginning of the file *
      */
-        private int offsetTableOffset;
+        int offsetTableOffset;
         /**
      * The table holding the information at which offset each object is found *
      */
-        private int[] offsetTable;
+        int[] offsetTable;
 
         /// <summary>
         /// Protected constructor so that instantiation is fully controlled by the
         /// static parse methods.
         /// </summary>
         /// <see cref="Parse(byte[])"/>
-        public BinaryPropertyListParser()
+        protected BinaryPropertyListParser()
         {
             /** empty **/
         }
@@ -99,11 +99,11 @@ namespace Claunia.PropertyList
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
         /// <param name="data">The binary property list's data.</param>
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
-        private NSObject DoParse(byte[] data)
+        NSObject DoParse(byte[] data)
         {
             bytes = data;
             string magic = Encoding.ASCII.GetString(CopyOfRange(bytes, 0, 8));
-            if (!magic.StartsWith("bplist"))
+            if (!magic.StartsWith("bplist", StringComparison.Ordinal))
             {
                 throw new PropertyListFormatException("The given data is no binary property list. Wrong magic bytes: " + magic);
             }
@@ -199,7 +199,7 @@ namespace Claunia.PropertyList
         /// <returns>The parsed object.</returns>
         /// <param name="obj">The object ID.</param>
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
-        private NSObject ParseObject(int obj)
+        NSObject ParseObject(int obj)
         {
             int offset = offsetTable[obj];
             byte type = bytes[offset];
@@ -399,7 +399,7 @@ namespace Claunia.PropertyList
         /// <returns>An array with the length two. First entry is the length, second entry the offset at which the content starts.</returns>
         /// <param name="objInfo">Object information byte.</param>
         /// <param name="offset">Offset in the byte array at which the object is located.</param>
-        private int[] ReadLengthAndOffset(int objInfo, int offset)
+        int[] ReadLengthAndOffset(int objInfo, int offset)
         {
             int length = objInfo;
             int stroffset = 1;
@@ -431,7 +431,7 @@ namespace Claunia.PropertyList
                     length = (int)new System.Numerics.BigInteger(litEBigInteger);
                 }
             }
-            return new int[]{ length, stroffset };
+            return new []{ length, stroffset };
         }
 
         /// <summary>
@@ -512,17 +512,10 @@ namespace Claunia.PropertyList
         public static double ParseDouble(byte[] bytes)
         {
             if (bytes.Length == 8)
-            {
                 return BitConverter.Int64BitsToDouble(ParseLong(bytes));
-            }
-            else if (bytes.Length == 4)
-            {
+            if (bytes.Length == 4)
                 return BitConverter.ToSingle(BitConverter.GetBytes(ParseLong(bytes)), 0);
-            }
-            else
-            {
-                throw new ArgumentException("bad byte array length " + bytes.Length);
-            }
+            throw new ArgumentException("bad byte array length " + bytes.Length);
         }
 
         /// <summary>
@@ -535,17 +528,10 @@ namespace Claunia.PropertyList
         public static double ParseDouble(byte[] bytes, int startIndex, int endIndex)
         {
             if (endIndex - startIndex == 8)
-            {
                 return BitConverter.Int64BitsToDouble(ParseLong(bytes, startIndex, endIndex));
-            }
-            else if (endIndex - startIndex == 4)
-            {
+            if (endIndex - startIndex == 4)
                 return BitConverter.ToSingle(BitConverter.GetBytes(ParseLong(bytes, startIndex, endIndex)), 0);
-            }
-            else
-            {
-                throw new ArgumentException("endIndex (" + endIndex + ") - startIndex (" + startIndex + ") != 4 or 8");
-            }
+            throw new ArgumentException("endIndex (" + endIndex + ") - startIndex (" + startIndex + ") != 4 or 8");
         }
 
         /// <summary>

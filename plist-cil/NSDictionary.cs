@@ -40,7 +40,7 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class NSDictionary : NSObject, IDictionary<string, NSObject>
     {
-        Dictionary<string, NSObject> dict;
+        readonly Dictionary<string, NSObject> dict;
 
         /// <summary>
         /// Creates a new empty NSDictionary.
@@ -262,12 +262,6 @@ namespace Claunia.PropertyList
             return false;
         }
 
-        public override bool Equals(Object obj)
-        {
-            bool foo = this.Equals((NSDictionary)obj);
-            return (obj.GetType().Equals(GetType()) && ((NSDictionary)obj).dict.Equals(dict));
-        }
-
         public override bool Equals(NSObject obj)
         {
             if (!(obj is NSDictionary))
@@ -294,7 +288,7 @@ namespace Claunia.PropertyList
         public override int GetHashCode()
         {
             int hash = 7;
-            hash = 83 * hash + (this.dict != null ? this.dict.GetHashCode() : 0);
+            hash = 83 * hash + (dict != null ? dict.GetHashCode() : 0);
             return hash;
         }
 

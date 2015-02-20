@@ -49,7 +49,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The type of the property list</returns>
         /// <param name="dataBeginning">The very first bytes of data of the property list (minus any whitespace) as a string</param>
-        private static int DetermineType(string dataBeginning)
+        static int DetermineType(string dataBeginning)
         {
             dataBeginning = dataBeginning.Trim();
             if (dataBeginning.Length == 0)
@@ -64,11 +64,7 @@ namespace Claunia.PropertyList
             {
                 return TYPE_ASCII;
             }
-            if (dataBeginning.StartsWith("<"))
-            {
-                return TYPE_XML;
-            }
-            return TYPE_ERROR_UNKNOWN;
+            return dataBeginning.StartsWith("<") ? TYPE_XML : TYPE_ERROR_UNKNOWN;
         }
 
         /// <summary>
@@ -76,7 +72,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The very first bytes of data of the property list (minus any whitespace)</returns>
         /// <param name="bytes">The type of the property list</param>
-        private static int DetermineType(byte[] bytes)
+        static int DetermineType(byte[] bytes)
         {
             //Skip any possible whitespace at the beginning of the file
             int offset = 0;
@@ -94,7 +90,7 @@ namespace Claunia.PropertyList
         /// <param name="fs">An input stream pointing to the beginning of the property list data.
         /// The stream will be reset to the beginning of the property
         /// list data after the type has been determined.</param>
-        private static int DetermineType(Stream fs)
+        static int DetermineType(Stream fs)
         {
             //Skip any possible whitespace at the beginning of the file
             byte[] magicBytes = new byte[8];
@@ -246,7 +242,7 @@ namespace Claunia.PropertyList
         /// Saves a property list with the given object as root into a binary file.
         /// </summary>
         /// <param name="root">The root object.</param>
-        /// <param name="outFile"></param>The output file.</param>
+        /// <param name="outFile">The output file.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
         public static void SaveAsBinary(NSObject root, FileInfo outFile)
         {
@@ -264,7 +260,7 @@ namespace Claunia.PropertyList
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
         public static void SaveAsBinary(NSObject root, Stream outStream)
         {
-            //BinaryPropertyListWriter.write(outStream, root);
+            BinaryPropertyListWriter.Write(outStream, root);
         }
 
         /// <summary>

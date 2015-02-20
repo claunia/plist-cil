@@ -51,7 +51,7 @@ namespace Claunia.PropertyList
         /// <summary>
         /// Creates a NSString from a string.
         /// </summary>
-        /// <param name="string">The string that will be contained in the NSString.</param>
+        /// <param name="text">The string that will be contained in the NSString.</param>
         public NSString(string text)
         {
             content = text;
@@ -228,9 +228,8 @@ namespace Claunia.PropertyList
         {
             string outString = "";
             char[] cArray = s.ToCharArray();
-            for (int i = 0; i < cArray.Length; i++)
+            foreach (char c in cArray)
             {
-                char c = cArray[i];
                 if (c > 127)
                 {
                     //non-ASCII Unicode
@@ -275,17 +274,10 @@ namespace Claunia.PropertyList
         public int CompareTo(Object o)
         {
             if (o is NSString)
-            {
-                return GetContent().CompareTo(((NSString)o).GetContent());
-            }
-            else if (o is String)
-            {
-                return GetContent().CompareTo(((String)o));
-            }
-            else
-            {
-                return -1;
-            }
+                return string.Compare(GetContent(), ((NSString)o).GetContent(), StringComparison.Ordinal);
+            if (o is String)
+                return string.Compare(GetContent(), ((String)o), StringComparison.Ordinal);
+            return -1;
         }
 
         public override bool Equals(NSObject obj)

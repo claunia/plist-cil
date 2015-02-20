@@ -34,8 +34,8 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class UID : NSObject
     {
-        byte[] bytes;
-        string name;
+        readonly byte[] bytes;
+        readonly string name;
 
         public UID(String name, byte[] bytes)
         {
@@ -69,11 +69,8 @@ namespace Claunia.PropertyList
         {
             Indent(xml, level);
             xml.Append("<string>");
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                byte b = bytes[i];
+            foreach (byte b in bytes)
                 xml.Append(String.Format("{0:x2}", b));
-            }
             xml.Append("</string>");
         }
 
@@ -87,11 +84,8 @@ namespace Claunia.PropertyList
         {
             Indent(ascii, level);
             ascii.Append("\"");
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                byte b = bytes[i];
+            foreach (byte b in bytes)
                 ascii.Append(String.Format("{0:x2}", b));
-            }
             ascii.Append("\"");
         }
 

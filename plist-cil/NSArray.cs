@@ -88,7 +88,7 @@ namespace Claunia.PropertyList
         public void SetValue(int key, Object value)
         {
             if (value == null)
-                throw new ArgumentNullException("Cannot add null values to an NSArray!");
+                throw new ArgumentNullException("value", "Cannot add null values to an NSArray!");
             array[key] = NSObject.Wrap(value);
         }
 
@@ -202,14 +202,14 @@ namespace Claunia.PropertyList
         {
             if (obj.GetType().Equals(typeof(NSArray)))
             {
-                return ArrayEquals(((NSArray)obj).GetArray(), this.array);
+                return ArrayEquals(((NSArray)obj).GetArray(), array);
             }
             else
             {
                 NSObject nso = NSObject.Wrap(obj);
                 if (nso.GetType().Equals(typeof(NSArray)))
                 {
-                    return ArrayEquals(((NSArray)nso).GetArray(), this.array);
+                    return ArrayEquals(((NSArray)nso).GetArray(), array);
                 }
             }
             return false;
@@ -289,7 +289,7 @@ namespace Claunia.PropertyList
         {
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE, StringComparison.Ordinal);
             for (int i = 0; i < array.Length; i++)
             {
                 Type objClass = array[i].GetType();
@@ -323,7 +323,7 @@ namespace Claunia.PropertyList
         {
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
-            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
+            int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE, StringComparison.Ordinal);
             for (int i = 0; i < array.Length; i++)
             {
                 Type objClass = array[i].GetType();

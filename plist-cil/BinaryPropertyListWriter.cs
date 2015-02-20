@@ -49,7 +49,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>Version code</returns>
         /// <param name="root">Object root.</param>
-        private static int GetMinimumRequiredVersion(NSObject root)
+        static int GetMinimumRequiredVersion(NSObject root)
         {
             int minVersion = VERSION_00;
             if (root == null)
@@ -137,17 +137,17 @@ namespace Claunia.PropertyList
             return bout.ToArray();
         }
 
-        private int version = VERSION_00;
+        int version = VERSION_00;
 
         // raw output stream to result file
-        private Stream outStream;
+        Stream outStream;
 
         // # of bytes written so far
-        private long count;
+        long count;
 
         // map from object to its ID
-        private Dictionary<NSObject, int> idMap = new Dictionary<NSObject, int>();
-        private int idSizeInBytes;
+        Dictionary<NSObject, int> idMap = new Dictionary<NSObject, int>();
+        int idSizeInBytes;
 
         /// <summary>
         /// Creates a new binary property list writer
@@ -168,29 +168,29 @@ namespace Claunia.PropertyList
         void Write(NSObject root)
         {
             // magic bytes
-            Write(new byte[]{ (byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t' });
+            Write(new []{ (byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t' });
 
             //version
             switch (version)
             {
                 case VERSION_00:
                     {
-                        Write(new byte[]{ (byte)'0', (byte)'0' });
+                        Write(new []{ (byte)'0', (byte)'0' });
                         break;
                     }
                 case VERSION_10:
                     {
-                        Write(new byte[]{ (byte)'1', (byte)'0' });
+                        Write(new []{ (byte)'1', (byte)'0' });
                         break;
                     }
                 case VERSION_15:
                     {
-                        Write(new byte[]{ (byte)'1', (byte)'5' });
+                        Write(new []{ (byte)'1', (byte)'5' });
                         break;
                     }
                 case VERSION_20:
                     {
-                        Write(new byte[]{ (byte)'2', (byte)'0' });
+                        Write(new []{ (byte)'2', (byte)'0' });
                         break;
                     }
             }
@@ -264,24 +264,20 @@ namespace Claunia.PropertyList
             return ID;
         }
 
-        private static int ComputeIdSizeInBytes(int numberOfIds)
+        static int ComputeIdSizeInBytes(int numberOfIds)
         {
             if (numberOfIds < 256)
                 return 1;
-            if (numberOfIds < 65536)
-                return 2;
-            return 4;
+            return numberOfIds < 65536 ? 2 : 4;
         }
 
-        private int ComputeOffsetSizeInBytes(long maxOffset)
+        static int ComputeOffsetSizeInBytes(long maxOffset)
         {
             if (maxOffset < 256)
                 return 1;
             if (maxOffset < 65536)
                 return 2;
-            if (maxOffset < 4294967296L)
-                return 4;
-            return 8;
+            return maxOffset < 4294967296L ? 4 : 8;
         }
 
         internal void WriteIntHeader(int kind, int value)
