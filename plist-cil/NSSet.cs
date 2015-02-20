@@ -31,7 +31,7 @@ namespace Claunia.PropertyList
 {
     /// <summary>
     /// A set is an interface to an unordered collection of objects.
-    /// This implementation uses a <see cref="List"/>as the underlying
+    /// This implementation uses a <see cref="List{NSObject}"/>as the underlying
     /// data structure.
     /// </summary>
     /// @author Daniel Dreibrodt
@@ -250,6 +250,11 @@ namespace Claunia.PropertyList
             return set;
         }
 
+        /// <summary>
+        /// Serves as a hash function for a <see cref="Claunia.PropertyList.NSSet"/> object.
+        /// </summary>
+        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        /// hash table.</returns>
         public override int GetHashCode()
         {
             int hash = 7;
@@ -257,6 +262,12 @@ namespace Claunia.PropertyList
             return hash;
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="Claunia.PropertyList.NSSet"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="Claunia.PropertyList.NSSet"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSSet"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(Object obj)
         {
             if (obj == null)
@@ -423,6 +434,12 @@ namespace Claunia.PropertyList
             ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.NSSet"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSSet"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSSet"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(NSObject obj)
         {
             if (!(obj is NSSet))

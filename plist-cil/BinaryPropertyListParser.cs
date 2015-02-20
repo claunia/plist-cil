@@ -33,7 +33,8 @@ namespace Claunia.PropertyList
     /// Use this class when you are sure about the format of the property list.
     /// Otherwise use the PropertyListParser class.
     ///
-    /// Parsing is done by calling the static <see cref="Parse"/> methods.
+    /// Parsing is done by calling the static <see cref="Parse(byte[])"/>,
+    /// <see cref="Parse(FileInfo)"/> and <see cref="Parse(Stream)"/> methods.
     ///
     /// </summary>
     /// @author Daniel Dreibrodt
@@ -42,33 +43,39 @@ namespace Claunia.PropertyList
     {
         int majorVersion, minorVersion;
 
-        /**
-     * property list in bytes *
-     */
+        /// <summary>
+        /// Property list in bytes
+        /// </summary>
         byte[] bytes;
-        /**
-     * Length of an offset definition in bytes *
-     */
+
+        /// <summary>
+        /// Length of an offset definition in bytes
+        /// </summary>
         int offsetSize;
-        /**
-     * Length of an object reference in bytes *
-     */
+
+        /// <summary>
+        /// Length of an object reference in bytes
+        /// </summary>
         int objectRefSize;
-        /**
-     * Number of objects stored in this property list *
-     */
+
+        /// <summary>
+        /// Number of objects stored in this property list
+        /// </summary>
         int numObjects;
-        /**
-     * Reference to the top object of the property list *
-     */
+
+        /// <summary>
+        /// Reference to the top object of the property list
+        /// </summary>
         int topObject;
-        /**
-     * Offset of the offset table from the beginning of the file *
-     */
+
+        /// <summary>
+        /// Offset of the offset table from the beginning of the file
+        /// </summary>
         int offsetTableOffset;
-        /**
-     * The table holding the information at which offset each object is found *
-     */
+
+        /// <summary>
+        /// The table holding the information at which offset each object is found
+        /// </summary>
         int[] offsetTable;
 
         /// <summary>
@@ -78,7 +85,6 @@ namespace Claunia.PropertyList
         /// <see cref="Parse(byte[])"/>
         protected BinaryPropertyListParser()
         {
-            /** empty **/
         }
 
         /// <summary>

@@ -377,8 +377,8 @@ namespace Claunia.PropertyList
         /// of the .NET Runtime Environment.
         /// <ul>
         /// <li><see cref="NSArray"/> objects are converted to arrays.</li>
-        /// <li><see cref="NSDictionary"/> objects are converted to objects extending the <see cref="System.Collections.Generic.Dictionary"/> class.</li>
-        /// <li><see cref="NSSet"/> objects are converted to objects extending the <see cref="System.Collections.Generic.List"/> class.</li>
+        /// <li><see cref="NSDictionary"/> objects are converted to objects extending the <see cref="Dictionary{TKey, TValue}"/> class.</li>
+        /// <li><see cref="NSSet"/> objects are converted to objects extending the <see cref="List{NSObject}"/> class.</li>
         /// <li><see cref="NSNumber"/> objects are converted to primitive number values (<see cref="int"/>, <see cref="long"/>, <see cref="double"/> or <see cref="bool"/>).</li>
         /// <li><see cref="NSString"/> objects are converted to <see cref="string"/> objects.</li>
         /// <li><see cref="NSData"/> objects are converted to <see cref="byte"/> arrays.</li>
@@ -486,6 +486,12 @@ namespace Claunia.PropertyList
             return false;
         }
 
+        /// <summary>
+        /// Determines if the specific NSObject is the same as the NSObject overriding this method
+        /// </summary>
+        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSObject"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSObject"/>; otherwise, <c>false</c>.</returns>
         public abstract bool Equals(NSObject obj);
     }
 }

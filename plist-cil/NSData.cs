@@ -124,11 +124,22 @@ namespace Claunia.PropertyList
             return Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="Claunia.PropertyList.NSData"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="Claunia.PropertyList.NSData"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSData"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(Object obj)
         {
             return obj.GetType().Equals(GetType()) && ArrayEquals(((NSData)obj).bytes, bytes);
         }
 
+        /// <summary>
+        /// Serves as a hash function for a <see cref="Claunia.PropertyList.NSData"/> object.
+        /// </summary>
+        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        /// hash table.</returns>
         public override int GetHashCode()
         {
             int hash = 5;
@@ -185,6 +196,12 @@ namespace Claunia.PropertyList
             ToASCII(ascii, level);
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.NSData"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSData"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSData"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(NSObject obj)
         {
             if (!(obj is NSData))

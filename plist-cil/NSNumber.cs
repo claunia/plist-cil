@@ -96,9 +96,9 @@ namespace Claunia.PropertyList
         /// Creates a number from its textual representation.
         /// </summary>
         /// <param name="text">The textual representation of the number.</param>
-        /// <seealso cref="bool.Parse"/>
-        /// <seealso cref="long.Parse"/>
-        /// <seealso cref="double.Parse"/>
+        /// <seealso cref="bool.Parse(string)"/>
+        /// <seealso cref="long.Parse(string)"/>
+        /// <seealso cref="double.Parse(string, IFormatProvider)"/>
         public NSNumber(string text)
         {
             if (text == null)
@@ -281,6 +281,11 @@ namespace Claunia.PropertyList
             return type == n.type && longValue == n.longValue && doubleValue == n.doubleValue && boolValue == n.boolValue;
         }
 
+        /// <summary>
+        /// Serves as a hash function for a <see cref="Claunia.PropertyList.NSNumber"/> object.
+        /// </summary>
+        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        /// hash table.</returns>
         public override int GetHashCode()
         {
             int hash = type;
@@ -290,6 +295,10 @@ namespace Claunia.PropertyList
             return hash;
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="Claunia.PropertyList.NSNumber"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="Claunia.PropertyList.NSNumber"/>.</returns>
         public override string ToString()
         {
             switch (type)
@@ -437,6 +446,12 @@ namespace Claunia.PropertyList
             }
         }
 
+        /// <summary>
+        /// Compares the current <see cref="Claunia.PropertyList.NSNumber"/> to the specified object.
+        /// </summary>
+        /// <returns>0 if the numbers are equal, 1 if the current <see cref="Claunia.PropertyList.NSNumber"/> is greater
+        /// than the argument and -1 if it is less, or the argument is not a number.</returns>
+        /// <param name="o">Object to compare to the current <see cref="Claunia.PropertyList.NSNumber"/>.</param>
         public int CompareTo(Object o)
         {
             double x = ToDouble();
@@ -457,7 +472,7 @@ namespace Claunia.PropertyList
 
         /// <summary>
         /// Determines if an object is a number.
-        /// Substitutes Java's Number class comparison
+        /// Substitutes .NET's Number class comparison
         /// </summary>
         /// <returns><c>true</c> if it is a number.</returns>
         /// <param name="o">Object.</param>
@@ -504,6 +519,12 @@ namespace Claunia.PropertyList
             return (double)0;
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.NSNumber"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSNumber"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSNumber"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(NSObject obj)
         {
             if (!(obj is NSNumber))

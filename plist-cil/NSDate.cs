@@ -126,11 +126,22 @@ namespace Claunia.PropertyList
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="Claunia.PropertyList.NSDate"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="Claunia.PropertyList.NSDate"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSDate"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(Object obj)
         {
             return obj.GetType().Equals(GetType()) && date.Equals(((NSDate)obj).Date);
         }
 
+        /// <summary>
+        /// Serves as a hash function for a <see cref="Claunia.PropertyList.NSDate"/> object.
+        /// </summary>
+        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        /// hash table.</returns>
         public override int GetHashCode()
         {
             return date.GetHashCode();
@@ -175,6 +186,12 @@ namespace Claunia.PropertyList
             ascii.Append(">");
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.NSDate"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSDate"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSDate"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(NSObject obj)
         {
             if (!(obj is NSDate))

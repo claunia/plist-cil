@@ -37,12 +37,21 @@ namespace Claunia.PropertyList
         readonly byte[] bytes;
         readonly string name;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="bytes">Bytes.</param>
         public UID(String name, byte[] bytes)
         {
             this.name = name;
             this.bytes = bytes;
         }
 
+        /// <summary>
+        /// Gets the bytes.
+        /// </summary>
+        /// <value>The bytes.</value>
         public byte[] Bytes
         {
             get
@@ -51,6 +60,10 @@ namespace Claunia.PropertyList
             }
         }
 
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <value>The name.</value>
         public string Name
         {
             get
@@ -94,6 +107,12 @@ namespace Claunia.PropertyList
             ToASCII(ascii, level);
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.UID"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.UID"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.UID"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(NSObject obj)
         {
             if (!(obj is UID))

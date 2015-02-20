@@ -1,5 +1,21 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
+	* UID.cs:
+	* NSSet.cs:
+	* NSDate.cs:
+	* NSData.cs:
+	* NSArray.cs:
+	* NSString.cs:
+	* NSObject.cs:
+	* NSNumber.cs:
+	* NSDictionary.cs:
+	* ASCIIPropertyListParser.cs:
+	* BinaryPropertyListParser.cs:
+	* BinaryPropertyListWriter.cs:
+	  Added all missing documentation for public methods.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
 	* NSDate.cs:
 	* NSObject.cs:
 	* NSNumber.cs:

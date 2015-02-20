@@ -91,44 +91,140 @@ namespace Claunia.PropertyList
             return parser.Parse();
         }
 
+        /// <summary>
+        /// A space
+        /// </summary>
         public const char WHITESPACE_SPACE = ' ';
+        /// <summary>
+        /// A tabulator
+        /// </summary>
         public const char WHITESPACE_TAB = '\t';
+        /// <summary>
+        /// A newline
+        /// </summary>
         public const char WHITESPACE_NEWLINE = '\n';
+        /// <summary>
+        /// A carriage return
+        /// </summary>
         public const char WHITESPACE_CARRIAGE_RETURN = '\r';
 
+        /// <summary>
+        /// Token of NSArray start
+        /// </summary>
         public const char ARRAY_BEGIN_TOKEN = '(';
+        /// <summary>
+        /// Token of NSArray end
+        /// </summary>
         public const char ARRAY_END_TOKEN = ')';
+        /// <summary>
+        /// Token of NSArray item delimiter
+        /// </summary>
         public const char ARRAY_ITEM_DELIMITER_TOKEN = ',';
 
+        /// <summary>
+        /// Token of NSDictionary start
+        /// </summary>
         public const char DICTIONARY_BEGIN_TOKEN = '{';
+        /// <summary>
+        /// Token of NSDictionary end
+        /// </summary>
         public const char DICTIONARY_END_TOKEN = '}';
+        /// <summary>
+        /// Token of NSDictionary assignment
+        /// </summary>
         public const char DICTIONARY_ASSIGN_TOKEN = '=';
+        /// <summary>
+        /// Token of NSDictionary item delimiter
+        /// </summary>
         public const char DICTIONARY_ITEM_DELIMITER_TOKEN = ';';
 
+        /// <summary>
+        /// Token of quoted NSString start
+        /// </summary>
         public const char QUOTEDSTRING_BEGIN_TOKEN = '"';
+        /// <summary>
+        /// Token of quoted NSString end
+        /// </summary>
         public const char QUOTEDSTRING_END_TOKEN = '"';
+        /// <summary>
+        /// Token of quoted NSString escaped character
+        /// </summary>
         public const char QUOTEDSTRING_ESCAPE_TOKEN = '\\';
 
+        /// <summary>
+        /// Token of NSData start
+        /// </summary>
         public const char DATA_BEGIN_TOKEN = '<';
+        /// <summary>
+        /// Token of NSData end
+        /// </summary>
         public const char DATA_END_TOKEN = '>';
 
+        /// <summary>
+        /// Token of GSObject start
+        /// </summary>
         public const char DATA_GSOBJECT_BEGIN_TOKEN = '*';
+        /// <summary>
+        /// Token of GSDate start
+        /// </summary>
         public const char DATA_GSDATE_BEGIN_TOKEN = 'D';
+        /// <summary>
+        /// Token of GSBoolean start
+        /// </summary>
         public const char DATA_GSBOOL_BEGIN_TOKEN = 'B';
+        /// <summary>
+        /// Token for GSBoolen's <c>true</c>
+        /// </summary>
         public const char DATA_GSBOOL_TRUE_TOKEN = 'Y';
+        /// <summary>
+        /// Token for GSBoolen's <c>false</c>
+        /// </summary>
         public const char DATA_GSBOOL_FALSE_TOKEN = 'N';
+        /// <summary>
+        /// Token for GSInteger
+        /// </summary>
         public const char DATA_GSINT_BEGIN_TOKEN = 'I';
+        /// <summary>
+        /// Token for GSReal
+        /// </summary>
         public const char DATA_GSREAL_BEGIN_TOKEN = 'R';
 
+        /// <summary>
+        /// Token for NSDate date field delimited
+        /// </summary>
         public const char DATE_DATE_FIELD_DELIMITER = '-';
+        /// <summary>
+        /// Token for NSDate time field delimiter
+        /// </summary>
         public const char DATE_TIME_FIELD_DELIMITER = ':';
+        /// <summary>
+        /// Token for GSDate date and time delimiter
+        /// </summary>
         public const char DATE_GS_DATE_TIME_DELIMITER = ' ';
+        /// <summary>
+        /// Token for NSDate date and time delimiter
+        /// </summary>
         public const char DATE_APPLE_DATE_TIME_DELIMITER = 'T';
+        /// <summary>
+        /// Token for NSDate end
+        /// </summary>
         public const char DATE_APPLE_END_TOKEN = 'Z';
 
+        /// <summary>
+        /// Token for comment start
+        /// </summary>
         public const char COMMENT_BEGIN_TOKEN = '/';
+        /// <summary>
+        /// Second token for multiline comment
+        /// </summary>
         public const char MULTILINE_COMMENT_SECOND_TOKEN = '*';
+        /// <summary>
+        /// Second token for singleline comment
+        /// </summary>
         public const char SINGLELINE_COMMENT_SECOND_TOKEN = '/';
+        /// <summary>
+        /// End token for multiline comment
+        /// </summary>
         public const char MULTILINE_COMMENT_END_TOKEN = '/';
 
         /**

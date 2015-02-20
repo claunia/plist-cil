@@ -111,6 +111,12 @@ namespace Claunia.PropertyList
             Prepend(s.GetContent());
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="Claunia.PropertyList.NSString"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="Claunia.PropertyList.NSString"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSString"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(Object obj)
         {
             if (!(obj is NSString))
@@ -118,6 +124,11 @@ namespace Claunia.PropertyList
             return content.Equals(((NSString)obj).content);
         }
 
+        /// <summary>
+        /// Serves as a hash function for a <see cref="Claunia.PropertyList.NSString"/> object.
+        /// </summary>
+        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        /// hash table.</returns>
         public override int GetHashCode()
         {
             return content.GetHashCode();
@@ -271,6 +282,11 @@ namespace Claunia.PropertyList
             return outString;
         }
 
+        /// <summary>
+        /// Compares the current <see cref="Claunia.PropertyList.NSString"/> to the specified object.
+        /// </summary>
+        /// <returns>A 32-bit signed integer that indicates the lexical relationship between the two comparands.</returns>
+        /// <param name="o">Object to compare to the current <see cref="Claunia.PropertyList.NSString"/>.</param>
         public int CompareTo(Object o)
         {
             if (o is NSString)
@@ -280,6 +296,12 @@ namespace Claunia.PropertyList
             return -1;
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.NSString"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSString"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSString"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(NSObject obj)
         {
             if (!(obj is NSString))

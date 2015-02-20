@@ -38,9 +38,21 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class BinaryPropertyListWriter
     {
+        /// <summary>
+        /// Binary property list version 0.0
+        /// </summary>
         public const int VERSION_00 = 0;
+        /// <summary>
+        /// Binary property list version 1.0
+        /// </summary>
         public const int VERSION_10 = 10;
+        /// <summary>
+        /// Binary property list version 1.5
+        /// </summary>
         public const int VERSION_15 = 15;
+        /// <summary>
+        /// Binary property list version 2.0
+        /// </summary>
         public const int VERSION_20 = 20;
 
         /// <summary>

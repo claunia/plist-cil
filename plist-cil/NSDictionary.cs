@@ -72,6 +72,10 @@ namespace Claunia.PropertyList
             return dict.TryGetValue(key, out nso) ? nso : null;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is empty.
+        /// </summary>
+        /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
         public bool IsEmpty
         {
             get
@@ -80,16 +84,31 @@ namespace Claunia.PropertyList
             }
         }
 
+        /// <summary>
+        /// Checks if the specified object key is contained in the current instance
+        /// </summary>
+        /// <returns><c>true</c>, if key is contained, <c>false</c> otherwise.</returns>
+        /// <param name="key">Key.</param>
         public bool ContainsKey(Object key)
         {
             return key is string && dict.ContainsKey((string)key);
         }
 
+        /// <summary>
+        /// Removes the item corresponding to the specified key from the current instance, if found.
+        /// </summary>
+        /// <param name="key">Key.</param>
+        /// <returns><c>true</c>, if  removed, <c>false</c> otherwise.</returns>
         public bool Remove(Object key)
         {
             return key is string && dict.Remove((string)key);
         }
 
+        /// <summary>
+        /// Gets the <see cref="NSObject"/> corresponding to the specified key from the current instance.
+        /// </summary>
+        /// <param name="key">Key.</param>
+        /// <returns>The object corresponding to the specified key, null if not found in the current instance</returns>
         public NSObject Get(Object key)
         {
             if (key is string)
@@ -97,6 +116,11 @@ namespace Claunia.PropertyList
             return null;
         }
 
+        /// <summary>
+        /// Checks if the current instance contains the object corresponding to the specified key.
+        /// </summary>
+        /// <returns><c>true</c>, if value is contained, <c>false</c> otherwise.</returns>
+        /// <param name="value">Object to search up in the current instance.</param>
         public bool ContainsValue(Object value)
         {
             if (value == null)
@@ -262,6 +286,12 @@ namespace Claunia.PropertyList
             return false;
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.NSDictionary"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSDictionary"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
+        /// <see cref="Claunia.PropertyList.NSDictionary"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(NSObject obj)
         {
             if (!(obj is NSDictionary))
@@ -285,6 +315,11 @@ namespace Claunia.PropertyList
             return true;
         }
 
+        /// <summary>
+        /// Serves as a hash function for a <see cref="Claunia.PropertyList.NSDictionary"/> object.
+        /// </summary>
+        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        /// hash table.</returns>
         public override int GetHashCode()
         {
             int hash = 7;
@@ -437,31 +472,62 @@ namespace Claunia.PropertyList
 
         #region IDictionary implementation
 
+        /// <summary>
+        /// Add the specified key and value.
+        /// </summary>
+        /// <param name="key">Key.</param>
+        /// <param name="value">Value.</param>
         public void Add(string key, NSObject value)
         {
             dict.Add(key, value);
         }
 
+        /// <Docs>The key to locate in the current instance.</Docs>
+        /// <para>Determines whether the current instance contains an entry with the specified key.</para>
+        /// <summary>
+        /// Containses the key.
+        /// </summary>
+        /// <returns><c>true</c>, if key was containsed, <c>false</c> otherwise.</returns>
+        /// <param name="key">Key.</param>
         public bool ContainsKey(string key)
         {
             return dict.ContainsKey(key);
         }
 
+        /// <summary>
+        /// Checks if there is any item contained in the current instance corresponding with the specified key.
+        /// </summary>
+        /// <returns><c>true</c>, if value is contained, <c>false</c> otherwise.</returns>
+        /// <param name="key">Key.</param>
         public bool ContainsValue(NSObject key)
         {
             return dict.ContainsValue(key);
         }
 
+        /// <summary>
+        /// Removes the item belonging to the specified key.
+        /// </summary>
+        /// <param name="key">Key.</param>
         public bool Remove(string key)
         {
             return dict.Remove(key);
         }
 
+        /// <summary>
+        /// Tries to get the item corresponding to the specified key
+        /// </summary>
+        /// <returns><c>true</c>, if get value was successfully found and retrieved, <c>false</c> otherwise.</returns>
+        /// <param name="key">Key.</param>
+        /// <param name="value">Where to store the value.</param>
         public bool TryGetValue(string key, out NSObject value)
         {
             return dict.TryGetValue(key, out value);
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="Claunia.PropertyList.NSObject"/> at the specified index.
+        /// </summary>
+        /// <param name="index">Index.</param>
         public NSObject this [string index]
         {
             get
@@ -474,6 +540,10 @@ namespace Claunia.PropertyList
             }
         }
 
+        /// <summary>
+        /// Gets an array with all the keys contained in the current instance.
+        /// </summary>
+        /// <value>The keys.</value>
         public ICollection<string> Keys
         {
             get
@@ -482,6 +552,10 @@ namespace Claunia.PropertyList
             }
         }
 
+        /// <summary>
+        /// Gets an array with all the objects contained in the current instance.
+        /// </summary>
+        /// <value>The objects.</value>
         public ICollection<NSObject> Values
         {
             get
@@ -493,32 +567,57 @@ namespace Claunia.PropertyList
         #endregion
 
         #region ICollection implementation
-
+        /// <summary>
+        /// Adds the specified item.
+        /// </summary>
+        /// <param name="item">Item.</param>
         public void Add(KeyValuePair<string, NSObject> item)
         {
             dict.Add(item.Key, item.Value);
         }
 
+        /// <summary>
+        /// Clears this instance.
+        /// </summary>
         public void Clear()
         {
             dict.Clear();
         }
 
+        /// <summary>
+        /// Checks if the current instance contains the specified item.
+        /// </summary>
+        /// <param name="item">Item.</param>
+        /// <returns><c>true</c> if it is found, <c>false</c> otherwise.</returns>
         public bool Contains(KeyValuePair<string, NSObject> item)
         {
             return dict.ContainsKey(item.Key);
         }
 
+        /// <summary>
+        /// Copies the <see cref="Dictionary{TKey, TValue}.ValueCollection"/> elements to an existing one-dimensional <see cref="Array"/>, starting at the specified array index.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="Dictionary{TKey, TValue}.ValueCollection"/>. The <see cref="Array"/> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
         public void CopyTo(KeyValuePair<string, NSObject>[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Removes the specified item.
+        /// </summary>
+        /// <param name="item">Item to remove.</param>
+        /// <returns><c>true</c> if successfully removed, <c>false</c> if not, or if item is not in current instance</returns>
         public bool Remove(KeyValuePair<string, NSObject> item)
         {
             return dict.Remove(item.Key);
         }
 
+        /// <summary>
+        /// Gets the count of items in the current instance.
+        /// </summary>
+        /// <value>How many items are contained in the current instance.</value>
         public int Count
         {
             get
@@ -527,6 +626,10 @@ namespace Claunia.PropertyList
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is read only.
+        /// </summary>
+        /// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
         public bool IsReadOnly
         {
             get
@@ -538,7 +641,10 @@ namespace Claunia.PropertyList
         #endregion
 
         #region IEnumerable implementation
-
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns>The enumerator.</returns>
         public IEnumerator<KeyValuePair<string, NSObject>> GetEnumerator()
         {
             return dict.GetEnumerator();
