@@ -1,5 +1,10 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
+	* plist-cil.csproj:
+	  Added MIT License file.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
 	* ASCIIPropertyListParser.cs:
 	  Remove redundant items.
 	Correct same ASCII exceptionfallback issue that appeared in

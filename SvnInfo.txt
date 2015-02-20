@@ -1,0 +1,12 @@
+Path: .
+Working Copy Root Path: /Development/plist
+URL: http://plist.googlecode.com/svn/trunk
+Repository Root: http://plist.googlecode.com/svn
+Repository UUID: 08b5d097-3e27-63a3-4c6f-efc316e1e7e5
+Revision: 113
+Node Kind: directory
+Schedule: normal
+Last Changed Author: daniel.dreibrodt@gmail.com
+Last Changed Rev: 113
+Last Changed Date: 2014-11-17 16:31:28 +0000 (lun, 17 nov 2014)
+

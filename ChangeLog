@@ -1,3 +1,10 @@
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
+	* SvnInfo.txt:
+	* plist-cil.sln:
+	  Added file to keep track of mainstream Subversion
+	  repository.
+
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
 	* plist-cil.sln:
