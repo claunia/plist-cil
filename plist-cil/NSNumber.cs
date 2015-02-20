@@ -69,18 +69,23 @@ namespace Claunia.PropertyList
         /// <param name="type">The type of number</param>
         /// <seealso cref="INTEGER"/>
         /// <seealso cref="REAL"/>
-        public NSNumber(byte[] bytes, int type) {
-            switch (type) {
-                case INTEGER: {
+        public NSNumber(byte[] bytes, int type)
+        {
+            switch (type)
+            {
+                case INTEGER:
+                    {
                         doubleValue = longValue = BinaryPropertyListParser.ParseLong(bytes);
                         break;
                     }
-                case REAL: {
+                case REAL:
+                    {
                         doubleValue = BinaryPropertyListParser.ParseDouble(bytes);
                         longValue = (long)Math.Round(doubleValue);
                         break;
                     }
-                default: {
+                default:
+                    {
                         throw new ArgumentException("Type argument is not valid.");
                     }
             }
@@ -94,27 +99,38 @@ namespace Claunia.PropertyList
         /// <seealso cref="bool.Parse"/>
         /// <seealso cref="long.Parse"/>
         /// <seealso cref="double.Parse"/>
-        public NSNumber(string text) {
+        public NSNumber(string text)
+        {
             if (text == null)
                 throw new ArgumentException("The given string is null and cannot be parsed as number.");
-            try {
+            try
+            {
                 long l = long.Parse(text);
                 doubleValue = longValue = l;
                 type = INTEGER;
-            } catch (Exception ex) {
-                try {
+            }
+            catch (Exception ex)
+            {
+                try
+                {
                     doubleValue = double.Parse(text, CultureInfo.InvariantCulture);
                     longValue = (long)Math.Round(doubleValue);
                     type = REAL;
-                } catch (Exception ex2) {
-                    try {
+                }
+                catch (Exception ex2)
+                {
+                    try
+                    {
                         boolValue = text.ToLower().Equals("true") || text.ToLower().Equals("yes");
-                        if(!boolValue && !(text.ToLower().Equals("false") || text.ToLower().Equals("no"))) {
+                        if (!boolValue && !(text.ToLower().Equals("false") || text.ToLower().Equals("no")))
+                        {
                             throw new Exception("not a bool");
                         }
                         type = BOOLEAN;
                         doubleValue = longValue = boolValue ? 1 : 0;
-                    } catch (Exception ex3) {
+                    }
+                    catch (Exception ex3)
+                    {
                         throw new ArgumentException("The given string neither represents a double, an int nor a bool value.");
                     }
                 }
@@ -125,7 +141,8 @@ namespace Claunia.PropertyList
         /// Creates an integer number.
         /// </summary>
         /// <param name="i">The integer value.</param>
-        public NSNumber(int i) {
+        public NSNumber(int i)
+        {
             doubleValue = longValue = i;
             type = INTEGER;
         }
@@ -134,7 +151,8 @@ namespace Claunia.PropertyList
         /// Creates an integer number.
         /// </summary>
         /// <param name="l">The long integer value.</param>
-        public NSNumber(long l) {
+        public NSNumber(long l)
+        {
             doubleValue = longValue = l;
             type = INTEGER;
         }
@@ -143,8 +161,9 @@ namespace Claunia.PropertyList
         /// Creates a real number.
         /// </summary>
         /// <param name="d">The real value.</param>
-        public NSNumber(double d) {
-            longValue = (long) (doubleValue = d);
+        public NSNumber(double d)
+        {
+            longValue = (long)(doubleValue = d);
             type = REAL;
         }
 
@@ -152,7 +171,8 @@ namespace Claunia.PropertyList
         /// Creates a bool number.
         /// </summary>
         /// <param name="b">The bool value.</param>
-        public NSNumber(bool b) {
+        public NSNumber(bool b)
+        {
             boolValue = b;
             doubleValue = longValue = b ? 1 : 0;
             type = BOOLEAN;
@@ -165,7 +185,8 @@ namespace Claunia.PropertyList
         /// <seealso cref="BOOLEAN"/>
         /// <seealso cref="INTEGER"/>
         /// <seealso cref="REAL"/>
-        public int GetNSNumberType() {
+        public int GetNSNumberType()
+        {
             return type;
         }
 
@@ -173,7 +194,8 @@ namespace Claunia.PropertyList
         /// Checks whether the value of this NSNumber is a bool.
         /// </summary>
         /// <returns>Whether the number's value is a bool.</returns>
-        public bool isBoolean() {
+        public bool isBoolean()
+        {
             return type == BOOLEAN;
         }
 
@@ -181,7 +203,8 @@ namespace Claunia.PropertyList
         /// Checks whether the value of this NSNumber is an integer.
         /// </summary>
         /// <returns>Whether the number's value is an integer.</returns>
-        public bool isInteger() {
+        public bool isInteger()
+        {
             return type == INTEGER;
         }
 
@@ -189,7 +212,8 @@ namespace Claunia.PropertyList
         /// Checks whether the value of this NSNumber is a real number.
         /// </summary>
         /// <returns>Whether the number's value is a real number.</returns>
-        public bool isReal() {
+        public bool isReal()
+        {
             return type == REAL;
         }
 
@@ -197,7 +221,8 @@ namespace Claunia.PropertyList
         /// The number's bool value.
         /// </summary>
         /// <returns><code>true</code> if the value is true or non-zero, <code>false</code> otherwise.</returns>
-        public bool ToBool() {
+        public bool ToBool()
+        {
             if (type == BOOLEAN)
                 return boolValue;
             else
@@ -208,7 +233,8 @@ namespace Claunia.PropertyList
         /// The number's long value.
         /// </summary>
         /// <returns>The value of the number as long</returns>
-        public long ToLong() {
+        public long ToLong()
+        {
             return longValue;
         }
 
@@ -219,15 +245,17 @@ namespace Claunia.PropertyList
         /// Otherwise the value might be innaccurate.</i>
         /// </summary>
         /// <returns>The value of the number as int.</returns>
-        public int ToInt() {
-            return (int) longValue;
+        public int ToInt()
+        {
+            return (int)longValue;
         }
 
         /// <summary>
         /// The number's double value.
         /// </summary>
         /// <returns>The value of the number as double.</returns>
-        public double ToDouble() {
+        public double ToDouble()
+        {
             return doubleValue;
         }
 
@@ -236,8 +264,9 @@ namespace Claunia.PropertyList
         /// WARNING: Possible loss of precision if the value is outside the float range.
         /// </summary>
         /// <returns>The value of the number as float.</returns>
-        public float floatValue() {
-            return (float) doubleValue;
+        public float floatValue()
+        {
+            return (float)doubleValue;
         }
 
         /// <summary>
@@ -245,53 +274,67 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="obj">The object to compare to.</param>
         /// <returns>Whether the objects are equal in terms of numeric value and type.</returns>
-        public override bool Equals(Object obj) {
-            if (!(obj is NSNumber)) return false;
-            NSNumber n = (NSNumber) obj;
+        public override bool Equals(Object obj)
+        {
+            if (!(obj is NSNumber))
+                return false;
+            NSNumber n = (NSNumber)obj;
             return type == n.type && longValue == n.longValue && doubleValue == n.doubleValue && boolValue == n.boolValue;
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             int hash = type;
-            hash = 37 * hash + (int) (this.longValue ^ ((uint)this.longValue >> 32));
-            hash = 37 * hash + (int) (BitConverter.DoubleToInt64Bits(this.doubleValue) ^ ((uint)(BitConverter.DoubleToInt64Bits(this.doubleValue) >> 32)));
+            hash = 37 * hash + (int)(this.longValue ^ ((uint)this.longValue >> 32));
+            hash = 37 * hash + (int)(BitConverter.DoubleToInt64Bits(this.doubleValue) ^ ((uint)(BitConverter.DoubleToInt64Bits(this.doubleValue) >> 32)));
             hash = 37 * hash + (ToBool() ? 1 : 0);
             return hash;
         }
 
-        public override string ToString() {
-            switch (type) {
-                case INTEGER: {
+        public override string ToString()
+        {
+            switch (type)
+            {
+                case INTEGER:
+                    {
                         return ToLong().ToString();
                     }
-                case REAL: {
+                case REAL:
+                    {
                         return ToDouble().ToString(CultureInfo.InvariantCulture);
                     }
-                case BOOLEAN: {
+                case BOOLEAN:
+                    {
                         return ToBool().ToString();
                     }
-                default: {
+                default:
+                    {
                         return base.ToString();
                     }
             }
         }
 
-        internal override void ToXml(StringBuilder xml, int level) {
+        internal override void ToXml(StringBuilder xml, int level)
+        {
             Indent(xml, level);
-            switch (type) {
-                case INTEGER: {
+            switch (type)
+            {
+                case INTEGER:
+                    {
                         xml.Append("<integer>");
                         xml.Append(ToLong());
                         xml.Append("</integer>");
                         break;
                     }
-                case REAL: {
+                case REAL:
+                    {
                         xml.Append("<real>");
                         xml.Append(ToDouble().ToString(CultureInfo.InvariantCulture));
                         xml.Append("</real>");
                         break;
                     }
-                case BOOLEAN: {
+                case BOOLEAN:
+                    {
                         if (ToBool())
                             xml.Append("<true/>");
                         else
@@ -301,67 +344,93 @@ namespace Claunia.PropertyList
             }
         }
 
-        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
-            switch (GetNSNumberType()) {
-                case INTEGER: {
-                        if (ToLong() < 0) {
+        internal override void ToBinary(BinaryPropertyListWriter outPlist)
+        {
+            switch (GetNSNumberType())
+            {
+                case INTEGER:
+                    {
+                        if (ToLong() < 0)
+                        {
                             outPlist.Write(0x13);
                             outPlist.WriteBytes(ToLong(), 8);
-                        } else if (ToLong() <= 0xff) {
+                        }
+                        else if (ToLong() <= 0xff)
+                        {
                             outPlist.Write(0x10);
                             outPlist.WriteBytes(ToLong(), 1);
-                        } else if (ToLong() <= 0xffff) {
+                        }
+                        else if (ToLong() <= 0xffff)
+                        {
                             outPlist.Write(0x11);
                             outPlist.WriteBytes(ToLong(), 2);
-                        } else if (ToLong() <= 0xffffffffL) {
+                        }
+                        else if (ToLong() <= 0xffffffffL)
+                        {
                             outPlist.Write(0x12);
                             outPlist.WriteBytes(ToLong(), 4);
-                        } else {
+                        }
+                        else
+                        {
                             outPlist.Write(0x13);
                             outPlist.WriteBytes(ToLong(), 8);
                         }
                         break;
                     }
-                case REAL: {
+                case REAL:
+                    {
                         outPlist.Write(0x23);
                         outPlist.WriteDouble(ToDouble());
                         break;
                     }
-                case BOOLEAN: {
+                case BOOLEAN:
+                    {
                         outPlist.Write(ToBool() ? 0x09 : 0x08);
                         break;
                     }
             }
         }
 
-        internal override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
-            if (type == BOOLEAN) {
+            if (type == BOOLEAN)
+            {
                 ascii.Append(boolValue ? "YES" : "NO");
-            } else {
+            }
+            else
+            {
                 ascii.Append(ToString());
             }
         }
 
-        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
-            switch (type) {
-                case INTEGER: {
+            switch (type)
+            {
+                case INTEGER:
+                    {
                         ascii.Append("<*I");
                         ascii.Append(ToString());
                         ascii.Append(">");
                         break;
                     }
-                case REAL: {
+                case REAL:
+                    {
                         ascii.Append("<*R");
                         ascii.Append(ToString());
                         ascii.Append(">");
                         break;
                     }
-                case BOOLEAN: {
-                        if (boolValue) {
+                case BOOLEAN:
+                    {
+                        if (boolValue)
+                        {
                             ascii.Append("<*BY>");
-                        } else {
+                        }
+                        else
+                        {
                             ascii.Append("<*BN>");
                         }
                         break;
@@ -369,17 +438,23 @@ namespace Claunia.PropertyList
             }
         }
 
-        public int CompareTo(Object o) {
+        public int CompareTo(Object o)
+        {
             double x = ToDouble();
             double y;
-            if (o is NSNumber) {
-                NSNumber num = (NSNumber) o;
+            if (o is NSNumber)
+            {
+                NSNumber num = (NSNumber)o;
                 y = num.ToDouble();
                 return (x < y) ? -1 : ((x == y) ? 0 : 1);
-            } else if (IsNumber(o)) {
+            }
+            else if (IsNumber(o))
+            {
                 y = GetDoubleFromObject(o);
                 return (x < y) ? -1 : ((x == y) ? 0 : 1);
-            } else {
+            }
+            else
+            {
                 return -1;
             }
         }

@@ -49,30 +49,40 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>Version code</returns>
         /// <param name="root">Object root.</param>
-        private static int GetMinimumRequiredVersion(NSObject root) {
+        private static int GetMinimumRequiredVersion(NSObject root)
+        {
             int minVersion = VERSION_00;
-            if (root == null) {
+            if (root == null)
+            {
                 minVersion = VERSION_10;
             }
-            if (root is NSDictionary) {
-                NSDictionary dict = (NSDictionary) root;
-                foreach (NSObject o in dict.GetDictionary().Values) {
+            if (root is NSDictionary)
+            {
+                NSDictionary dict = (NSDictionary)root;
+                foreach (NSObject o in dict.GetDictionary().Values)
+                {
                     int v = GetMinimumRequiredVersion(o);
                     if (v > minVersion)
                         minVersion = v;
                 }
-            } else if (root is NSArray) {
-                NSArray array = (NSArray) root;
-                foreach (NSObject o in array.GetArray()) {
+            }
+            else if (root is NSArray)
+            {
+                NSArray array = (NSArray)root;
+                foreach (NSObject o in array.GetArray())
+                {
                     int v = GetMinimumRequiredVersion(o);
                     if (v > minVersion)
                         minVersion = v;
                 }
-            } else if (root is NSSet) {
+            }
+            else if (root is NSSet)
+            {
                 //Sets are only allowed in property lists v1+
                 minVersion = VERSION_10;
-                NSSet set = (NSSet) root;
-                foreach (NSObject o in set.AllObjects()) {
+                NSSet set = (NSSet)root;
+                foreach (NSObject o in set.AllObjects())
+                {
                     int v = GetMinimumRequiredVersion(o);
                     if (v > minVersion)
                         minVersion = v;
@@ -87,7 +97,8 @@ namespace Claunia.PropertyList
         /// <param name="file">the file to write to</param>
         /// <param name="root">the source of the data to write to the file</param>
         /// <exception cref="IOException"></exception>
-        public static void Write(FileInfo file, NSObject root) {
+        public static void Write(FileInfo file, NSObject root)
+        {
             FileStream fous = file.OpenWrite();
             Write(fous, root);
             fous.Close();
@@ -99,12 +110,14 @@ namespace Claunia.PropertyList
         /// <param name="outStream">the stream to write to</param>
         /// <param name="root">the source of the data to write to the stream</param>
         /// <exception cref="IOException"></exception>
-        public static void Write(Stream outStream, NSObject root) {
+        public static void Write(Stream outStream, NSObject root)
+        {
             int minVersion = GetMinimumRequiredVersion(root);
-            if (minVersion > VERSION_00) {
+            if (minVersion > VERSION_00)
+            {
                 string versionString = ((minVersion == VERSION_10) ? "v1.0" : ((minVersion == VERSION_15) ? "v1.5" : ((minVersion == VERSION_20) ? "v2.0" : "v0.0")));
                 throw new IOException("The given property list structure cannot be saved. " +
-                    "The required version of the binary format (" + versionString + ") is not yet supported.");
+                "The required version of the binary format (" + versionString + ") is not yet supported.");
             }
             BinaryPropertyListWriter w = new BinaryPropertyListWriter(outStream, minVersion);
             w.Write(root);
@@ -117,7 +130,8 @@ namespace Claunia.PropertyList
         /// <returns>The byte array containing the serialized property list</returns>
         /// <param name="root">The root object of the property list</param>
         /// <exception cref="IOException"></exception>
-        public static byte[] WriteToArray(NSObject root) {
+        public static byte[] WriteToArray(NSObject root)
+        {
             MemoryStream bout = new MemoryStream();
             Write(bout, root);
             return bout.ToArray();
@@ -140,35 +154,43 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="outStr">The output stream into which the binary property list will be written</param>
         /// <exception cref="IOException">If an error occured while writing to the stream</exception>
-        BinaryPropertyListWriter(Stream outStr) {
+        BinaryPropertyListWriter(Stream outStr)
+        {
             outStream = outStr;
         }
 
-        BinaryPropertyListWriter(Stream outStr, int version) {
+        BinaryPropertyListWriter(Stream outStr, int version)
+        {
             this.version = version;
             outStream = outStr;
         }
 
-        void Write(NSObject root) {
+        void Write(NSObject root)
+        {
             // magic bytes
-            Write(new byte[]{(byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t'});
+            Write(new byte[]{ (byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t' });
 
             //version
-            switch (version) {
-                case VERSION_00: {
-                        Write(new byte[]{(byte)'0', (byte)'0'});
+            switch (version)
+            {
+                case VERSION_00:
+                    {
+                        Write(new byte[]{ (byte)'0', (byte)'0' });
                         break;
                     }
-                case VERSION_10: {
-                        Write(new byte[]{(byte)'1', (byte)'0'});
+                case VERSION_10:
+                    {
+                        Write(new byte[]{ (byte)'1', (byte)'0' });
                         break;
                     }
-                case VERSION_15: {
-                        Write(new byte[]{(byte)'1', (byte)'5'});
+                case VERSION_15:
+                    {
+                        Write(new byte[]{ (byte)'1', (byte)'5' });
                         break;
                     }
-                case VERSION_20: {
-                        Write(new byte[]{(byte)'2', (byte)'0'});
+                case VERSION_20:
+                    {
+                        Write(new byte[]{ (byte)'2', (byte)'0' });
                         break;
                     }
             }
@@ -182,13 +204,17 @@ namespace Claunia.PropertyList
             long[] offsets = new long[idMap.Count];
 
             // write each object, save offset
-            foreach (KeyValuePair<NSObject, int> entry in idMap) {
+            foreach (KeyValuePair<NSObject, int> entry in idMap)
+            {
                 NSObject obj = entry.Key;
                 int id = entry.Value;
                 offsets[id] = count;
-                if (obj == null) {
+                if (obj == null)
+                {
                     Write(0x00);
-                } else {
+                }
+                else
+                {
                     obj.ToBinary(this);
                 }
             }
@@ -196,11 +222,13 @@ namespace Claunia.PropertyList
             // write offset table
             long offsetTableOffset = count;
             int offsetSizeInBytes = ComputeOffsetSizeInBytes(count);
-            foreach (long offset in offsets) {
+            foreach (long offset in offsets)
+            {
                 WriteBytes(offset, offsetSizeInBytes);
             }
 
-            if (version != VERSION_15) {
+            if (version != VERSION_15)
+            {
                 // write trailer
                 // 6 null bytes
                 Write(new byte[6]);
@@ -221,80 +249,105 @@ namespace Claunia.PropertyList
             outStream.Flush();
         }
 
-        internal void AssignID(NSObject obj) {
-            if (!idMap.ContainsKey(obj)) {
+        internal void AssignID(NSObject obj)
+        {
+            if (!idMap.ContainsKey(obj))
+            {
                 idMap.Add(obj, idMap.Count);
             }
         }
 
-        internal int GetID(NSObject obj) {
+        internal int GetID(NSObject obj)
+        {
             int ID;
             idMap.TryGetValue(obj, out ID);
             return ID;
         }
 
-        private static int ComputeIdSizeInBytes(int numberOfIds) {
-            if (numberOfIds < 256) return 1;
-            if (numberOfIds < 65536) return 2;
+        private static int ComputeIdSizeInBytes(int numberOfIds)
+        {
+            if (numberOfIds < 256)
+                return 1;
+            if (numberOfIds < 65536)
+                return 2;
             return 4;
         }
 
-        private int ComputeOffsetSizeInBytes(long maxOffset) {
-            if (maxOffset < 256) return 1;
-            if (maxOffset < 65536) return 2;
-            if (maxOffset < 4294967296L) return 4;
+        private int ComputeOffsetSizeInBytes(long maxOffset)
+        {
+            if (maxOffset < 256)
+                return 1;
+            if (maxOffset < 65536)
+                return 2;
+            if (maxOffset < 4294967296L)
+                return 4;
             return 8;
         }
 
-        internal void WriteIntHeader(int kind, int value) {
+        internal void WriteIntHeader(int kind, int value)
+        {
             if (value <= 0)
                 throw new ArgumentException("value must be greater than 0", "value");
 
-            if (value < 15) {
+            if (value < 15)
+            {
                 Write((kind << 4) + value);
-            } else if (value < 256) {
+            }
+            else if (value < 256)
+            {
                 Write((kind << 4) + 15);
                 Write(0x10);
                 WriteBytes(value, 1);
-            } else if (value < 65536) {
+            }
+            else if (value < 65536)
+            {
                 Write((kind << 4) + 15);
                 Write(0x11);
                 WriteBytes(value, 2);
-            } else {
+            }
+            else
+            {
                 Write((kind << 4) + 15);
                 Write(0x12);
                 WriteBytes(value, 4);
             }
         }
 
-        internal void Write(int b) {
-            byte[] bBytes= new byte[1];
+        internal void Write(int b)
+        {
+            byte[] bBytes = new byte[1];
             bBytes[0] = (byte)b;
             outStream.Write(bBytes, 0, 1);
             count++;
         }
 
-        internal void Write(byte[] bytes) {
+        internal void Write(byte[] bytes)
+        {
             outStream.Write(bytes, 0, bytes.Length);
             count += bytes.Length;
         }
 
-        internal void WriteBytes(long value, int bytes) {
+        internal void WriteBytes(long value, int bytes)
+        {
             // write low-order bytes big-endian style
-            for (int i = bytes - 1; i >= 0; i--) {
-                Write((int) (value >> (8 * i)));
+            for (int i = bytes - 1; i >= 0; i--)
+            {
+                Write((int)(value >> (8 * i)));
             }
         }
 
-        internal void WriteID(int id) {
+        internal void WriteID(int id)
+        {
             WriteBytes(id, idSizeInBytes);
         }
 
-        internal void WriteLong(long value) {
+        internal void WriteLong(long value)
+        {
             WriteBytes(value, 8);
         }
 
-        internal void WriteDouble(double value) {
+        internal void WriteDouble(double value)
+        {
             WriteLong(BitConverter.DoubleToInt64Bits(value));
         }
     }

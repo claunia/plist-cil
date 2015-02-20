@@ -45,7 +45,8 @@ namespace Claunia.PropertyList
         /// <summary>
         /// Creates a new empty NSDictionary.
         /// </summary>
-        public NSDictionary() {
+        public NSDictionary()
+        {
             dict = new Dictionary<string, NSObject>();
         }
 
@@ -55,7 +56,8 @@ namespace Claunia.PropertyList
         /// dictionary.
         /// </summary>
         /// <returns>The hashmap which is used by this dictionary to store its contents.</returns>
-        public Dictionary<string, NSObject> GetDictionary() {
+        public Dictionary<string, NSObject> GetDictionary()
+        {
             return dict;
         }
 
@@ -64,14 +66,16 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The object.</returns>
         /// <param name="key">The key.</param>
-        public NSObject ObjectForKey(string key) {
+        public NSObject ObjectForKey(string key)
+        {
             NSObject nso;
             return dict.TryGetValue(key, out nso) ? nso : null;
         }
 
         public bool IsEmpty
         {
-            get {
+            get
+            {
                 return dict.Count == 0;
             }
         }
@@ -88,12 +92,13 @@ namespace Claunia.PropertyList
 
         public NSObject Get(Object key)
         {
-            if(key is string)
+            if (key is string)
                 return ObjectForKey((string)key);
             return null;
         }
 
-        public bool ContainsValue(Object value) {
+        public bool ContainsValue(Object value)
+        {
             if (value == null)
                 return false;
             NSObject wrap = NSObject.Wrap(value);
@@ -106,8 +111,9 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="obj">The value. Supported object types are numbers, byte-arrays, dates, strings and arrays or sets of those.</param>
-        public void Add(String key, Object obj) {
-            if(obj == null)
+        public void Add(String key, Object obj)
+        {
+            if (obj == null)
                 return;
             Add(key, NSObject.Wrap(obj));
         }
@@ -117,7 +123,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="obj">The value.</param>
-        public void Add(string key, long obj) {
+        public void Add(string key, long obj)
+        {
             Add(key, new NSNumber(obj));
         }
 
@@ -126,7 +133,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="obj">The value.</param>
-        public void Add(string key, double obj) {
+        public void Add(string key, double obj)
+        {
             Add(key, new NSNumber(obj));
         }
 
@@ -135,7 +143,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="obj">The value.</param>
-        public void Add(string key, bool obj) {
+        public void Add(string key, bool obj)
+        {
             Add(key, new NSNumber(obj));
         }
 
@@ -144,10 +153,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
-        public bool ContainsValue(string val) {
-            foreach (NSObject o in dict.Values) {
-                if (o.GetType().Equals(typeof(NSString))) {
-                    NSString str = (NSString) o;
+        public bool ContainsValue(string val)
+        {
+            foreach (NSObject o in dict.Values)
+            {
+                if (o.GetType().Equals(typeof(NSString)))
+                {
+                    NSString str = (NSString)o;
                     if (str.GetContent().Equals(val))
                         return true;
                 }
@@ -160,10 +172,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
-        public bool ContainsValue(long val) {
-            foreach (NSObject o in dict.Values) {
-                if (o.GetType().Equals(typeof(NSNumber))) {
-                    NSNumber num = (NSNumber) o;
+        public bool ContainsValue(long val)
+        {
+            foreach (NSObject o in dict.Values)
+            {
+                if (o.GetType().Equals(typeof(NSNumber)))
+                {
+                    NSNumber num = (NSNumber)o;
                     if (num.isInteger() && num.ToInt() == val)
                         return true;
                 }
@@ -176,10 +191,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
-        public bool ContainsValue(double val) {
-            foreach (NSObject o in dict.Values) {
-                if (o.GetType().Equals(typeof(NSNumber))) {
-                    NSNumber num = (NSNumber) o;
+        public bool ContainsValue(double val)
+        {
+            foreach (NSObject o in dict.Values)
+            {
+                if (o.GetType().Equals(typeof(NSNumber)))
+                {
+                    NSNumber num = (NSNumber)o;
                     if (num.isReal() && num.ToDouble() == val)
                         return true;
                 }
@@ -192,10 +210,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
-        public bool ContainsValue(bool val) {
-            foreach (NSObject o in dict.Values) {
-                if (o.GetType().Equals(typeof(NSNumber))) {
-                    NSNumber num = (NSNumber) o;
+        public bool ContainsValue(bool val)
+        {
+            foreach (NSObject o in dict.Values)
+            {
+                if (o.GetType().Equals(typeof(NSNumber)))
+                {
+                    NSNumber num = (NSNumber)o;
                     if (num.isBoolean() && num.ToBool() == val)
                         return true;
                 }
@@ -208,10 +229,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
-        public bool ContainsValue(DateTime val) {
-            foreach (NSObject o in dict.Values) {
-                if (o.GetType().Equals(typeof(NSDate))) {
-                    NSDate dat = (NSDate) o;
+        public bool ContainsValue(DateTime val)
+        {
+            foreach (NSObject o in dict.Values)
+            {
+                if (o.GetType().Equals(typeof(NSDate)))
+                {
+                    NSDate dat = (NSDate)o;
                     if (dat.Date.Equals(val))
                         return true;
                 }
@@ -224,10 +248,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
-        public bool ContainsValue(byte[] val) {
-            foreach (NSObject o in dict.Values) {
-                if (o.GetType().Equals(typeof(NSData))) {
-                    NSData dat = (NSData) o;
+        public bool ContainsValue(byte[] val)
+        {
+            foreach (NSObject o in dict.Values)
+            {
+                if (o.GetType().Equals(typeof(NSData)))
+                {
+                    NSData dat = (NSData)o;
                     if (ArrayEquals(dat.Bytes, val))
                         return true;
                 }
@@ -235,9 +262,10 @@ namespace Claunia.PropertyList
             return false;
         }
 
-        public override bool Equals(Object obj) {
-            bool foo = this.Equals((NSDictionary) obj);
-            return (obj.GetType().Equals(GetType()) && ((NSDictionary) obj).dict.Equals(dict));
+        public override bool Equals(Object obj)
+        {
+            bool foo = this.Equals((NSDictionary)obj);
+            return (obj.GetType().Equals(GetType()) && ((NSDictionary)obj).dict.Equals(dict));
         }
 
         public override bool Equals(NSObject obj)
@@ -263,26 +291,32 @@ namespace Claunia.PropertyList
             return true;
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             int hash = 7;
             hash = 83 * hash + (this.dict != null ? this.dict.GetHashCode() : 0);
             return hash;
         }
 
-        internal override void ToXml(StringBuilder xml, int level) {
+        internal override void ToXml(StringBuilder xml, int level)
+        {
             Indent(xml, level);
             xml.Append("<dict>");
             xml.Append(NSObject.NEWLINE);
-            foreach(KeyValuePair<string, NSObject> kvp in dict) {
+            foreach (KeyValuePair<string, NSObject> kvp in dict)
+            {
                 Indent(xml, level + 1);
                 xml.Append("<key>");
                 //According to http://www.w3.org/TR/REC-xml/#syntax node values must not
                 //contain the characters < or &. Also the > character should be escaped.
-                if (kvp.Key.Contains("&") || kvp.Key.Contains("<") || kvp.Key.Contains(">")) {
+                if (kvp.Key.Contains("&") || kvp.Key.Contains("<") || kvp.Key.Contains(">"))
+                {
                     xml.Append("<![CDATA[");
                     xml.Append(kvp.Key.Replace("]]>", "]]]]><![CDATA[>"));
                     xml.Append("]]>");
-                } else {
+                }
+                else
+                {
                     xml.Append(kvp.Key);
                 }
                 xml.Append("</key>");
@@ -294,20 +328,25 @@ namespace Claunia.PropertyList
             xml.Append("</dict>");
         }
 
-        internal override void AssignIDs(BinaryPropertyListWriter outPlist) {
+        internal override void AssignIDs(BinaryPropertyListWriter outPlist)
+        {
             base.AssignIDs(outPlist);
-            foreach (KeyValuePair<string, NSObject> entry in dict) {
+            foreach (KeyValuePair<string, NSObject> entry in dict)
+            {
                 new NSString(entry.Key).AssignIDs(outPlist);
                 entry.Value.AssignIDs(outPlist);
             }
         }
 
-        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+        internal override void ToBinary(BinaryPropertyListWriter outPlist)
+        {
             outPlist.WriteIntHeader(0xD, dict.Count);
-            foreach (KeyValuePair<String, NSObject> entry in dict) {
+            foreach (KeyValuePair<String, NSObject> entry in dict)
+            {
                 outPlist.WriteID(outPlist.GetID(new NSString(entry.Key)));
             }
-            foreach (KeyValuePair<String, NSObject> entry in dict) {
+            foreach (KeyValuePair<String, NSObject> entry in dict)
+            {
                 outPlist.WriteID(outPlist.GetID(entry.Value));
             }
         }
@@ -319,7 +358,8 @@ namespace Claunia.PropertyList
         /// Property List Programming Guide - Old-Style ASCII Property Lists</a>.
         /// </summary>
         /// <returns>ASCII representation of this object.</returns>
-        public string ToASCIIPropertyList() {
+        public string ToASCIIPropertyList()
+        {
             StringBuilder ascii = new StringBuilder();
             ToASCII(ascii, 0);
             ascii.Append(NEWLINE);
@@ -333,28 +373,34 @@ namespace Claunia.PropertyList
         /// GnuStep - NSPropertyListSerialization class documentation</a>
         /// </summary>
         /// <returns>GnuStep ASCII representation of this object.</returns>
-        public string ToGnuStepASCIIPropertyList() {
+        public string ToGnuStepASCIIPropertyList()
+        {
             StringBuilder ascii = new StringBuilder();
             ToASCIIGnuStep(ascii, 0);
             ascii.Append(NEWLINE);
             return ascii.ToString();
         }
 
-        internal override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.DICTIONARY_BEGIN_TOKEN);
             ascii.Append(NEWLINE);
-            foreach (string key in Keys) {
+            foreach (string key in Keys)
+            {
                 NSObject val = ObjectForKey(key);
                 Indent(ascii, level + 1);
                 ascii.Append("\"");
                 ascii.Append(NSString.EscapeStringForASCII(key));
                 ascii.Append("\" =");
                 Type objClass = val.GetType();
-                if (objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData))) {
+                if (objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
+                {
                     ascii.Append(NEWLINE);
                     val.ToASCII(ascii, level + 2);
-                } else {
+                }
+                else
+                {
                     ascii.Append(" ");
                     val.ToASCII(ascii, 0);
                 }
@@ -365,21 +411,26 @@ namespace Claunia.PropertyList
             ascii.Append(ASCIIPropertyListParser.DICTIONARY_END_TOKEN);
         }
 
-        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.DICTIONARY_BEGIN_TOKEN);
             ascii.Append(NEWLINE);
-            foreach (string key in Keys) {
+            foreach (string key in Keys)
+            {
                 NSObject val = ObjectForKey(key);
                 Indent(ascii, level + 1);
                 ascii.Append("\"");
                 ascii.Append(NSString.EscapeStringForASCII(key));
                 ascii.Append("\" =");
                 Type objClass = val.GetType();
-                if (objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData))) {
+                if (objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
+                {
                     ascii.Append(NEWLINE);
                     val.ToASCIIGnuStep(ascii, level + 2);
-                } else {
+                }
+                else
+                {
                     ascii.Append(" ");
                     val.ToASCIIGnuStep(ascii, 0);
                 }
@@ -391,6 +442,7 @@ namespace Claunia.PropertyList
         }
 
         #region IDictionary implementation
+
         public void Add(string key, NSObject value)
         {
             dict.Add(key, value);
@@ -416,7 +468,7 @@ namespace Claunia.PropertyList
             return dict.TryGetValue(key, out value);
         }
 
-        public NSObject this[string index]
+        public NSObject this [string index]
         {
             get
             {
@@ -427,6 +479,7 @@ namespace Claunia.PropertyList
                 dict[index] = value;
             }
         }
+
         public ICollection<string> Keys
         {
             get
@@ -434,6 +487,7 @@ namespace Claunia.PropertyList
                 return dict.Keys;
             }
         }
+
         public ICollection<NSObject> Values
         {
             get
@@ -441,28 +495,36 @@ namespace Claunia.PropertyList
                 return dict.Values;
             }
         }
+
         #endregion
+
         #region ICollection implementation
+
         public void Add(KeyValuePair<string, NSObject> item)
         {
             dict.Add(item.Key, item.Value);
         }
+
         public void Clear()
         {
             dict.Clear();
         }
+
         public bool Contains(KeyValuePair<string, NSObject> item)
         {
             return dict.ContainsKey(item.Key);
         }
+
         public void CopyTo(KeyValuePair<string, NSObject>[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
+
         public bool Remove(KeyValuePair<string, NSObject> item)
         {
             return dict.Remove(item.Key);
         }
+
         public int Count
         {
             get
@@ -470,6 +532,7 @@ namespace Claunia.PropertyList
                 return dict.Count;
             }
         }
+
         public bool IsReadOnly
         {
             get
@@ -477,18 +540,25 @@ namespace Claunia.PropertyList
                 return false;
             }
         }
+
         #endregion
+
         #region IEnumerable implementation
+
         public IEnumerator<KeyValuePair<string, NSObject>> GetEnumerator()
         {
             return dict.GetEnumerator();
         }
+
         #endregion
+
         #region IEnumerable implementation
+
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return dict.GetEnumerator();
         }
+
         #endregion
     }
 }

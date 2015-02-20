@@ -61,7 +61,8 @@ namespace Claunia.PropertyList
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
         /// <exception cref="FormatException">When an error occurs during parsing.</exception>
         /// <exception cref="IOException">When an error occured while reading from the input stream.</exception>
-        public static NSObject Parse(FileInfo f) {
+        public static NSObject Parse(FileInfo f)
+        {
             return Parse(f.OpenRead());
         }
 
@@ -72,7 +73,8 @@ namespace Claunia.PropertyList
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
         /// <exception cref="FormatException">When an error occurs during parsing.</exception>
         /// <exception cref="IOException"></exception>
-        public static NSObject Parse(Stream fs) {
+        public static NSObject Parse(Stream fs)
+        {
             byte[] buf = PropertyListParser.ReadAll(fs);
             fs.Close();
             return Parse(buf);
@@ -84,7 +86,8 @@ namespace Claunia.PropertyList
         /// <param name="bytes">The ASCII property list data.</param>
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
         /// <exception cref="FormatException">When an error occurs during parsing.</exception>
-        public static NSObject Parse(byte[] bytes) {
+        public static NSObject Parse(byte[] bytes)
+        {
             ASCIIPropertyListParser parser = new ASCIIPropertyListParser(bytes);
             return parser.Parse();
         }
@@ -141,7 +144,8 @@ namespace Claunia.PropertyList
         /**
         * Only allow subclasses to change instantiation.
         */
-        protected ASCIIPropertyListParser() {
+        protected ASCIIPropertyListParser()
+        {
 
         }
 
@@ -149,7 +153,8 @@ namespace Claunia.PropertyList
         /// Creates a new parser for the given property list content.
         /// </summary>
         /// <param name="propertyListContent">The content of the property list that is to be parsed.</param>
-        private ASCIIPropertyListParser(byte[] propertyListContent) {
+        private ASCIIPropertyListParser(byte[] propertyListContent)
+        {
             data = propertyListContent;
         }
 
@@ -158,8 +163,10 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>Whether the given tokens occur at the current parsing position.</returns>
         /// <param name="sequence">The sequence of tokens to look for.</param>
-        private bool AcceptSequence(params char[] sequence) {
-            for (int i = 0; i < sequence.Length; i++) {
+        private bool AcceptSequence(params char[] sequence)
+        {
+            for (int i = 0; i < sequence.Length; i++)
+            {
                 if (data[index + i] != sequence[i])
                     return false;
             }
@@ -172,9 +179,11 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="acceptableSymbols">The symbols to check.</param>
         /// <returns>Whether one of the symbols can be accepted or not.</returns>
-        private bool Accept(params char[] acceptableSymbols) {
+        private bool Accept(params char[] acceptableSymbols)
+        {
             bool symbolPresent = false;
-            foreach (char c in acceptableSymbols) {
+            foreach (char c in acceptableSymbols)
+            {
                 if (data[index] == c)
                     symbolPresent = true;
             }
@@ -187,7 +196,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="acceptableSymbol">The symbol to check.</param>
         /// <returns>Whether the symbol can be accepted or not.</returns>
-        private bool Accept(char acceptableSymbol) {
+        private bool Accept(char acceptableSymbol)
+        {
             return data[index] == acceptableSymbol;
         }
 
@@ -196,13 +206,16 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="expectedSymbols">The expected symbols.</param>
         /// <exception cref="FormatException">If none of the expected symbols could be found.</exception>
-        private void Expect(params char[] expectedSymbols) {
-            if (!Accept(expectedSymbols)) {
+        private void Expect(params char[] expectedSymbols)
+        {
+            if (!Accept(expectedSymbols))
+            {
                 String excString = "Expected '" + expectedSymbols[0] + "'";
-                for (int i = 1; i < expectedSymbols.Length; i++) {
+                for (int i = 1; i < expectedSymbols.Length; i++)
+                {
                     excString += " or '" + expectedSymbols[i] + "'";
                 }
-                excString += " but found '" + (char) data[index] + "'";
+                excString += " but found '" + (char)data[index] + "'";
                 throw new FormatException(String.Format("{0} at {1}", excString, index));
             }
         }
@@ -212,7 +225,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="expectedSymbol">The expected symbol.</param>
         /// <exception cref="FormatException">If the expected symbol could be found.</exception>
-        private void Expect(char expectedSymbol) {
+        private void Expect(char expectedSymbol)
+        {
             if (!Accept(expectedSymbol))
                 throw new FormatException(String.Format("Expected '{0}' but found '{1}' at {2}", expectedSymbol, data[index], index));
         }
@@ -222,7 +236,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="symbol">The symbol to read.</param>
         /// <exception cref="FormatException">If the expected symbol could not be read.</exception>
-        private void Read(char symbol) {
+        private void Read(char symbol)
+        {
             Expect(symbol);
             index++;
         }
@@ -230,7 +245,8 @@ namespace Claunia.PropertyList
         /**
      * Skips the current symbol.
      */
-        private void Skip() {
+        private void Skip()
+        {
             index++;
         }
 
@@ -238,34 +254,42 @@ namespace Claunia.PropertyList
         /// Skips several symbols
         /// </summary>
         /// <param name="numSymbols">The amount of symbols to skip.</param>
-        private void Skip(int numSymbols) {
+        private void Skip(int numSymbols)
+        {
             index += numSymbols;
         }
 
         /**
      * Skips all whitespaces and comments from the current parsing position onward.
      */
-        private void SkipWhitespacesAndComments() {
+        private void SkipWhitespacesAndComments()
+        {
             bool commentSkipped;
-            do {
+            do
+            {
                 commentSkipped = false;
 
                 //Skip whitespaces
-                while (Accept(WHITESPACE_CARRIAGE_RETURN, WHITESPACE_NEWLINE, WHITESPACE_SPACE, WHITESPACE_TAB)) {
+                while (Accept(WHITESPACE_CARRIAGE_RETURN, WHITESPACE_NEWLINE, WHITESPACE_SPACE, WHITESPACE_TAB))
+                {
                     Skip();
                 }
 
                 //Skip single line comments "//..."
-                if (AcceptSequence(COMMENT_BEGIN_TOKEN, SINGLELINE_COMMENT_SECOND_TOKEN)) {
+                if (AcceptSequence(COMMENT_BEGIN_TOKEN, SINGLELINE_COMMENT_SECOND_TOKEN))
+                {
                     Skip(2);
                     ReadInputUntil(WHITESPACE_CARRIAGE_RETURN, WHITESPACE_NEWLINE);
                     commentSkipped = true;
                 }
                 //Skip multi line comments "/* ... */"
-                else if (AcceptSequence(COMMENT_BEGIN_TOKEN, MULTILINE_COMMENT_SECOND_TOKEN)) {
+                else if (AcceptSequence(COMMENT_BEGIN_TOKEN, MULTILINE_COMMENT_SECOND_TOKEN))
+                {
                     Skip(2);
-                    while (true) {
-                        if (AcceptSequence(MULTILINE_COMMENT_SECOND_TOKEN, MULTILINE_COMMENT_END_TOKEN)) {
+                    while (true)
+                    {
+                        if (AcceptSequence(MULTILINE_COMMENT_SECOND_TOKEN, MULTILINE_COMMENT_END_TOKEN))
+                        {
                             Skip(2);
                             break;
                         }
@@ -282,10 +306,12 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The input until one the given symbols.</returns>
         /// <param name="symbols">The symbols that can occur after the string to read.</param>
-        private string ReadInputUntil(params char[] symbols) {
+        private string ReadInputUntil(params char[] symbols)
+        {
             string s = "";
-            while (!Accept(symbols)) {
-                s += (char) data[index];
+            while (!Accept(symbols))
+            {
+                s += (char)data[index];
                 Skip();
             }
             return s;
@@ -296,10 +322,12 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The input until the given symbol.</returns>
         /// <param name="symbol">The symbol that can occur after the string to read.</param>
-        private string ReadInputUntil(char symbol) {
+        private string ReadInputUntil(char symbol)
+        {
             String s = "";
-            while (!Accept(symbol)) {
-                s += (char) data[index];
+            while (!Accept(symbol))
+            {
+                s += (char)data[index];
                 Skip();
             }
             return s;
@@ -311,13 +339,17 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The root object of the property list. This can either be a NSDictionary or a NSArray.</returns>
         /// <exception cref="FormatException">When an error occured during parsing</exception>
-        public NSObject Parse() {
+        public NSObject Parse()
+        {
             index = 0;
             SkipWhitespacesAndComments();
             Expect(DICTIONARY_BEGIN_TOKEN, ARRAY_BEGIN_TOKEN, COMMENT_BEGIN_TOKEN);
-            try {
+            try
+            {
                 return ParseObject();
-            } catch (IndexOutOfRangeException ex) {
+            }
+            catch (IndexOutOfRangeException ex)
+            {
                 throw new FormatException(String.Format("Reached end of input unexpectedly at {0}.", index));
             }
         }
@@ -328,37 +360,53 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The parsed NSObject.</returns>
         /// <seealso cref="ASCIIPropertyListParser.index"/>
-        private NSObject ParseObject() {
-            switch (data[index]) {
-                case (byte)ARRAY_BEGIN_TOKEN: {
+        private NSObject ParseObject()
+        {
+            switch (data[index])
+            {
+                case (byte)ARRAY_BEGIN_TOKEN:
+                    {
                         return ParseArray();
                     }
-                case (byte)DICTIONARY_BEGIN_TOKEN: {
+                case (byte)DICTIONARY_BEGIN_TOKEN:
+                    {
                         return ParseDictionary();
                     }
-                case (byte)DATA_BEGIN_TOKEN: {
+                case (byte)DATA_BEGIN_TOKEN:
+                    {
                         return ParseData();
                     }
-                case (byte)QUOTEDSTRING_BEGIN_TOKEN: {
+                case (byte)QUOTEDSTRING_BEGIN_TOKEN:
+                    {
                         string quotedString = ParseQuotedString();
                         //apple dates are quoted strings of length 20 and after the 4 year digits a dash is found
-                        if (quotedString.Length == 20 && quotedString[4] == DATE_DATE_FIELD_DELIMITER) {
-                            try {
+                        if (quotedString.Length == 20 && quotedString[4] == DATE_DATE_FIELD_DELIMITER)
+                        {
+                            try
+                            {
                                 return new NSDate(quotedString);
-                            } catch (Exception ex) {
+                            }
+                            catch (Exception ex)
+                            {
                                 //not a date? --> return string
                                 return new NSString(quotedString);
                             }
-                        } else {
+                        }
+                        else
+                        {
                             return new NSString(quotedString);
                         }
                     }
-                default: {
+                default:
+                    {
                         //0-9
-                        if (data[index] > 0x2F && data[index] < 0x3A) {
+                        if (data[index] > 0x2F && data[index] < 0x3A)
+                        {
                             //could be a date or just a string
                             return ParseDateString();
-                        } else {
+                        }
+                        else
+                        {
                             //non-numerical -> string or boolean
                             string parsedString = ParseString();
                             return new NSString(parsedString);
@@ -372,17 +420,22 @@ namespace Claunia.PropertyList
         /// The prerequisite for calling this method is, that an array begin token has been read.
         /// </summary>
         /// <returns>The array found at the parsing position.</returns>
-        private NSArray ParseArray() {
+        private NSArray ParseArray()
+        {
             //Skip begin token
             Skip();
             SkipWhitespacesAndComments();
             List<NSObject> objects = new List<NSObject>();
-            while (!Accept(ARRAY_END_TOKEN)) {
+            while (!Accept(ARRAY_END_TOKEN))
+            {
                 objects.Add(ParseObject());
                 SkipWhitespacesAndComments();
-                if (Accept(ARRAY_ITEM_DELIMITER_TOKEN)) {
+                if (Accept(ARRAY_ITEM_DELIMITER_TOKEN))
+                {
                     Skip();
-                } else {
+                }
+                else
+                {
                     break; //must have reached end of array
                 }
                 SkipWhitespacesAndComments();
@@ -397,17 +450,22 @@ namespace Claunia.PropertyList
         /// The prerequisite for calling this method is, that a dictionary begin token has been read.
         /// </summary>
         /// <returns>The dictionary found at the parsing position.</returns>
-        private NSDictionary ParseDictionary() {
+        private NSDictionary ParseDictionary()
+        {
             //Skip begin token
             Skip();
             SkipWhitespacesAndComments();
             NSDictionary dict = new NSDictionary();
-            while (!Accept(DICTIONARY_END_TOKEN)) {
+            while (!Accept(DICTIONARY_END_TOKEN))
+            {
                 //Parse key
                 string keyString;
-                if (Accept(QUOTEDSTRING_BEGIN_TOKEN)) {
+                if (Accept(QUOTEDSTRING_BEGIN_TOKEN))
+                {
                     keyString = ParseQuotedString();
-                } else {
+                }
+                else
+                {
                     keyString = ParseString();
                 }
                 SkipWhitespacesAndComments();
@@ -433,30 +491,40 @@ namespace Claunia.PropertyList
         /// The prerequisite for calling this method is, that a data begin token has been read.
         /// </summary>
         /// <returns>The data object found at the parsing position.</returns>
-        private NSObject ParseData() {
+        private NSObject ParseData()
+        {
             NSObject obj = null;
             //Skip begin token
             Skip();
-            if (Accept(DATA_GSOBJECT_BEGIN_TOKEN)) {
+            if (Accept(DATA_GSOBJECT_BEGIN_TOKEN))
+            {
                 Skip();
                 Expect(DATA_GSBOOL_BEGIN_TOKEN, DATA_GSDATE_BEGIN_TOKEN, DATA_GSINT_BEGIN_TOKEN, DATA_GSREAL_BEGIN_TOKEN);
-                if (Accept(DATA_GSBOOL_BEGIN_TOKEN)) {
+                if (Accept(DATA_GSBOOL_BEGIN_TOKEN))
+                {
                     //Boolean
                     Skip();
                     Expect(DATA_GSBOOL_TRUE_TOKEN, DATA_GSBOOL_FALSE_TOKEN);
-                    if (Accept(DATA_GSBOOL_TRUE_TOKEN)) {
+                    if (Accept(DATA_GSBOOL_TRUE_TOKEN))
+                    {
                         obj = new NSNumber(true);
-                    } else {
+                    }
+                    else
+                    {
                         obj = new NSNumber(false);
                     }
                     //Skip the parsed boolean token
                     Skip();
-                } else if (Accept(DATA_GSDATE_BEGIN_TOKEN)) {
+                }
+                else if (Accept(DATA_GSDATE_BEGIN_TOKEN))
+                {
                     //Date
                     Skip();
                     string dateString = ReadInputUntil(DATA_END_TOKEN);
                     obj = new NSDate(dateString);
-                } else if (Accept(DATA_GSINT_BEGIN_TOKEN, DATA_GSREAL_BEGIN_TOKEN)) {
+                }
+                else if (Accept(DATA_GSINT_BEGIN_TOKEN, DATA_GSREAL_BEGIN_TOKEN))
+                {
                     //Number
                     Skip();
                     string numberString = ReadInputUntil(DATA_END_TOKEN);
@@ -464,16 +532,19 @@ namespace Claunia.PropertyList
                 }
                 //parse data end token
                 Read(DATA_END_TOKEN);
-            } else {
+            }
+            else
+            {
                 string dataString = ReadInputUntil(DATA_END_TOKEN);
                 dataString = Regex.Replace(dataString, "\\s+", "");
 
                 int numBytes = dataString.Length / 2;
                 byte[] bytes = new byte[numBytes];
-                for (int i = 0; i < bytes.Length; i++) {
+                for (int i = 0; i < bytes.Length; i++)
+                {
                     string byteString = dataString.Substring(i * 2, 2);
                     int byteValue = Convert.ToInt32(byteString, 16);
-                    bytes[i] = (byte) byteValue;
+                    bytes[i] = (byte)byteValue;
                 }
                 obj = new NSData(bytes);
 
@@ -488,12 +559,17 @@ namespace Claunia.PropertyList
         /// Attempts to parse a plain string as a date if possible.
         /// </summary>
         /// <returns>A NSDate if the string represents such an object. Otherwise a NSString is returned.</returns>
-        private NSObject ParseDateString() {
+        private NSObject ParseDateString()
+        {
             string numericalString = ParseString();
-            if (numericalString.Length > 4 && numericalString[4] == DATE_DATE_FIELD_DELIMITER) {
-                try {
+            if (numericalString.Length > 4 && numericalString[4] == DATE_DATE_FIELD_DELIMITER)
+            {
+                try
+                {
                     return new NSDate(numericalString);
-                } catch(Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     //An exception occurs if the string is not a date but just a string
                 }
             }
@@ -505,7 +581,8 @@ namespace Claunia.PropertyList
         /// The string is made up of all characters to the next whitespace, delimiter token or assignment token.
         /// </summary>
         /// <returns>The string found at the current parsing position.</returns>
-        private string ParseString() {
+        private string ParseString()
+        {
             return ReadInputUntil(WHITESPACE_SPACE, WHITESPACE_TAB, WHITESPACE_NEWLINE, WHITESPACE_CARRIAGE_RETURN,
                 ARRAY_ITEM_DELIMITER_TOKEN, DICTIONARY_ITEM_DELIMITER_TOKEN, DICTIONARY_ASSIGN_TOKEN, ARRAY_END_TOKEN);
         }
@@ -516,23 +593,29 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The quoted string found at the parsing method with all special characters unescaped.</returns>
         /// <exception cref="FormatException">If an error occured during parsing.</exception>
-        private string ParseQuotedString() {
+        private string ParseQuotedString()
+        {
             //Skip begin token
             Skip();
             string quotedString = "";
             bool unescapedBackslash = true;
             //Read from opening quotation marks to closing quotation marks and skip escaped quotation marks
-            while (data[index] != QUOTEDSTRING_END_TOKEN || (data[index - 1] == QUOTEDSTRING_ESCAPE_TOKEN && unescapedBackslash)) {
-                quotedString += (char) data[index];
-                if (Accept(QUOTEDSTRING_ESCAPE_TOKEN)) {
+            while (data[index] != QUOTEDSTRING_END_TOKEN || (data[index - 1] == QUOTEDSTRING_ESCAPE_TOKEN && unescapedBackslash))
+            {
+                quotedString += (char)data[index];
+                if (Accept(QUOTEDSTRING_ESCAPE_TOKEN))
+                {
                     unescapedBackslash = !(data[index - 1] == QUOTEDSTRING_ESCAPE_TOKEN && unescapedBackslash);
                 }
                 Skip();
             }
             string unescapedString;
-            try {
+            try
+            {
                 unescapedString = ParseQuotedString(quotedString);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 throw new FormatException(String.Format("The quoted string could not be parsed at {0}.", index));
             }
             //skip end token
@@ -554,28 +637,34 @@ namespace Claunia.PropertyList
         /// <exception cref="ArgumentException">If the en-/decoder for the UTF-8 or ASCII encoding could not be loaded</exception>
         /// <exception cref="EncoderFallbackException">If the string is encoded neither in ASCII nor in UTF-8</exception>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static string ParseQuotedString(string s) {
+        public static string ParseQuotedString(string s)
+        {
             List<byte> strBytes = new List<byte>();
             CharEnumerator c = s.GetEnumerator();
 
-            while(c.MoveNext()) {
-                switch (c.Current) {
-                    case '\\': { //An escaped sequence is following
+            while (c.MoveNext())
+            {
+                switch (c.Current)
+                {
+                    case '\\':
+                        { //An escaped sequence is following
                             byte[] bts = Encoding.UTF8.GetBytes(ParseEscapedSequence(c));
                             foreach (byte b in bts)
                                 strBytes.Add(b);
                             break;
                         }
-                    default: { //a normal ASCII char
-                            strBytes.Add((byte) 0);
-                            strBytes.Add((byte) c.Current);
+                    default:
+                        { //a normal ASCII char
+                            strBytes.Add((byte)0);
+                            strBytes.Add((byte)c.Current);
                             break;
                         }
                 }
             }
             byte[] bytArr = new byte[strBytes.Count];
             int i = 0;
-            foreach (byte b in strBytes) {
+            foreach (byte b in strBytes)
+            {
                 bytArr[i] = b;
                 i++;
             }
@@ -585,7 +674,8 @@ namespace Claunia.PropertyList
 
             //If the string can be represented in the ASCII codepage
             // --> use ASCII encoding
-            try{
+            try
+            {
                 if (asciiEncoder == null)
                     asciiEncoder = Encoding.GetEncoding("ascii", EncoderExceptionFallback.ExceptionFallback, DecoderExceptionFallback.ExceptionFallback);
                 return asciiEncoder.GetString(Encoding.Convert(Encoding.BigEndianUnicode, asciiEncoder, bytArr));
@@ -604,22 +694,36 @@ namespace Claunia.PropertyList
         /// <returns>The unescaped character as a string.</returns>
         /// <param name="iterator">The string character iterator pointing to the first character after the backslash</param>
         /// <exception cref="EncoderFallbackException">If an invalid Unicode or ASCII escape sequence is found.</exception>
-        private static string ParseEscapedSequence(CharEnumerator iterator) {
+        private static string ParseEscapedSequence(CharEnumerator iterator)
+        {
             iterator.MoveNext();
             char c = iterator.Current;
-            if (c == '\\') {
-                return Encoding.UTF8.GetString(new byte[]{0, (byte)'\\'});
-            } else if (c == '"') {
-                return Encoding.UTF8.GetString(new byte[]{0, (byte)'\"'});
-            } else if (c == 'b') {
-                return Encoding.UTF8.GetString(new byte[]{0, (byte)'\b'});
-            } else if (c == 'n') {
-                return Encoding.UTF8.GetString(new byte[]{0, (byte)'\n'});
-            } else if (c == 'r') {
-                return Encoding.UTF8.GetString(new byte[]{0, (byte)'\r'});
-            } else if (c == 't') {
-                return Encoding.UTF8.GetString(new byte[]{0, (byte)'\t'});
-            } else if (c == 'U' || c == 'u') {
+            if (c == '\\')
+            {
+                return Encoding.UTF8.GetString(new byte[]{ 0, (byte)'\\' });
+            }
+            else if (c == '"')
+            {
+                return Encoding.UTF8.GetString(new byte[]{ 0, (byte)'\"' });
+            }
+            else if (c == 'b')
+            {
+                return Encoding.UTF8.GetString(new byte[]{ 0, (byte)'\b' });
+            }
+            else if (c == 'n')
+            {
+                return Encoding.UTF8.GetString(new byte[]{ 0, (byte)'\n' });
+            }
+            else if (c == 'r')
+            {
+                return Encoding.UTF8.GetString(new byte[]{ 0, (byte)'\r' });
+            }
+            else if (c == 't')
+            {
+                return Encoding.UTF8.GetString(new byte[]{ 0, (byte)'\t' });
+            }
+            else if (c == 'U' || c == 'u')
+            {
                 //4 digit hex Unicode value
                 string byte1 = "";
                 iterator.MoveNext();
@@ -631,9 +735,11 @@ namespace Claunia.PropertyList
                 byte2 += iterator.Current;
                 iterator.MoveNext();
                 byte2 += iterator.Current;
-                byte[] stringBytes = {(byte) Convert.ToInt32(byte1, 16), (byte) Convert.ToInt32(byte2, 16)};
+                byte[] stringBytes = { (byte)Convert.ToInt32(byte1, 16), (byte)Convert.ToInt32(byte2, 16) };
                 return Encoding.UTF8.GetString(stringBytes);
-            } else {
+            }
+            else
+            {
                 //3 digit octal ASCII value
                 string num = "";
                 num += c;
@@ -642,7 +748,7 @@ namespace Claunia.PropertyList
                 iterator.MoveNext();
                 num += iterator.Current;
                 int asciiCode = Convert.ToInt32(num, 8);
-                byte[] stringBytes = {0, (byte) asciiCode};
+                byte[] stringBytes = { 0, (byte)asciiCode };
                 return Encoding.UTF8.GetString(stringBytes);
             }
         }

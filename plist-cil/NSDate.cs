@@ -49,10 +49,14 @@ namespace Claunia.PropertyList
         /// <returns>The parsed Date</returns>
         /// <param name="textRepresentation">The date string as found in the XML property list</param>
         /// <exception cref="FormatException">Given string cannot be parsed</exception>
-        private static DateTime ParseDateString(string textRepresentation) {
-            try {
+        private static DateTime ParseDateString(string textRepresentation)
+        {
+            try
+            {
                 return DateTime.ParseExact(textRepresentation, sdfDefault, provider);
-            } catch (FormatException ex) {
+            }
+            catch (FormatException ex)
+            {
                 return DateTime.ParseExact(textRepresentation, sdfGnuStep, provider);
             }
         }
@@ -63,7 +67,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="date">The date which should be represented.</param>
         /// <returns>The string representation of the date.</returns>
-        private static string MakeDateString(DateTime date) {
+        private static string MakeDateString(DateTime date)
+        {
             return date.ToString(sdfDefault);
         }
 
@@ -74,7 +79,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="date">The date which should be represented.</param>
         /// <returns>The string representation of the date.</returns>
-        private static string MakeDateStringGnuStep(DateTime date) {
+        private static string MakeDateStringGnuStep(DateTime date)
+        {
             return date.ToString(sdfGnuStep);
         }
 
@@ -82,7 +88,8 @@ namespace Claunia.PropertyList
         /// Creates a date from its binary representation.
         /// </summary>
         /// <param name="bytes">bytes The date bytes</param>
-        public NSDate(byte[] bytes) {
+        public NSDate(byte[] bytes)
+        {
             //dates are 8 byte big-endian double, seconds since the epoch
             date = EPOCH.AddSeconds(BinaryPropertyListParser.ParseDouble(bytes));
         }
@@ -93,7 +100,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="textRepresentation">The textual representation of the date (ISO 8601 format)</param>
         /// <exception cref="FormatException">When the date could not be parsed, i.e. it does not match the expected pattern.</exception>
-        public NSDate(String textRepresentation) {
+        public NSDate(String textRepresentation)
+        {
             date = ParseDateString(textRepresentation);
         }
 
@@ -101,7 +109,8 @@ namespace Claunia.PropertyList
         /// Creates a NSDate from a .NET DateTime
         /// </summary>
         /// <param name="d">The date</param>
-        public NSDate(DateTime d) {
+        public NSDate(DateTime d)
+        {
             if (d == null)
                 throw new ArgumentException("Date cannot be null", "d");
             date = d;
@@ -119,22 +128,26 @@ namespace Claunia.PropertyList
             }
         }
 
-        public override bool Equals(Object obj) {
-            return obj.GetType().Equals(GetType()) && date.Equals(((NSDate) obj).Date);
+        public override bool Equals(Object obj)
+        {
+            return obj.GetType().Equals(GetType()) && date.Equals(((NSDate)obj).Date);
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             return date.GetHashCode();
         }
 
-        internal override void ToXml(StringBuilder xml, int level) {
+        internal override void ToXml(StringBuilder xml, int level)
+        {
             Indent(xml, level);
             xml.Append("<date>");
             xml.Append(MakeDateString(date));
             xml.Append("</date>");
         }
 
-        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+        internal override void ToBinary(BinaryPropertyListWriter outPlist)
+        {
             outPlist.Write(0x33);
             outPlist.WriteDouble((date - EPOCH).TotalSeconds);
         }
@@ -143,18 +156,21 @@ namespace Claunia.PropertyList
         /// Generates a string representation of the date.
         /// </summary>
         /// <returns>A string representation of the date.</returns>
-        public override String ToString() {
+        public override String ToString()
+        {
             return date.ToString();
         }
 
-        internal override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
             ascii.Append("\"");
             ascii.Append(MakeDateString(date));
             ascii.Append("\"");
         }
 
-        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
             ascii.Append("<*D");
             ascii.Append(MakeDateStringGnuStep(date));

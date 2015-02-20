@@ -71,7 +71,8 @@ namespace Claunia.PropertyList
         /// Assigns IDs to all the objects in this NSObject subtree.
         /// </summary>
         /// <param name="out">The writer object that handles the binary serialization.</param>
-        internal virtual void AssignIDs(BinaryPropertyListWriter outPlist) {
+        internal virtual void AssignIDs(BinaryPropertyListWriter outPlist)
+        {
             outPlist.AssignID(this);
         }
 
@@ -85,7 +86,8 @@ namespace Claunia.PropertyList
         /// Generates a valid XML property list including headers using this object as root.
         /// </summary>
         /// <returns>The XML representation of the property list including XML header and doctype information.</returns>
-        public string ToXmlPropertyList() {
+        public string ToXmlPropertyList()
+        {
             StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             xml.Append(NSObject.NEWLINE);
             xml.Append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">");
@@ -122,7 +124,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="xml">The string builder for the XML document.</param>
         /// <param name="level">The level of identation.</param>
-        internal void Indent(StringBuilder xml, int level) {
+        internal void Indent(StringBuilder xml, int level)
+        {
             for (int i = 0; i < level; i++)
                 xml.Append(INDENT);
         }
@@ -132,7 +135,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
-        public static NSNumber Wrap(long value) {
+        public static NSNumber Wrap(long value)
+        {
             return new NSNumber(value);
         }
 
@@ -141,7 +145,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
-        public static NSNumber Wrap(double value) {
+        public static NSNumber Wrap(double value)
+        {
             return new NSNumber(value);
         }
 
@@ -150,7 +155,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
-        public static NSNumber Wrap(bool value) {
+        public static NSNumber Wrap(bool value)
+        {
             return new NSNumber(value);
         }
 
@@ -159,7 +165,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
-        public static NSData Wrap(byte[] value) {
+        public static NSData Wrap(byte[] value)
+        {
             return new NSData(value);
         }
 
@@ -169,9 +176,11 @@ namespace Claunia.PropertyList
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
         /// <exception cref="SystemException">When one of the objects contained in the array cannot be represented by a NSObject.</exception>
-        public static NSArray Wrap(Object[] value) {
+        public static NSArray Wrap(Object[] value)
+        {
             NSArray arr = new NSArray(value.Length);
-            for (int i = 0; i < value.Length; i++) {
+            for (int i = 0; i < value.Length; i++)
+            {
                 arr.SetValue(i, Wrap(value[i]));
             }
             return arr;
@@ -183,7 +192,8 @@ namespace Claunia.PropertyList
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
         /// <exception cref="SystemException">When one of the values contained in the map cannot be represented by a NSObject.</exception>
-        public static NSDictionary Wrap(Dictionary<string, Object> value) {
+        public static NSDictionary Wrap(Dictionary<string, Object> value)
+        {
             NSDictionary dict = new NSDictionary();
             foreach (KeyValuePair<string, Object> kvp in value)
                 dict.Add(kvp.Key, Wrap(kvp.Value));
@@ -196,7 +206,8 @@ namespace Claunia.PropertyList
         /// <param name="value">The value to represent as a NSObject.</param>
         /// <returns>A NSObject representing the given value.</returns>
         /// <exception cref="SystemException">When one of the values contained in the map cannot be represented by a NSObject.</exception>
-        public static NSSet Wrap(List<Object> value) {
+        public static NSSet Wrap(List<Object> value)
+        {
             NSSet set = new NSSet();
             foreach (Object o in value)
                 set.AddObject(Wrap(o));
@@ -220,101 +231,123 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="o">The object to represent.</param>
         ///<returns>A NSObject equivalent to the given object.</returns>
-        public static NSObject Wrap(Object o) {
-            if(o == null)
+        public static NSObject Wrap(Object o)
+        {
+            if (o == null)
                 throw new NullReferenceException("A null object cannot be wrapped as a NSObject");
 
-            if(o is NSObject)
+            if (o is NSObject)
                 return (NSObject)o;
 
             Type c = o.GetType();
-            if (typeof(bool).Equals(c)) {
+            if (typeof(bool).Equals(c))
+            {
                 return Wrap((bool)o);
             }
-            if (typeof(Byte).Equals(c)) {
-                return Wrap((int) (Byte) o);
+            if (typeof(Byte).Equals(c))
+            {
+                return Wrap((int)(Byte)o);
             }
-            if (typeof(short).Equals(c)) {
-                return Wrap((int) (short) o);
+            if (typeof(short).Equals(c))
+            {
+                return Wrap((int)(short)o);
             }
-            if (typeof(int).Equals(c)) {
-                return Wrap((int) (int) o);
+            if (typeof(int).Equals(c))
+            {
+                return Wrap((int)(int)o);
             }
-            if (typeof(long).IsAssignableFrom(c)) {
-                return Wrap((long) (long) o);
+            if (typeof(long).IsAssignableFrom(c))
+            {
+                return Wrap((long)(long)o);
             }
-            if (typeof(float).Equals(c)) {
-                return Wrap((double) (float) o);
+            if (typeof(float).Equals(c))
+            {
+                return Wrap((double)(float)o);
             }
-            if (typeof(double).IsAssignableFrom(c)) {
-                return Wrap((double) (Double) o);
+            if (typeof(double).IsAssignableFrom(c))
+            {
+                return Wrap((double)(Double)o);
             }
-            if (typeof(string).Equals(c)) {
+            if (typeof(string).Equals(c))
+            {
                 return new NSString((string)o);
             }
-            if (typeof(DateTime).Equals(c)) {
+            if (typeof(DateTime).Equals(c))
+            {
                 return new NSDate((DateTime)o);
             }
-            if(c.IsArray) {
+            if (c.IsArray)
+            {
                 Type cc = c.GetElementType();
-                if (cc.Equals(typeof(byte))) {
-                    return Wrap((byte[]) o);
+                if (cc.Equals(typeof(byte)))
+                {
+                    return Wrap((byte[])o);
                 }
-                else if(cc.Equals(typeof(bool))) {
+                else if (cc.Equals(typeof(bool)))
+                {
                     bool[] array = (bool[])o;
                     NSArray nsa = new NSArray(array.Length);
-                    for(int i=0;i<array.Length;i++)
+                    for (int i = 0; i < array.Length; i++)
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(cc.Equals(typeof(float))) {
+                else if (cc.Equals(typeof(float)))
+                {
                     float[] array = (float[])o;
                     NSArray nsa = new NSArray(array.Length);
-                    for(int i=0;i<array.Length;i++)
+                    for (int i = 0; i < array.Length; i++)
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(cc.Equals(typeof(double))) {
+                else if (cc.Equals(typeof(double)))
+                {
                     double[] array = (double[])o;
                     NSArray nsa = new NSArray(array.Length);
-                    for(int i=0;i<array.Length;i++)
+                    for (int i = 0; i < array.Length; i++)
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(cc.Equals(typeof(short))) {
+                else if (cc.Equals(typeof(short)))
+                {
                     short[] array = (short[])o;
                     NSArray nsa = new NSArray(array.Length);
-                    for(int i=0;i<array.Length;i++)
+                    for (int i = 0; i < array.Length; i++)
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(cc.Equals(typeof(int))) {
+                else if (cc.Equals(typeof(int)))
+                {
                     int[] array = (int[])o;
                     NSArray nsa = new NSArray(array.Length);
-                    for(int i=0;i<array.Length;i++)
+                    for (int i = 0; i < array.Length; i++)
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else if(cc.Equals(typeof(long))) {
+                else if (cc.Equals(typeof(long)))
+                {
                     long[] array = (long[])o;
                     NSArray nsa = new NSArray(array.Length);
-                    for(int i=0;i<array.Length;i++)
+                    for (int i = 0; i < array.Length; i++)
                         nsa.SetValue(i, Wrap(array[i]));
                     return nsa;
                 }
-                else {
-                    return Wrap((Object[]) o);
+                else
+                {
+                    return Wrap((Object[])o);
                 }
             }
-            if (typeof(Dictionary<string,Object>).IsAssignableFrom(c)) {
+            if (typeof(Dictionary<string,Object>).IsAssignableFrom(c))
+            {
                 Dictionary<string,Object> netDict = (Dictionary<string,Object>)o;
                 NSDictionary dict = new NSDictionary();
-                foreach(KeyValuePair<string, Object> kvp in netDict) {
+                foreach (KeyValuePair<string, Object> kvp in netDict)
+                {
                     dict.Add(kvp.Key, Wrap(kvp.Value));
                 }
                 return dict;
             }
-            if (typeof(List<Object>).IsAssignableFrom(c)) {
+            if (typeof(List<Object>).IsAssignableFrom(c))
+            {
                 return Wrap(((List<Object>)o).ToArray());
             }
             return WrapSerialized(o);
@@ -327,15 +360,19 @@ namespace Claunia.PropertyList
         /// <param name="o">The object to serialize and wrap.</param>
         /// <returns>A NSData object</returns>
         /// <exception cref="SystemException">When the object could not be serialized.</exception>
-        public static NSData WrapSerialized(Object o) {
-            try {
+        public static NSData WrapSerialized(Object o)
+        {
+            try
+            {
                 BinaryFormatter bf = new BinaryFormatter();
-                using(MemoryStream ms = new MemoryStream())
+                using (MemoryStream ms = new MemoryStream())
                 {
                     bf.Serialize(ms, o);
                     return new NSData(ms.ToArray());
                 }
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 throw new SystemException("The given object of class " + o.GetType() + " could not be serialized and stored in a NSData object.");
             }
         }
@@ -355,58 +392,87 @@ namespace Claunia.PropertyList
         /// </ul>
         /// </summary>
         /// <returns>A native .NET object representing this NSObject's value.</returns>
-        public Object ToObject() {
-            if(this is NSArray) {
+        public Object ToObject()
+        {
+            if (this is NSArray)
+            {
                 NSObject[] arrayA = ((NSArray)this).GetArray();
                 Object[] arrayB = new Object[arrayA.Length];
-                for(int i = 0; i < arrayA.Length; i++) {
+                for (int i = 0; i < arrayA.Length; i++)
+                {
                     arrayB[i] = arrayA[i].ToObject();
                 }
                 return arrayB;
-            } else if (this is NSDictionary) {
+            }
+            else if (this is NSDictionary)
+            {
                 Dictionary<string, NSObject> dictA = ((NSDictionary)this).GetDictionary();
                 Dictionary<string, Object> dictB = new Dictionary<string, Object>(dictA.Count);
-                foreach(KeyValuePair<string, NSObject> kvp in dictA) {
+                foreach (KeyValuePair<string, NSObject> kvp in dictA)
+                {
                     dictB.Add(kvp.Key, kvp.Value.ToObject());
                 }
                 return dictB;
-            } else if(this is NSSet) {
+            }
+            else if (this is NSSet)
+            {
                 List<NSObject> setA = ((NSSet)this).GetSet();
                 List<Object> setB = new List<Object>();
-                foreach(NSObject o in setA) {
+                foreach (NSObject o in setA)
+                {
                     setB.Add(o.ToObject());
                 }
                 return setB;
-            } else if(this is NSNumber) {
+            }
+            else if (this is NSNumber)
+            {
                 NSNumber num = (NSNumber)this;
-                switch(num.GetNSNumberType()) {
-                    case NSNumber.INTEGER : {
+                switch (num.GetNSNumberType())
+                {
+                    case NSNumber.INTEGER:
+                        {
                             long longVal = num.ToLong();
-                            if(longVal > int.MaxValue || longVal < int.MinValue) {
+                            if (longVal > int.MaxValue || longVal < int.MinValue)
+                            {
                                 return longVal;
-                            } else {
+                            }
+                            else
+                            {
                                 return num.ToInt();
                             }
                         }
-                    case NSNumber.REAL : {
+                    case NSNumber.REAL:
+                        {
                             return num.ToDouble();
                         }
-                    case NSNumber.BOOLEAN : {
+                    case NSNumber.BOOLEAN:
+                        {
                             return num.ToBool();
                         }
-                    default : {
+                    default :
+                        {
                             return num.ToDouble();
                         }
                 }
-            } else if(this is NSString) {
+            }
+            else if (this is NSString)
+            {
                 return ((NSString)this).GetContent();
-            } else if(this is NSData) {
+            }
+            else if (this is NSData)
+            {
                 return ((NSData)this).Bytes;
-            } else if(this is NSDate) {
+            }
+            else if (this is NSDate)
+            {
                 return ((NSDate)this).Date;
-            } else if(this is UID) {
+            }
+            else if (this is UID)
+            {
                 return ((UID)this).Bytes;
-            } else {
+            }
+            else
+            {
                 return this;
             }
         }

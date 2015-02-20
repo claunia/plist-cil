@@ -38,7 +38,7 @@ namespace Claunia.PropertyList
         /// Creates a new exception with the given message.
         /// </summary>
         /// <param name="message">A message containing information about the nature of the exception.</param>
-        public PropertyListFormatException(string message) : base (message)
+        public PropertyListFormatException(string message) : base(message)
         {
         }
     }

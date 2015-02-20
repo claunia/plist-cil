@@ -236,16 +236,20 @@ namespace Claunia.PropertyList
             xml.Append("</array>");
         }
 
-        internal override void AssignIDs(BinaryPropertyListWriter outPlist) {
+        internal override void AssignIDs(BinaryPropertyListWriter outPlist)
+        {
             base.AssignIDs(outPlist);
-            foreach (NSObject obj in array) {
+            foreach (NSObject obj in array)
+            {
                 obj.AssignIDs(outPlist);
             }
         }
 
-        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+        internal override void ToBinary(BinaryPropertyListWriter outPlist)
+        {
             outPlist.WriteIntHeader(0xA, array.Length);
-            foreach (NSObject obj in array) {
+            foreach (NSObject obj in array)
+            {
                 outPlist.WriteID(outPlist.GetID(obj));
             }
         }
@@ -290,7 +294,7 @@ namespace Claunia.PropertyList
             {
                 Type objClass = array[i].GetType();
                 if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
-                        && indexOfLastNewLine != ascii.Length)
+                    && indexOfLastNewLine != ascii.Length)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
@@ -324,7 +328,7 @@ namespace Claunia.PropertyList
             {
                 Type objClass = array[i].GetType();
                 if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
-                        && indexOfLastNewLine != ascii.Length)
+                    && indexOfLastNewLine != ascii.Length)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;

@@ -49,18 +49,23 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The type of the property list</returns>
         /// <param name="dataBeginning">The very first bytes of data of the property list (minus any whitespace) as a string</param>
-        private static int DetermineType(string dataBeginning) {
+        private static int DetermineType(string dataBeginning)
+        {
             dataBeginning = dataBeginning.Trim();
-            if(dataBeginning.Length == 0) {
+            if (dataBeginning.Length == 0)
+            {
                 return TYPE_ERROR_BLANK;
             }
-            if(dataBeginning.StartsWith("bplist")) {
+            if (dataBeginning.StartsWith("bplist"))
+            {
                 return TYPE_BINARY;
             }
-            if(dataBeginning.StartsWith("(") || dataBeginning.StartsWith("{") || dataBeginning.StartsWith("/")) {
+            if (dataBeginning.StartsWith("(") || dataBeginning.StartsWith("{") || dataBeginning.StartsWith("/"))
+            {
                 return TYPE_ASCII;
             }
-            if(dataBeginning.StartsWith("<")) {
+            if (dataBeginning.StartsWith("<"))
+            {
                 return TYPE_XML;
             }
             return TYPE_ERROR_UNKNOWN;
@@ -71,10 +76,12 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The very first bytes of data of the property list (minus any whitespace)</returns>
         /// <param name="bytes">The type of the property list</param>
-        private static int DetermineType(byte[] bytes) {
+        private static int DetermineType(byte[] bytes)
+        {
             //Skip any possible whitespace at the beginning of the file
             int offset = 0;
-            while(offset < bytes.Length && bytes[offset] == ' ' || bytes[offset] == '\t' || bytes[offset] == '\r' || bytes[offset] == '\n' || bytes[offset] == '\f') {
+            while (offset < bytes.Length && bytes[offset] == ' ' || bytes[offset] == '\t' || bytes[offset] == '\r' || bytes[offset] == '\n' || bytes[offset] == '\f')
+            {
                 offset++;
             }
             return DetermineType(Encoding.ASCII.GetString(bytes, offset, Math.Min(8, bytes.Length - offset)));
@@ -87,12 +94,14 @@ namespace Claunia.PropertyList
         /// <param name="fs">An input stream pointing to the beginning of the property list data.
         /// The stream will be reset to the beginning of the property
         /// list data after the type has been determined.</param>
-        private static int DetermineType(Stream fs) {
+        private static int DetermineType(Stream fs)
+        {
             //Skip any possible whitespace at the beginning of the file
             byte[] magicBytes = new byte[8];
             int b;
             long mark;
-            do {
+            do
+            {
                 mark = fs.Position;
                 b = fs.ReadByte();
             }
@@ -107,7 +116,7 @@ namespace Claunia.PropertyList
             int type = DetermineType(Encoding.ASCII.GetString(magicBytes, 0, read));
             fs.Seek(mark, SeekOrigin.Begin);
             //if(fs.markSupported())
-              //  fs.reset();
+            //  fs.reset();
             return type;
         }
 
@@ -116,13 +125,15 @@ namespace Claunia.PropertyList
         /// a maximum count.
         /// </summary>
         /// <param name="fs">The Stream pointing to the data that should be stored in the array.</param>
-        internal static byte[] ReadAll(Stream fs) {
+        internal static byte[] ReadAll(Stream fs)
+        {
             MemoryStream outputStream = new MemoryStream();
             byte[] buf = new byte[512];
             int read = 512;
-            while (read == 512) {
+            while (read == 512)
+            {
                 read = fs.Read(buf, 0, 512);
-                if(read != -1)
+                if (read != -1)
                     outputStream.Write(buf, 0, read);
             }
             return outputStream.ToArray();
@@ -133,7 +144,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="filePath">Path to the property list file.</param>
         /// <returns>The root object in the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
-        public static NSObject Parse(string filePath) {
+        public static NSObject Parse(string filePath)
+        {
             return Parse(new FileInfo(filePath));
         }
 
@@ -142,11 +154,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="f">The property list file.</param>
         /// <returns>The root object in the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
-        public static NSObject Parse(FileInfo f) {
+        public static NSObject Parse(FileInfo f)
+        {
             FileStream fis = f.OpenRead();
             int type = DetermineType(fis);
             fis.Close();
-            switch(type) {
+            switch (type)
+            {
                 case TYPE_BINARY:
                     return BinaryPropertyListParser.Parse(f);
                 case TYPE_XML:
@@ -163,8 +177,10 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="bytes">The property list data as a byte array.</param>
         /// <returns>The root object in the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
-        public static NSObject Parse(byte[] bytes) {
-            switch(DetermineType(bytes)) {
+        public static NSObject Parse(byte[] bytes)
+        {
+            switch (DetermineType(bytes))
+            {
                 case TYPE_BINARY:
                     return BinaryPropertyListParser.Parse(bytes);
                 case TYPE_XML:
@@ -181,7 +197,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="fs">The Stream delivering the property list data.</param>
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
-        public static NSObject Parse(Stream fs) {
+        public static NSObject Parse(Stream fs)
+        {
             return Parse(ReadAll(fs));
         }
 
@@ -191,7 +208,8 @@ namespace Claunia.PropertyList
         /// <param name="root">The root object.</param>
         /// <param name="outFile">The output file.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
-        public static void SaveAsXml(NSObject root, FileInfo outFile) {
+        public static void SaveAsXml(NSObject root, FileInfo outFile)
+        {
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
@@ -206,7 +224,8 @@ namespace Claunia.PropertyList
         /// <param name="root">The root object.</param>
         /// <param name="outStream">The output stream.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
-        public static void SaveAsXml(NSObject root, Stream outStream) {
+        public static void SaveAsXml(NSObject root, Stream outStream)
+        {
             StreamWriter w = new StreamWriter(outStream, Encoding.UTF8);
             w.Write(root.ToXmlPropertyList());
             w.Close();
@@ -217,7 +236,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="inFile">The source file.</param>
         /// <param name="outFile">The target file.</param>
-        public static void ConvertToXml(FileInfo inFile, FileInfo outFile) {
+        public static void ConvertToXml(FileInfo inFile, FileInfo outFile)
+        {
             NSObject root = Parse(inFile);
             SaveAsXml(root, outFile);
         }
@@ -228,7 +248,8 @@ namespace Claunia.PropertyList
         /// <param name="root">The root object.</param>
         /// <param name="outFile"></param>The output file.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
-        public static void SaveAsBinary(NSObject root, FileInfo outFile) {
+        public static void SaveAsBinary(NSObject root, FileInfo outFile)
+        {
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
@@ -241,7 +262,8 @@ namespace Claunia.PropertyList
         /// <param name="root">The root object.</param>
         /// <param name="outStream">The output stream.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
-        public static void SaveAsBinary(NSObject root, Stream outStream) {
+        public static void SaveAsBinary(NSObject root, Stream outStream)
+        {
             //BinaryPropertyListWriter.write(outStream, root);
         }
 
@@ -250,7 +272,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="inFile">The source file.</param>
         /// <param name="outFile">The target file.</param>
-        public static void ConvertToBinary(FileInfo inFile, FileInfo outFile) {
+        public static void ConvertToBinary(FileInfo inFile, FileInfo outFile)
+        {
             NSObject root = Parse(inFile);
             SaveAsBinary(root, outFile);
         }
@@ -261,7 +284,8 @@ namespace Claunia.PropertyList
         /// <param name="root">The root object.</param>
         /// <param name="outFile">The output file.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
-        public static void SaveAsASCII(NSDictionary root, FileInfo outFile) {
+        public static void SaveAsASCII(NSDictionary root, FileInfo outFile)
+        {
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
@@ -278,7 +302,8 @@ namespace Claunia.PropertyList
         /// <param name="root">The root object.</param>
         /// <param name="outFile">The output file.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
-        public static void SaveAsASCII(NSArray root, FileInfo outFile) {
+        public static void SaveAsASCII(NSArray root, FileInfo outFile)
+        {
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
@@ -294,17 +319,21 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="inFile">The source file.</param>
         /// <param name="outFile">The target file.</param>
-        public static void ConvertToASCII(FileInfo inFile, FileInfo outFile) {
+        public static void ConvertToASCII(FileInfo inFile, FileInfo outFile)
+        {
             NSObject root = Parse(inFile);
-            if(root is NSDictionary) {
-                SaveAsASCII((NSDictionary) root, outFile);
+            if (root is NSDictionary)
+            {
+                SaveAsASCII((NSDictionary)root, outFile);
             }
-            else if(root is NSArray) {
-                SaveAsASCII((NSArray) root, outFile);
+            else if (root is NSArray)
+            {
+                SaveAsASCII((NSArray)root, outFile);
             }
-            else {
+            else
+            {
                 throw new PropertyListFormatException("The root of the given input property list "
-                    + "is neither a Dictionary nor an Array!");
+                + "is neither a Dictionary nor an Array!");
             }
         }
 
@@ -314,7 +343,8 @@ namespace Claunia.PropertyList
         /// <param name="root">The root object.</param>
         /// <param name="outFile">The output file.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
-        public static void SaveAsGnuStepASCII(NSDictionary root, FileInfo outFile) {
+        public static void SaveAsGnuStepASCII(NSDictionary root, FileInfo outFile)
+        {
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
@@ -331,7 +361,8 @@ namespace Claunia.PropertyList
         /// <param name="root">The root object.</param>
         /// <param name="outFile">The output file.</param>
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
-        public static void SaveAsGnuStepASCII(NSArray root, FileInfo outFile) {
+        public static void SaveAsGnuStepASCII(NSArray root, FileInfo outFile)
+        {
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
@@ -347,17 +378,21 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="inFile">The source file.</param>
         /// <param name="outFile">The target file.</param>
-        public static void ConvertToGnuStepASCII(FileInfo inFile, FileInfo outFile) {
+        public static void ConvertToGnuStepASCII(FileInfo inFile, FileInfo outFile)
+        {
             NSObject root = Parse(inFile);
-            if(root is NSDictionary) {
-                SaveAsGnuStepASCII((NSDictionary) root, outFile);
+            if (root is NSDictionary)
+            {
+                SaveAsGnuStepASCII((NSDictionary)root, outFile);
             }
-            else if(root is NSArray) {
-                SaveAsGnuStepASCII((NSArray) root, outFile);
+            else if (root is NSArray)
+            {
+                SaveAsGnuStepASCII((NSArray)root, outFile);
             }
-            else {
+            else
+            {
                 throw new PropertyListFormatException("The root of the given input property list "
-                    + "is neither a Dictionary nor an Array!");
+                + "is neither a Dictionary nor an Array!");
             }
         }
     }

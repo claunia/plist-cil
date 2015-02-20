@@ -41,7 +41,8 @@ namespace Claunia.PropertyList
         /// Creates the NSData object from the binary representation of it.
         /// </summary>
         /// <param name="bytes">The raw data contained in the NSData object.</param>
-        public NSData(byte[] bytes) {
+        public NSData(byte[] bytes)
+        {
             this.bytes = bytes;
         }
 
@@ -50,7 +51,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="base64">The Base64 encoded contents of the NSData object.</param>
         /// <exception cref="FormatException">When the given string is not a proper Base64 formatted string.</exception>
-        public NSData(string base64) {
+        public NSData(string base64)
+        {
             bytes = Convert.FromBase64String(base64);
         }
 
@@ -60,8 +62,9 @@ namespace Claunia.PropertyList
         /// <param name="file">The file containing the data.</param>
         /// <exception cref="FileNotFoundException">If the file could not be found.</exception>
         /// <exception cref="IOException">If the file could not be read.</exception>
-        public NSData(FileInfo file) {
-            bytes = new byte[(int) file.Length];
+        public NSData(FileInfo file)
+        {
+            bytes = new byte[(int)file.Length];
             FileStream raf = file.OpenRead();
             raf.Read(bytes, 0, (int)file.Length);
             raf.Close();
@@ -71,8 +74,10 @@ namespace Claunia.PropertyList
         /// The bytes contained in this NSData object.
         /// </summary>
         /// <value>The data as bytes</value>
-        public byte[] Bytes {
-            get {
+        public byte[] Bytes
+        {
+            get
+            {
                 return bytes;
             }
         }
@@ -81,8 +86,10 @@ namespace Claunia.PropertyList
         /// Gets the amount of data stored in this object.
         /// </summary>
         /// <value>The number of bytes contained in this object.</value>
-        public int Length {
-            get {
+        public int Length
+        {
+            get
+            {
                 return bytes.Length;
             }
         }
@@ -92,7 +99,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="buf">The byte buffer which will contain the data</param>
         /// <param name="length">The amount of data to copy</param>
-        public void GetBytes(MemoryStream buf, int length) {
+        public void GetBytes(MemoryStream buf, int length)
+        {
             buf.Write(bytes, 0, Math.Min(bytes.Length, length));
         }
 
@@ -102,7 +110,8 @@ namespace Claunia.PropertyList
         /// <param name="buf">The byte buffer which will contain the data</param>
         /// <param name="rangeStart">The start index.</param>
         /// <param name="rangeStop">The stop index.</param>
-        public void GetBytes(MemoryStream buf, int rangeStart, int rangeStop) {
+        public void GetBytes(MemoryStream buf, int rangeStart, int rangeStop)
+        {
             buf.Write(bytes, rangeStart, Math.Min(bytes.Length, rangeStop));
         }
 
@@ -110,26 +119,31 @@ namespace Claunia.PropertyList
         /// Gets the Base64 encoded data contained in this NSData object.
         /// </summary>
         /// <returns>The Base64 encoded data as a <c>string</c>.</returns>
-        public string GetBase64EncodedData() {
+        public string GetBase64EncodedData()
+        {
             return Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
         }
 
-        public override bool Equals(Object obj) {
-            return obj.GetType().Equals(GetType()) && ArrayEquals(((NSData) obj).bytes, bytes);
+        public override bool Equals(Object obj)
+        {
+            return obj.GetType().Equals(GetType()) && ArrayEquals(((NSData)obj).bytes, bytes);
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             int hash = 5;
             hash = 67 * hash + bytes.GetHashCode();
             return hash;
         }
 
-        internal override void ToXml(StringBuilder xml, int level) {
+        internal override void ToXml(StringBuilder xml, int level)
+        {
             Indent(xml, level);
             xml.Append("<data>");
             xml.Append(NSObject.NEWLINE);
             string base64 = GetBase64EncodedData();
-            foreach (string line in base64.Split('\n')) {
+            foreach (string line in base64.Split('\n'))
+            {
                 Indent(xml, level + 1);
                 xml.Append(line);
                 xml.Append(NSObject.NEWLINE);
@@ -138,35 +152,42 @@ namespace Claunia.PropertyList
             xml.Append("</data>");
         }
 
-        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+        internal override void ToBinary(BinaryPropertyListWriter outPlist)
+        {
             outPlist.WriteIntHeader(0x4, bytes.Length);
             outPlist.Write(bytes);
         }
 
-        internal override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.DATA_BEGIN_TOKEN);
             int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
-            for (int i = 0; i < bytes.Length; i++) {
+            for (int i = 0; i < bytes.Length; i++)
+            {
                 int b = bytes[i] & 0xFF;
                 ascii.Append(String.Format("{0:x2}", b));
-                    if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH) {
+                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
+                {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
-                } else if ((i + 1) % 2 == 0 && i != bytes.Length - 1) {
+                }
+                else if ((i + 1) % 2 == 0 && i != bytes.Length - 1)
+                {
                     ascii.Append(" ");
                 }
             }
             ascii.Append(ASCIIPropertyListParser.DATA_END_TOKEN);
         }
 
-        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
+        {
             ToASCII(ascii, level);
         }
 
         public override bool Equals(NSObject obj)
         {
-            if(!(obj is NSData))
+            if (!(obj is NSData))
                 return false;
 
             return ArrayEquals(bytes, ((NSData)obj).Bytes);

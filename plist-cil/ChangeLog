@@ -1,3 +1,22 @@
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
+	* UID.cs:
+	* NSSet.cs:
+	* NSDate.cs:
+	* NSData.cs:
+	* NSArray.cs:
+	* NSString.cs:
+	* NSObject.cs:
+	* NSNumber.cs:
+	* NSDictionary.cs:
+	* PropertyListParser.cs:
+	* XmlPropertyListParser.cs:
+	* ASCIIPropertyListParser.cs:
+	* BinaryPropertyListWriter.cs:
+	* BinaryPropertyListParser.cs:
+	* PropertyListFormatException.cs:
+	  Reformat code.
+
 2015-02-19  Natalia Portillo  <claunia@claunia.com>
 
 	* UID.cs:

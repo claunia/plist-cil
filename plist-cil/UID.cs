@@ -65,32 +65,38 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="xml">The xml StringBuilder</param>
         /// <param name="level">The indentation level</param>
-        internal override void ToXml(StringBuilder xml, int level) {
+        internal override void ToXml(StringBuilder xml, int level)
+        {
             Indent(xml, level);
             xml.Append("<string>");
-            for (int i = 0; i < bytes.Length; i++) {
+            for (int i = 0; i < bytes.Length; i++)
+            {
                 byte b = bytes[i];
                 xml.Append(String.Format("{0:x2}", b));
             }
             xml.Append("</string>");
         }
 
-        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
+        internal override void ToBinary(BinaryPropertyListWriter outPlist)
+        {
             outPlist.Write(0x80 + bytes.Length - 1);
             outPlist.Write(bytes);
         }
 
-        internal override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
             ascii.Append("\"");
-            for (int i = 0; i < bytes.Length; i++) {
+            for (int i = 0; i < bytes.Length; i++)
+            {
                 byte b = bytes[i];
                 ascii.Append(String.Format("{0:x2}", b));
             }
             ascii.Append("\"");
         }
 
-        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
+        {
             ToASCII(ascii, level);
         }
 

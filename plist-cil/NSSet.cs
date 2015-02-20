@@ -46,7 +46,8 @@ namespace Claunia.PropertyList
         /// <summary>
         /// Creates an empty unordered set.
         /// </summary>
-        public NSSet() {
+        public NSSet()
+        {
             set = new List<NSObject>();
         }
 
@@ -67,7 +68,8 @@ namespace Claunia.PropertyList
                 set = new TreeSet<NSObject>();
         }*/
 
-        public NSSet(bool ordered) {
+        public NSSet(bool ordered)
+        {
             this.ordered = ordered;
             set = new List<NSObject>();
         }
@@ -77,7 +79,8 @@ namespace Claunia.PropertyList
         /// Create a set and fill it with the given objects.
         /// </summary>
         /// <param name="objects">The objects to populate the set.</param>
-        public NSSet(params NSObject[] objects) {
+        public NSSet(params NSObject[] objects)
+        {
             set = new List<NSObject>(objects);
         }
 
@@ -99,7 +102,8 @@ namespace Claunia.PropertyList
             set.addAll(Arrays.asList(objects));
         }*/
 
-        public NSSet(bool ordered, params NSObject[] objects) {
+        public NSSet(bool ordered, params NSObject[] objects)
+        {
             this.ordered = ordered;
             set = new List<NSObject>(objects);
             if (ordered)
@@ -111,7 +115,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="obj">The object to add.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void AddObject(NSObject obj) {
+        public void AddObject(NSObject obj)
+        {
             set.Add(obj);
             if (ordered)
                 set.Sort();
@@ -122,7 +127,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="obj">The object to remove.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void RemoveObject(NSObject obj) {
+        public void RemoveObject(NSObject obj)
+        {
             set.Remove(obj);
             if (ordered)
                 set.Sort();
@@ -133,7 +139,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>An array of all objects in the set.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public NSObject[] AllObjects() {
+        public NSObject[] AllObjects()
+        {
             return set.ToArray();
         }
 
@@ -143,7 +150,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The first object in the set, or <code>null</code> if the set is empty.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public NSObject AnyObject() {
+        public NSObject AnyObject()
+        {
             if (set.Count == 0)
                 return null;
             else
@@ -155,7 +163,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns><c>true</c>, when the object was found, <c>false</c> otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
-        public bool ContainsObject(NSObject obj) {
+        public bool ContainsObject(NSObject obj)
+        {
             return set.Contains(obj);
         }
 
@@ -166,8 +175,10 @@ namespace Claunia.PropertyList
         /// <param name="obj">The object to look for.</param>
         /// <returns>The object if it is present, <code>null</code> otherwise.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public NSObject Member(NSObject obj) {
-            foreach (NSObject o in set) {
+        public NSObject Member(NSObject obj)
+        {
+            foreach (NSObject o in set)
+            {
                 if (o.Equals(obj))
                     return o;
             }
@@ -180,8 +191,10 @@ namespace Claunia.PropertyList
         /// <returns><c>true</c> if the intersection of both sets is empty, <c>false</c> otherwise.</returns>
         /// <param name="otherSet">The other set.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public bool IntersectsSet(NSSet otherSet) {
-            foreach (NSObject o in set) {
+        public bool IntersectsSet(NSSet otherSet)
+        {
+            foreach (NSObject o in set)
+            {
                 if (otherSet.ContainsObject(o))
                     return true;
             }
@@ -194,8 +207,10 @@ namespace Claunia.PropertyList
         /// <returns><c>true</c> if all elements in this set are also present in the other set, <c>false</c>otherwise.</returns>
         /// <param name="otherSet">The other set.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public bool IsSubsetOfSet(NSSet otherSet) {
-            foreach (NSObject o in set) {
+        public bool IsSubsetOfSet(NSSet otherSet)
+        {
+            foreach (NSObject o in set)
+            {
                 if (!otherSet.ContainsObject(o))
                     return false;
             }
@@ -209,7 +224,8 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The iterator for the set.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public IEnumerator GetEnumerator() {
+        public IEnumerator GetEnumerator()
+        {
             return set.GetEnumerator();
         }
 
@@ -217,24 +233,29 @@ namespace Claunia.PropertyList
         /// Gets the underlying data structure in which this NSSets stores its content.
         /// </summary>
         /// <returns>A Set object.</returns>
-        internal List<NSObject> GetSet() {
+        internal List<NSObject> GetSet()
+        {
             return set;
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             int hash = 7;
             hash = 29 * hash + (this.set != null ? this.set.GetHashCode() : 0);
             return hash;
         }
 
-        public override bool Equals(Object obj) {
-            if (obj == null) {
+        public override bool Equals(Object obj)
+        {
+            if (obj == null)
+            {
                 return false;
             }
-            if (GetType() != obj.GetType()) {
+            if (GetType() != obj.GetType())
+            {
                 return false;
             }
-            NSSet other = (NSSet) obj;
+            NSSet other = (NSSet)obj;
             return !(this.set != other.set && (this.set == null || !this.set.Equals(other.set)));
         }
 
@@ -260,13 +281,15 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="xml">The XML StringBuilder</param>
         /// <param name="level">The indentation level</param>
-        internal override void ToXml(StringBuilder xml, int level) {
+        internal override void ToXml(StringBuilder xml, int level)
+        {
             Indent(xml, level);
             xml.Append("<array>");
             xml.Append(NSObject.NEWLINE);
             if (ordered)
                 set.Sort();
-            foreach (NSObject o in set) {
+            foreach (NSObject o in set)
+            {
                 o.ToXml(xml, level + 1);
                 xml.Append(NSObject.NEWLINE);
             }
@@ -274,21 +297,28 @@ namespace Claunia.PropertyList
             xml.Append("</array>");
         }
 
-        internal override void AssignIDs(BinaryPropertyListWriter outPlist) {
+        internal override void AssignIDs(BinaryPropertyListWriter outPlist)
+        {
             base.AssignIDs(outPlist);
-            foreach (NSObject obj in set) {
+            foreach (NSObject obj in set)
+            {
                 obj.AssignIDs(outPlist);
             }
         }
 
-        internal override void ToBinary(BinaryPropertyListWriter outPlist) {
-            if (ordered) {
+        internal override void ToBinary(BinaryPropertyListWriter outPlist)
+        {
+            if (ordered)
+            {
                 set.Sort();
                 outPlist.WriteIntHeader(0xB, set.Count);
-            } else {
+            }
+            else
+            {
                 outPlist.WriteIntHeader(0xC, set.Count);
             }
-            foreach (NSObject obj in set) {
+            foreach (NSObject obj in set)
+            {
                 outPlist.WriteID(outPlist.GetID(obj));
             }
         }
@@ -300,21 +330,26 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="ascii">The ASCII file string builder</param>
         /// <param name="level">The indentation level</param>
-        internal override void ToASCII(StringBuilder ascii, int level) {
+        internal override void ToASCII(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
             if (ordered)
                 set.Sort();
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
             int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
-            for (int i = 0; i < array.Length; i++) {
+            for (int i = 0; i < array.Length; i++)
+            {
                 Type objClass = array[i].GetType();
                 if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
-                    && indexOfLastNewLine != ascii.Length) {
+                    && indexOfLastNewLine != ascii.Length)
+                {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
                     array[i].ToASCII(ascii, level + 1);
-                } else {
+                }
+                else
+                {
                     if (i != 0)
                         ascii.Append(" ");
                     array[i].ToASCII(ascii, 0);
@@ -323,7 +358,8 @@ namespace Claunia.PropertyList
                 if (i != array.Length - 1)
                     ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
 
-                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH) {
+                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
+                {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
                 }
@@ -338,21 +374,26 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="ascii">The ASCII file string builder</param>
         /// <param name="level">The indentation level</param>
-        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) {
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
+        {
             Indent(ascii, level);
             if (ordered)
                 set.Sort();
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
             int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE);
-            for (int i = 0; i < array.Length; i++) {
+            for (int i = 0; i < array.Length; i++)
+            {
                 Type objClass = array[i].GetType();
                 if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
-                    && indexOfLastNewLine != ascii.Length) {
+                    && indexOfLastNewLine != ascii.Length)
+                {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
                     array[i].ToASCIIGnuStep(ascii, level + 1);
-                } else {
+                }
+                else
+                {
                     if (i != 0)
                         ascii.Append(" ");
                     array[i].ToASCIIGnuStep(ascii, 0);
@@ -361,7 +402,8 @@ namespace Claunia.PropertyList
                 if (i != array.Length - 1)
                     ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
 
-                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH) {
+                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
+                {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
                 }
