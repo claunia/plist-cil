@@ -37,7 +37,7 @@ namespace Claunia.PropertyList
         string content;
 
         /// <summary>
-        /// Creates an NSString from its binary representation.
+        /// Creates a NSString from its binary representation.
         /// </summary>
         /// <param name="bytes">The binary representation.</param>
         /// <param name="encoding">The encoding of the binary representation, the name of a supported charset.</param>

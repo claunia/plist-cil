@@ -29,10 +29,14 @@ using System.Collections.Generic;
 namespace Claunia.PropertyList
 {
     /// <summary>
+    /// <para>
     /// A BinaryPropertyListWriter is a helper class for writing out
-    /// binary property list files.  It contains an output stream and
-    /// various structures for keeping track of which NSObjects have
-    /// already been serialized, and where they were put in the file.
+    /// binary property list files.
+    /// </para><para>
+    /// It contains an output stream and various structures for keeping track
+    /// of which NSObjects have already been serialized, and where they were
+    /// put in the file.
+    /// </para>
     /// </summary>
     /// @author Keith Randall
     /// @author Natalia Portillo

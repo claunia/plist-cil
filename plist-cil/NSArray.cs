@@ -48,7 +48,7 @@ namespace Claunia.PropertyList
         /// <summary>
         /// Creates a array from an existing one
         /// </summary>
-        /// <param name="a">The array which should be wrapped by the NSArray</param>
+        /// <param name="a">The array which should be wrapped by the NSArray.</param>
         public NSArray(params NSObject[] a)
         {
             array = a;
@@ -266,10 +266,14 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
+        /// <para>
         /// Generates a valid ASCII property list which has this NSArray as its
-        /// root object. The generated property list complies with the format as
-        /// described in <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html">
-        /// Property List Programming Guide - Old-Style ASCII Property Lists</a>.
+        /// root object.
+        /// </para><para>
+        /// The generated property list complies with the format as
+        /// described in https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html
+        /// Property List Programming Guide - Old-Style ASCII Property Lists.
+        /// </para>
         /// </summary>
         /// <returns>ASCII representation of this object.</returns>
         public string ToASCIIPropertyList()
@@ -281,11 +285,14 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
+        /// <para>
         /// Generates a valid ASCII property list in GnuStep format which has this
-        /// NSArray as its root object. The generated property list complies with
-        /// the format as described in <a href="http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html">
-        /// GnuStep - NSPropertyListSerialization class documentation
-        /// </a>
+        /// NSArray as its root object.
+        /// </para><para>
+        /// The generated property list complies with
+        /// the format as described in http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html
+        /// GnuStep - NSPropertyListSerialization class documentation.
+        /// </para>
         /// </summary>
         /// <returns>GnuStep ASCII representation of this object.</returns>
         public string ToGnuStepASCIIPropertyList()

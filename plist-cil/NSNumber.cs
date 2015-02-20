@@ -220,7 +220,7 @@ namespace Claunia.PropertyList
         /// <summary>
         /// The number's bool value.
         /// </summary>
-        /// <returns><code>true</code> if the value is true or non-zero, <code>false</code> otherwise.</returns>
+        /// <returns><c>true</c> if the value is true or non-zero, <c>false</c> otherwise.</returns>
         public bool ToBool()
         {
             if (type == BOOLEAN)

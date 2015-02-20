@@ -28,7 +28,7 @@ using System.Text;
 namespace Claunia.PropertyList
 {
     /// <summary>
-    /// A UID. Only found in binary property lists that are keyed archives.
+    /// An UID. Only found in binary property lists that are keyed archives.
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo

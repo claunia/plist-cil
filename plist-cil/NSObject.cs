@@ -31,9 +31,12 @@ using System.IO;
 namespace Claunia.PropertyList
 {
     /// <summary>
+    /// <para>
     /// Abstract interface for any object contained in a property list.
+    /// </para><para>
     /// The names and functions of the various objects orient themselves
     /// towards Apple's Cocoa API.
+    /// </para>
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
@@ -119,8 +122,8 @@ namespace Claunia.PropertyList
 
         /// <summary>
         /// Helper method that adds correct identation to the xml output.
-        /// Calling this method will add <code>level</code> number of tab characters
-        /// to the <code>xml</code> string.
+        /// Calling this method will add <c>level</c> number of tab characters
+        /// to the <c>xml</c> string.
         /// </summary>
         /// <param name="xml">The string builder for the XML document.</param>
         /// <param name="level">The level of identation.</param>
@@ -215,19 +218,21 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
+        /// <para>
         /// Creates a NSObject representing the given .NET Object.
-        ///
+        /// </para><para>
         /// Numerics of type <see cref="bool"/>, <see cref="int"/>, <see cref="long"/>, <see cref="short"/>, <see cref="byte"/>, <see cref="float"/> or <see cref="double"/> are wrapped as NSNumber objects.
-        ///
-        /// Strings are wrapped as NSString objects abd byte arrays as NSData objects.
-        ///
-        /// Date objects are wrapped as NSDate objects.
-        ///
-        /// Serializable classes are serialized and their data is stored in NSData objects.
-        ///
-        /// Arrays and Collection objects are converted to NSArrays where each array member is wrapped into a NSObject.
-        ///
-        /// Map objects are converted to NSDictionaries. Each key is converted to a string and each value wrapped into a NSObject.
+        /// </para><para>
+        /// Strings are wrapped as <see cref="NSString"/> objects and byte arrays as <see cref="NSData"/> objects.
+        /// </para><para>
+        /// DateTime objects are wrapped as <see cref="NSDate"/> objects.
+        /// </para><para>
+        /// Serializable classes are serialized and their data is stored in <see cref="NSData"/> objects.
+        /// </para><para>
+        /// Arrays and Collection objects are converted to <see cref="NSArray"/> where each array member is wrapped into a <see cref="NSObject"/>.
+        /// </para><para>
+        /// Dictionaries are converted to <see cref="NSDictionary"/>. Each key is converted to a string and each value wrapped into a <see cref="NSObject"/>.
+        /// </para>
         /// </summary>
         /// <param name="o">The object to represent.</param>
         ///<returns>A NSObject equivalent to the given object.</returns>
@@ -485,7 +490,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Determines if the specific NSObject is the same as the NSObject overriding this method
+        /// Determines if the specific NSObject is the same as the NSObject overriding this method.
         /// </summary>
         /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSObject"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current

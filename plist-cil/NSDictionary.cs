@@ -29,12 +29,15 @@ using System.Text;
 namespace Claunia.PropertyList
 {
     /// <summary>
+    /// <para>
     /// A NSDictionary is a collection of keys and values, essentially a Dictionary.
     /// The keys are simple Strings whereas the values can be any kind of NSObject.
-    ///
-    /// You can access the keys through the function <code>AllKeys()</code>. Access
-    /// to the objects stored for each key is given through the function
-    /// <code>ObjectoForKey(String key)</code>.
+    /// </para><para>
+    /// You can access the keys through the function <see cref="Keys"/>.
+    /// </para><para>
+    /// Access to the objects stored for each key is given through the function
+    /// <see cref="ObjectForKey"/>.
+    /// </para>
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
@@ -85,7 +88,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Checks if the specified object key is contained in the current instance
+        /// Checks if the specified object key is contained in the current instance.
         /// </summary>
         /// <returns><c>true</c>, if key is contained, <c>false</c> otherwise.</returns>
         /// <param name="key">Key.</param>
@@ -108,7 +111,7 @@ namespace Claunia.PropertyList
         /// Gets the <see cref="NSObject"/> corresponding to the specified key from the current instance.
         /// </summary>
         /// <param name="key">Key.</param>
-        /// <returns>The object corresponding to the specified key, null if not found in the current instance</returns>
+        /// <returns>The object corresponding to the specified key, null if not found in the current instance.</returns>
         public NSObject Get(Object key)
         {
             if (key is string)
@@ -383,8 +386,8 @@ namespace Claunia.PropertyList
         /// <summary>
         /// Generates a valid ASCII property list which has this NSDictionary as its
         /// root object. The generated property list complies with the format as
-        /// described in <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html">
-        /// Property List Programming Guide - Old-Style ASCII Property Lists</a>.
+        /// described in https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html
+        /// Property List Programming Guide - Old-Style ASCII Property Lists.
         /// </summary>
         /// <returns>ASCII representation of this object.</returns>
         public string ToASCIIPropertyList()
@@ -398,8 +401,8 @@ namespace Claunia.PropertyList
         /// <summary>
         /// Generates a valid ASCII property list in GnuStep format which has this
         /// NSDictionary as its root object. The generated property list complies with
-        /// the format as described in <a href="http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html">
-        /// GnuStep - NSPropertyListSerialization class documentation</a>
+        /// the format as described in http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html
+        /// GnuStep - NSPropertyListSerialization class documentation.
         /// </summary>
         /// <returns>GnuStep ASCII representation of this object.</returns>
         public string ToGnuStepASCIIPropertyList()
@@ -482,12 +485,10 @@ namespace Claunia.PropertyList
             dict.Add(key, value);
         }
 
-        /// <Docs>The key to locate in the current instance.</Docs>
-        /// <para>Determines whether the current instance contains an entry with the specified key.</para>
         /// <summary>
-        /// Containses the key.
+        /// Checks if there is any item contained in the current instance corresponding with the specified key.
         /// </summary>
-        /// <returns><c>true</c>, if key was containsed, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c>, if key was contained, <c>false</c> otherwise.</returns>
         /// <param name="key">Key.</param>
         public bool ContainsKey(string key)
         {
@@ -495,13 +496,13 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Checks if there is any item contained in the current instance corresponding with the specified key.
+        /// Checks if there is any item contained in the current instance corresponding with the specified value.
         /// </summary>
         /// <returns><c>true</c>, if value is contained, <c>false</c> otherwise.</returns>
-        /// <param name="key">Key.</param>
-        public bool ContainsValue(NSObject key)
+        /// <param name="value">Key.</param>
+        public bool ContainsValue(NSObject value)
         {
-            return dict.ContainsValue(key);
+            return dict.ContainsValue(value);
         }
 
         /// <summary>
@@ -609,7 +610,7 @@ namespace Claunia.PropertyList
         /// Removes the specified item.
         /// </summary>
         /// <param name="item">Item to remove.</param>
-        /// <returns><c>true</c> if successfully removed, <c>false</c> if not, or if item is not in current instance</returns>
+        /// <returns><c>true</c> if successfully removed, <c>false</c> if not, or if item is not in current instance.</returns>
         public bool Remove(KeyValuePair<string, NSObject> item)
         {
             return dict.Remove(item.Key);

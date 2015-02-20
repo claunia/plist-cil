@@ -1,5 +1,20 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
+	* UID.cs:
+	* NSSet.cs:
+	* NSData.cs:
+	* NSArray.cs:
+	* NSString.cs:
+	* NSNumber.cs:
+	* NSObject.cs:
+	* NSDictionary.cs:
+	* PropertyListParser.cs:
+	* BinaryPropertyListWriter.cs:
+	* BinaryPropertyListParser.cs:
+	  Prettify documentation.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
 	* NSObject.cs:
 	* ASCIIPropertyListParser.cs:
 	  Modify some JavaDoc to Xml.

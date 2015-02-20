@@ -30,9 +30,12 @@ using System.Text;
 namespace Claunia.PropertyList
 {
     /// <summary>
+    /// <para>
     /// A set is an interface to an unordered collection of objects.
+    /// </para><para>
     /// This implementation uses a <see cref="List{NSObject}"/>as the underlying
     /// data structure.
+    /// </para>
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
@@ -50,23 +53,10 @@ namespace Claunia.PropertyList
             set = new List<NSObject>();
         }
 
-        /**
-        * Creates an empty set.
-        *
-        * @param ordered Indicates whether the created set should be ordered or unordered.
-        * @see java.util.LinkedHashSet
-        * @see java.util.TreeSet
-        */
-        // No need for this. It's easier in C# to just follow NSSet unordered as-is
-        /*
-        public NSSet(boolean ordered) {
-            this.ordered = ordered;
-            if (!ordered)
-                set = new LinkedHashSet<NSObject>();
-            else
-                set = new TreeSet<NSObject>();
-        }*/
-
+        /// <summary>
+        /// Creates an empty set.
+        /// </summary>
+        /// <param name="ordered">Should the set be ordered on operations?</param>
         public NSSet(bool ordered)
         {
             this.ordered = ordered;
@@ -75,7 +65,7 @@ namespace Claunia.PropertyList
 
 
         /// <summary>
-        /// Create a set and fill it with the given objects.
+        /// Creates a set and fill it with the given objects.
         /// </summary>
         /// <param name="objects">The objects to populate the set.</param>
         public NSSet(params NSObject[] objects)
@@ -83,24 +73,11 @@ namespace Claunia.PropertyList
             set = new List<NSObject>(objects);
         }
 
-        /**
-        * Create a set and fill it with the given objects.
-        *
-        * @param objects The objects to populate the set.
-        * @see java.util.LinkedHashSet
-        * @see java.util.TreeSet
-        */
-        // No need for this. It's easier in C# to just follow NSSet unordered as-is
-        /*
-        public NSSet(boolean ordered, NSObject... objects) {
-            this.ordered = ordered;
-            if (!ordered)
-                set = new LinkedHashSet<NSObject>();
-            else
-                set = new TreeSet<NSObject>();
-            set.addAll(Arrays.asList(objects));
-        }*/
-
+        /// <summary>
+        /// Creates a set and fill it with the given objects.
+        /// </summary>
+        /// <param name="objects">The objects to populate the set.</param>
+        /// <param name="ordered">Should the set be ordered on operations?</param>
         public NSSet(bool ordered, params NSObject[] objects)
         {
             this.ordered = ordered;
@@ -150,10 +127,10 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Returns one of the objects in the set, or <code>null</code>
+        /// Returns one of the objects in the set, or <c>null</c>
         /// if the set contains no objects.
         /// </summary>
-        /// <returns>The first object in the set, or <code>null</code> if the set is empty.</returns>
+        /// <returns>The first object in the set, or <c>null</c> if the set is empty.</returns>
         public NSObject AnyObject()
         {
             lock (set)
@@ -177,7 +154,7 @@ namespace Claunia.PropertyList
         /// and returns that object if it is present.
         /// </summary>
         /// <param name="obj">The object to look for.</param>
-        /// <returns>The object if it is present, <code>null</code> otherwise.</returns>
+        /// <returns>The object if it is present, <c>null</c> otherwise.</returns>
         public NSObject Member(NSObject obj)
         {
             lock (set)
@@ -229,7 +206,7 @@ namespace Claunia.PropertyList
 
         /// <summary>
         /// Returns an enumerator object that lets you iterate over all elements of the set.
-        /// This is the equivalent to <code>objectEnumerator</code> in the Cocoa implementation
+        /// This is the equivalent to <c>objectEnumerator</c> in the Cocoa implementation
         /// of NSSet.
         /// </summary>
         /// <returns>The iterator for the set.</returns>

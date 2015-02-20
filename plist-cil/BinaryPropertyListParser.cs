@@ -29,13 +29,14 @@ using System.IO;
 namespace Claunia.PropertyList
 {
     /// <summary>
+    /// <para>
     /// Parses property lists that are in Apple's binary format.
     /// Use this class when you are sure about the format of the property list.
     /// Otherwise use the PropertyListParser class.
-    ///
+    /// </para><para>
     /// Parsing is done by calling the static <see cref="Parse(byte[])"/>,
     /// <see cref="Parse(FileInfo)"/> and <see cref="Parse(Stream)"/> methods.
-    ///
+    /// </para>
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo

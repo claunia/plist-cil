@@ -95,7 +95,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Loads the bytes from this NSData object into a byte buffer
+        /// Loads the bytes from this NSData object into a byte buffer.
         /// </summary>
         /// <param name="buf">The byte buffer which will contain the data</param>
         /// <param name="length">The amount of data to copy</param>
@@ -105,7 +105,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Loads the bytes from this NSData object into a byte buffer
+        /// Loads the bytes from this NSData object into a byte buffer.
         /// </summary>
         /// <param name="buf">The byte buffer which will contain the data</param>
         /// <param name="rangeStart">The start index.</param>

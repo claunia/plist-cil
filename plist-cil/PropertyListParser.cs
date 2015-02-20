@@ -334,7 +334,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Saves a property list with the given object as root into a ASCII file.
+        /// Saves a property list with the given object as root into a GnuStep ASCII file.
         /// </summary>
         /// <param name="root">The root object.</param>
         /// <param name="outFile">The output file.</param>
@@ -352,7 +352,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Saves a property list with the given object as root into a ASCII file.
+        /// Saves a property list with the given object as root into a GnuStep ASCII file.
         /// </summary>
         /// <param name="root">The root object.</param>
         /// <param name="outFile">The output file.</param>
@@ -370,7 +370,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Converts a given property list file into ASCII format.
+        /// Converts a given property list file into GnuStep ASCII format.
         /// </summary>
         /// <param name="inFile">The source file.</param>
         /// <param name="outFile">The target file.</param>
