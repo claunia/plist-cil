@@ -1,6 +1,11 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
 	* plist-cil.csproj:
+	  Add ChangeLog so it is copied on build.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
+	* plist-cil.csproj:
 	  Added README.
 
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
