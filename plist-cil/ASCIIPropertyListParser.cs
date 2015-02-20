@@ -32,22 +32,26 @@ using System.Runtime.CompilerServices;
 namespace Claunia.PropertyList
 {
     /// <summary>
-    /// <p>
+    /// <para>
     /// Parser for ASCII property lists. Supports Apple OS X/iOS and GnuStep/NeXTSTEP format.
     /// This parser is based on the recursive descent paradigm, but the underlying grammar
     /// is not explicitely defined.
-    /// </p>
-    /// <p>
+    /// </para>
+    /// <para>
     /// Resources on ASCII property list format:
-    /// </p>
-    /// <ul>
-    /// <li><a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html">
+    /// </para>
+    /// <para>
+    /// https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html
+    /// </para>
+    /// <para>
     /// Property List Programming Guide - Old-Style ASCII Property Lists
-    /// </a></li>
-    /// <li><a href="http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html">
+    /// </para>
+    /// <para>
+    /// http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html
+    /// </para>
+    /// <para>
     /// GnuStep - NSPropertyListSerialization class documentation
-    /// </a></li>
-    /// </ul>
+    /// </para>
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo

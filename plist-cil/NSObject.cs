@@ -375,16 +375,14 @@ namespace Claunia.PropertyList
         /// <summary>
         /// Converts this NSObject into an equivalent object
         /// of the .NET Runtime Environment.
-        /// <ul>
-        /// <li><see cref="NSArray"/> objects are converted to arrays.</li>
-        /// <li><see cref="NSDictionary"/> objects are converted to objects extending the <see cref="Dictionary{TKey, TValue}"/> class.</li>
-        /// <li><see cref="NSSet"/> objects are converted to objects extending the <see cref="List{NSObject}"/> class.</li>
-        /// <li><see cref="NSNumber"/> objects are converted to primitive number values (<see cref="int"/>, <see cref="long"/>, <see cref="double"/> or <see cref="bool"/>).</li>
-        /// <li><see cref="NSString"/> objects are converted to <see cref="string"/> objects.</li>
-        /// <li><see cref="NSData"/> objects are converted to <see cref="byte"/> arrays.</li>
-        /// <li><see cref="NSDate"/> objects are converted to <see cref="System.DateTime"/> objects.</li>
-        /// <li><see cref="UID"/> objects are converted to <see cref="byte"/> arrays.</li>
-        /// </ul>
+        /// <para><see cref="NSArray"/> objects are converted to arrays.</para>
+        /// <para><see cref="NSDictionary"/> objects are converted to objects extending the <see cref="Dictionary{TKey, TValue}"/> class.</para>
+        /// <para><see cref="NSSet"/> objects are converted to objects extending the <see cref="List{NSObject}"/> class.</para>
+        /// <para><see cref="NSNumber"/> objects are converted to primitive number values (<see cref="int"/>, <see cref="long"/>, <see cref="double"/> or <see cref="bool"/>).</para>
+        /// <para><see cref="NSString"/> objects are converted to <see cref="string"/> objects.</para>
+        /// <para><see cref="NSData"/> objects are converted to <see cref="byte"/> arrays.</para>
+        /// <para><see cref="NSDate"/> objects are converted to <see cref="System.DateTime"/> objects.</para>
+        /// <para><see cref="UID"/> objects are converted to <see cref="byte"/> arrays.</para>
         /// </summary>
         /// <returns>A native .NET object representing this NSObject's value.</returns>
         public Object ToObject()

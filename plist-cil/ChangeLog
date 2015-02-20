@@ -1,5 +1,11 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
+	* NSObject.cs:
+	* ASCIIPropertyListParser.cs:
+	  Modify some JavaDoc to Xml.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
 	* NSDictionary.cs:
 	  Implement NSDictionary.CopyTo()
 
