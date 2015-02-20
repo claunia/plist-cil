@@ -1,5 +1,11 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
+	* IssueTest.cs:
+	  Remove unused variables and disable warnings that we know
+	  are innocuous.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
 	* plist-cil.test.csproj:
 	  
 

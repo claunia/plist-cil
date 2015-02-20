@@ -1,5 +1,15 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
+	* NSDate.cs:
+	* NSObject.cs:
+	* NSNumber.cs:
+	* ASCIIPropertyListParser.cs:
+	* BinaryPropertyListParser.cs:
+	  Remove unused variables and disable warnings that we know
+	  are innocuous.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
 	* plist-cil.csproj:
 	  Added ZIPing release.
 

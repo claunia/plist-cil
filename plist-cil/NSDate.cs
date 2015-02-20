@@ -55,7 +55,7 @@ namespace Claunia.PropertyList
             {
                 return DateTime.ParseExact(textRepresentation, sdfDefault, provider);
             }
-            catch (FormatException ex)
+            catch (FormatException)
             {
                 return DateTime.ParseExact(textRepresentation, sdfGnuStep, provider);
             }
@@ -111,8 +111,6 @@ namespace Claunia.PropertyList
         /// <param name="d">The date</param>
         public NSDate(DateTime d)
         {
-            if (d == null)
-                throw new ArgumentException("Date cannot be null", "d");
             date = d;
         }
 

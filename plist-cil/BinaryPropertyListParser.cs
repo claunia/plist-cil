@@ -445,7 +445,9 @@ namespace Claunia.PropertyList
             foreach (byte b in bytes)
             {
                 l <<= 8;
+                #pragma warning disable 675
                 l |= b & 0xFF;
+                #pragma warning restore 675
             }
             l &= 0xFFFFFFFFL;
             return l;
@@ -464,7 +466,9 @@ namespace Claunia.PropertyList
             for (int i = startIndex; i < endIndex; i++)
             {
                 l <<= 8;
+                #pragma warning disable 675
                 l |= bytes[i] & 0xFF;
+                #pragma warning restore 675
             }
             l &= 0xFFFFFFFFL;
             return l;
@@ -481,7 +485,9 @@ namespace Claunia.PropertyList
             foreach (byte b in bytes)
             {
                 l <<= 8;
+                #pragma warning disable 675
                 l |= b & 0xFF;
+                #pragma warning restore 675
             }
             return l;
         }
@@ -499,7 +505,9 @@ namespace Claunia.PropertyList
             for (int i = startIndex; i < endIndex; i++)
             {
                 l <<= 8;
+                #pragma warning disable 675
                 l |= bytes[i] & 0xFF;
+                #pragma warning restore 675
             }
             return l;
         }

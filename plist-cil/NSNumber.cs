@@ -109,7 +109,7 @@ namespace Claunia.PropertyList
                 doubleValue = longValue = l;
                 type = INTEGER;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 try
                 {
@@ -117,7 +117,7 @@ namespace Claunia.PropertyList
                     longValue = (long)Math.Round(doubleValue);
                     type = REAL;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
                     try
                     {
@@ -129,7 +129,7 @@ namespace Claunia.PropertyList
                         type = BOOLEAN;
                         doubleValue = longValue = boolValue ? 1 : 0;
                     }
-                    catch (Exception ex3)
+                    catch (Exception)
                     {
                         throw new ArgumentException("The given string neither represents a double, an int nor a bool value.");
                     }

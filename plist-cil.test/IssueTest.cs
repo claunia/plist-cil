@@ -99,13 +99,17 @@ namespace plistcil.test
         [Test]
         public static void TestIssue30()
         {
+            #pragma warning disable 219
             NSArray arr = (NSArray)PropertyListParser.Parse(new FileInfo("test-files/issue30.plist"));
+            #pragma warning restore 219
         }
 
         [Test]
         public static void TestIssue33()
         {
+            #pragma warning disable 219
             NSDictionary dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue33.pbxproj"));
+            #pragma warning restore 219
         }
 
         [Test]

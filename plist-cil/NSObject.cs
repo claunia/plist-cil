@@ -366,7 +366,7 @@ namespace Claunia.PropertyList
                     return new NSData(ms.ToArray());
                 }
             }
-            catch (IOException ex)
+            catch (IOException)
             {
                 throw new SystemException("The given object of class " + o.GetType() + " could not be serialized and stored in a NSData object.");
             }

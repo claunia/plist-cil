@@ -343,7 +343,7 @@ namespace Claunia.PropertyList
             {
                 return ParseObject();
             }
-            catch (IndexOutOfRangeException ex)
+            catch (IndexOutOfRangeException)
             {
                 throw new FormatException(String.Format("Reached end of input unexpectedly at {0}.", index));
             }
@@ -381,7 +381,7 @@ namespace Claunia.PropertyList
                             {
                                 return new NSDate(quotedString);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 //not a date? --> return string
                                 return new NSString(quotedString);
@@ -552,7 +552,7 @@ namespace Claunia.PropertyList
                 {
                     return new NSDate(numericalString);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //An exception occurs if the string is not a date but just a string
                 }
@@ -598,7 +598,7 @@ namespace Claunia.PropertyList
             {
                 unescapedString = ParseQuotedString(quotedString);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new FormatException(String.Format("The quoted string could not be parsed at {0}.", index));
             }
@@ -606,11 +606,6 @@ namespace Claunia.PropertyList
             Skip();
             return unescapedString;
         }
-
-        /**
-     * Used to encode the parsed strings
-     */
-        static Encoding asciiEncoder;
 
         /// <summary>
         /// Parses a string according to the format specified for ASCII property lists.
