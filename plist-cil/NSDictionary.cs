@@ -601,7 +601,8 @@ namespace Claunia.PropertyList
         /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
         public void CopyTo(KeyValuePair<string, NSObject>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            ICollection<KeyValuePair<string, NSObject>> coll = dict;
+            coll.CopyTo(array, arrayIndex);
         }
 
         /// <summary>

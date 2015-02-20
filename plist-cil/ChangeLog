@@ -1,5 +1,10 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
+	* NSDictionary.cs:
+	  Implement NSDictionary.CopyTo()
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
 	* UID.cs:
 	* NSSet.cs:
 	* NSDate.cs:
