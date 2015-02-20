@@ -1,6 +1,11 @@
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
 	* plist-cil.csproj:
+	  Added ZIPing release.
+
+2015-02-20  Natalia Portillo  <claunia@claunia.com>
+
+	* plist-cil.csproj:
 	  Added automatic HTML and MonoDoc documentation generation
 	  for Release.
 

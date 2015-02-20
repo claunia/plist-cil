@@ -30,6 +30,7 @@
       <CustomCommands>
         <Command type="AfterBuild" command="monodocer -pretty -importslashdoc:plist-cil.xml -assembly:plist-cil.dll -path:docs/mono" workingdir="${TargetDir}" />
         <Command type="AfterBuild" command="mdoc export-html -o docs/html docs/mono" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="zip -9r ${ProjectName}.zip ." workingdir="${TargetDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
