@@ -42,7 +42,15 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class BinaryPropertyListParser
     {
-        int majorVersion, minorVersion;
+        /// <summary>
+        /// Major version of the property list format
+        /// </summary>
+        int majorVersion;
+
+        /// <summary>
+        /// Minor version of the property list format
+        /// </summary>
+        int minorVersion;
 
         /// <summary>
         /// Property list in bytes
@@ -50,29 +58,9 @@ namespace Claunia.PropertyList
         byte[] bytes;
 
         /// <summary>
-        /// Length of an offset definition in bytes
-        /// </summary>
-        int offsetSize;
-
-        /// <summary>
         /// Length of an object reference in bytes
         /// </summary>
         int objectRefSize;
-
-        /// <summary>
-        /// Number of objects stored in this property list
-        /// </summary>
-        int numObjects;
-
-        /// <summary>
-        /// Reference to the top object of the property list
-        /// </summary>
-        int topObject;
-
-        /// <summary>
-        /// Offset of the offset table from the beginning of the file
-        /// </summary>
-        int offsetTableOffset;
 
         /// <summary>
         /// The table holding the information at which offset each object is found
@@ -126,6 +114,7 @@ namespace Claunia.PropertyList
 
             if (majorVersion > 0)
             {
+                // Version 1.0+ is not even supported by OS X's own parser
                 throw new PropertyListFormatException("Unsupported binary property list format: v" + majorVersion + "." + minorVersion + ". " +
                 "Version 1.0 and later are not yet supported.");
             }
@@ -135,16 +124,11 @@ namespace Claunia.PropertyList
          */
             byte[] trailer = CopyOfRange(bytes, bytes.Length - 32, bytes.Length);
             //6 null bytes (index 0 to 5)
-            offsetSize = (int)ParseUnsignedInt(trailer, 6, 7);
-            //System.Console.WriteLine("offsetSize: "+offsetSize);
+            int offsetSize = (int)ParseUnsignedInt(trailer, 6, 7);
             objectRefSize = (int)ParseUnsignedInt(trailer, 7, 8);
-            //System.Console.WriteLine("objectRefSize: "+objectRefSize);
-            numObjects = (int)ParseUnsignedInt(trailer, 8, 16);
-            //System.Console.WriteLine("numObjects: "+numObjects);
-            topObject = (int)ParseUnsignedInt(trailer, 16, 24);
-            //System.Console.WriteLine("topObject: "+topObject);
-            offsetTableOffset = (int)ParseUnsignedInt(trailer, 24, 32);
-            //System.Console.WriteLine("offsetTableOffset: "+offsetTableOffset);
+            int numObjects = (int)ParseUnsignedInt(trailer, 8, 16);
+            int topObject = (int)ParseUnsignedInt(trailer, 16, 24);
+            int offsetTableOffset = (int)ParseUnsignedInt(trailer, 24, 32);
 
             /*
          * Handle offset table
@@ -155,9 +139,6 @@ namespace Claunia.PropertyList
             {
                 byte[] offsetBytes = CopyOfRange(bytes, offsetTableOffset + i * offsetSize, offsetTableOffset + (i + 1) * offsetSize);
                 offsetTable[i] = (int)ParseUnsignedInt(offsetBytes);
-                /*System.Console.Write("Offset for Object #"+i+" is "+offsetTable[i]+" [");
-            foreach(byte b: in ffsetBytes) System.Console.Write(Convert.ToString((int)b, 16))+" ");
-            System.Console.WriteLine("]");*/
             }
 
             return ParseObject(topObject);
@@ -185,22 +166,13 @@ namespace Claunia.PropertyList
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
         public static NSObject Parse(FileInfo f)
         {
-            // While on Java, heap size is limited by the JVM, on .NET the heap size is dynamically allocated using all
-            // available RAM+swap. There is a function to check if that allocation can succeed, but works in 16MiB pieces,
-            // far bigger than any known PropertyList. And even then, paging would allow to work with insanely sized PropertyLists.
-            // Therefor, the checks in .NET (System.Runtime.MemoryFailPoint) are not worth the effort.
-            // Rest of calls to Java's Runtime.getRuntime().freeMemory() will not be commented but completely removed.
-            /*
-            if (f.length() > Runtime.getRuntime().freeMemory()) {
-                throw new OutOfMemoryError("To little heap space available! Wanted to read " + f.length() + " bytes, but only " + Runtime.getRuntime().freeMemory() + " are available.");
-            }*/
             return Parse(f.OpenRead());
         }
 
         /// <summary>
         /// Parses an object inside the currently parsed binary property list.
         /// For the format specification check
-        /// <a href="http://www.opensource.apple.com/source/CF/CF-744/CFBinaryPList.c">
+        /// <a href="http://www.opensource.apple.com/source/CF/CF-855.17/CFBinaryPList.c">
         /// Apple's binary property list parser implementation</a>.
         /// </summary>
         /// <returns>The parsed object.</returns>
@@ -237,19 +209,19 @@ namespace Claunia.PropertyList
                             case 0xC:
                                 {
                                     //URL with no base URL (v1.0 and later)
-                                    //TODO
+                                    //TODO Implement binary URL parsing (not yet even implemented in Core Foundation as of revision 855.17)
                                     break;
                                 }
                             case 0xD:
                                 {
                                     //URL with base URL (v1.0 and later)
-                                    //TODO
+                                    //TODO Implement binary URL parsing (not yet even implemented in Core Foundation as of revision 855.17)
                                     break;
                                 }
                             case 0xE:
                                 {
                                     //16-byte UUID (v1.0 and later)
-                                    //TODO
+                                    //TODO Implement binary UUID parsing (not yet even implemented in Core Foundation as of revision 855.17)
                                     break;
                                 }
                             case 0xF:
@@ -284,51 +256,63 @@ namespace Claunia.PropertyList
                 case 0x4:
                     {
                         //Data
-                        int[] lenAndoffset = ReadLengthAndOffset(objInfo, offset);
-                        int length = lenAndoffset[0];
-                        int dataoffset = lenAndoffset[1];
+                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int length = lengthAndOffset[0];
+                        int dataoffset = lengthAndOffset[1];
 
                         return new NSData(CopyOfRange(bytes, offset + dataoffset, offset + dataoffset + length));
                     }
                 case 0x5:
                     {
                         //ASCII String
-                        int[] lenAndoffset = ReadLengthAndOffset(objInfo, offset);
-                        int length = lenAndoffset[0];
-                        int stroffset = lenAndoffset[1];
+                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int length = lengthAndOffset[0]; //Each character is 1 byte
+                        int stroffset = lengthAndOffset[1];
 
                         return new NSString(CopyOfRange(bytes, offset + stroffset, offset + stroffset + length), "ASCII");
                     }
                 case 0x6:
                     {
                         //UTF-16-BE String
-                        int[] lenAndoffset = ReadLengthAndOffset(objInfo, offset);
-                        int length = lenAndoffset[0];
-                        int stroffset = lenAndoffset[1];
+                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int length = lengthAndOffset[0];
+                        int stroffset = lengthAndOffset[1];
 
-                        //length is String length -> to get byte length multiply by 2, as 1 character takes 2 bytes in UTF-16
+                        //UTF-16 characters can have variable length, but the Core Foundation reference implementation
+                        //assumes 2 byte characters, thus only covering the Basic Multilingual Plane
                         length *= 2;
                         return new NSString(CopyOfRange(bytes, offset + stroffset, offset + stroffset + length), "UTF-16BE");
                     }
+                case 0x7:
+                    {
+                        //UTF-8 string (v1.0 and later)
+                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int strOffset = lengthAndOffset[1];
+                        int characters = lengthAndOffset[0];
+                        //UTF-8 characters can have variable length, so we need to calculate the byte length dynamically
+                        //by reading the UTF-8 characters one by one
+                        int length = CalculateUtf8StringLength(bytes, offset + strOffset, characters);
+                        return new NSString(CopyOfRange(bytes, offset + strOffset, offset + strOffset + length), "UTF-8");
+                    }
                 case 0x8:
                     {
-                        //UID
+                        //UID (v1.0 and later)
                         int length = objInfo + 1;
                         return new UID(obj.ToString(), CopyOfRange(bytes, offset + 1, offset + 1 + length));
                     }
                 case 0xA:
                     {
                         //Array
-                        int[] lenAndoffset = ReadLengthAndOffset(objInfo, offset);
-                        int length = lenAndoffset[0];
-                        int arrayoffset = lenAndoffset[1];
+                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int length = lengthAndOffset[0];
+                        int arrayOffset = lengthAndOffset[1];
 
                         NSArray array = new NSArray(length);
                         for (int i = 0; i < length; i++)
                         {
                             int objRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
-                                             offset + arrayoffset + i * objectRefSize,
-                                             offset + arrayoffset + (i + 1) * objectRefSize));
+                                             offset + arrayOffset + i * objectRefSize,
+                                             offset + arrayOffset + (i + 1) * objectRefSize));
                             array.SetValue(i, ParseObject(objRef));
                         }
                         return array;
@@ -336,10 +320,10 @@ namespace Claunia.PropertyList
                     }
                 case 0xB:
                     {
-                        //Ordered set
-                        int[] lenAndoffset = ReadLengthAndOffset(objInfo, offset);
-                        int length = lenAndoffset[0];
-                        int contentOffset = lenAndoffset[1];
+                        //Ordered set (v1.0 and later)
+                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int length = lengthAndOffset[0];
+                        int contentOffset = lengthAndOffset[1];
 
                         NSSet set = new NSSet(true);
                         for (int i = 0; i < length; i++)
@@ -353,10 +337,10 @@ namespace Claunia.PropertyList
                     }
                 case 0xC:
                     {
-                        //Set
-                        int[] lenAndoffset = ReadLengthAndOffset(objInfo, offset);
-                        int length = lenAndoffset[0];
-                        int contentOffset = lenAndoffset[1];
+                        //Set (v1.0 and later)
+                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int length = lengthAndOffset[0];
+                        int contentOffset = lengthAndOffset[1];
 
                         NSSet set = new NSSet();
                         for (int i = 0; i < length; i++)
@@ -371,9 +355,9 @@ namespace Claunia.PropertyList
                 case 0xD:
                     {
                         //Dictionary
-                        int[] lenAndoffset = ReadLengthAndOffset(objInfo, offset);
-                        int length = lenAndoffset[0];
-                        int contentOffset = lenAndoffset[1];
+                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int length = lengthAndOffset[0];
+                        int contentOffset = lengthAndOffset[1];
 
                         //System.out.println("Parsing dictionary #"+obj);
                         NSDictionary dict = new NSDictionary();
@@ -408,8 +392,8 @@ namespace Claunia.PropertyList
         /// <param name="offset">Offset in the byte array at which the object is located.</param>
         int[] ReadLengthAndOffset(int objInfo, int offset)
         {
-            int length = objInfo;
-            int stroffset = 1;
+            int lengthValue = objInfo;
+            int offsetValue = 1;
             if (objInfo == 0xF)
             {
                 int int_type = bytes[offset + 1];
@@ -420,10 +404,10 @@ namespace Claunia.PropertyList
                 }
                 int intInfo = int_type & 0x0F;
                 int intLength = (int)Math.Pow(2, intInfo);
-                stroffset = 2 + intLength;
+                offsetValue = 2 + intLength;
                 if (intLength < 3)
                 {
-                    length = (int)ParseUnsignedInt(CopyOfRange(bytes, offset + 2, offset + 2 + intLength));
+                    lengthValue = (int)ParseUnsignedInt(CopyOfRange(bytes, offset + 2, offset + 2 + intLength));
                 }
                 else
                 {
@@ -435,10 +419,71 @@ namespace Claunia.PropertyList
                         litEBigInteger[i] = bigEBigInteger[j];
                     litEBigInteger[litEBigInteger.Length - 1] = (byte)0x00; // Be sure to get unsigned BigInteger
 
-                    length = (int)new System.Numerics.BigInteger(litEBigInteger);
+                    lengthValue = (int)new System.Numerics.BigInteger(litEBigInteger);
                 }
             }
-            return new []{ length, stroffset };
+            return new []{ lengthValue, offsetValue };
+        }
+
+        /// <summary>
+        /// Calculates the length in bytes of the UTF-8 string.
+        /// </summary>
+        /// <returns>The UTF-8 string length.</returns>
+        /// <param name="bytes">Array containing the UTF-8 string.</param>
+        /// <param name="offset">Offset in the array where the UTF-8 string resides.</param>
+        /// <param name="numCharacters">How many UTF-8 characters are in the string.</param>
+        int CalculateUtf8StringLength(byte[] bytes, int offset, int numCharacters)
+        {
+            int length = 0;
+            for (int i = 0; i < numCharacters; i++)
+            {
+                int tempOffset = offset + length;
+                if (bytes.Length <= tempOffset)
+                {
+                    //WARNING: Invalid UTF-8 string, fall back to length = number of characters
+                    return numCharacters;
+                }
+                if (bytes[tempOffset] < 0x80)
+                {
+                    length++;
+                }
+                if (bytes[tempOffset] < 0xC2)
+                {
+                    //Invalid value (marks continuation byte), fall back to length = number of characters
+                    return numCharacters;
+                }
+                else if (bytes[tempOffset] < 0xE0)
+                {
+                    if ((bytes[tempOffset + 1] & 0xC0) != 0x80)
+                    {
+                        //Invalid continuation byte, fall back to length = number of characters
+                        return numCharacters;
+                    }
+                    length += 2;
+                }
+                else if (bytes[tempOffset] < 0xF0)
+                {
+                    if ((bytes[tempOffset + 1] & 0xC0) != 0x80
+                                          || (bytes[tempOffset + 2] & 0xC0) != 0x80)
+                    {
+                        //Invalid continuation byte, fall back to length = number of characters
+                        return numCharacters;
+                    }
+                    length += 3;
+                }
+                else if (bytes[tempOffset] < 0xF5)
+                {
+                    if ((bytes[tempOffset + 1] & 0xC0) != 0x80
+                                          || (bytes[tempOffset + 2] & 0xC0) != 0x80
+                                          || (bytes[tempOffset + 3] & 0xC0) != 0x80)
+                    {
+                        //Invalid continuation byte, fall back to length = number of characters
+                        return numCharacters;
+                    }
+                    length += 4;
+                }
+            }
+            return length;
         }
 
         /// <summary>

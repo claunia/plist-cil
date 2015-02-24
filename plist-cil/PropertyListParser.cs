@@ -76,6 +76,11 @@ namespace Claunia.PropertyList
         {
             //Skip any possible whitespace at the beginning of the file
             int offset = 0;
+            if (bytes.Length >= 3 && (bytes[0] & 0xFF) == 0xEF && (bytes[1] & 0xFF) == 0xBB && (bytes[2] & 0xFF) == 0xBF)
+            {
+                //Skip Unicode byte order mark (BOM)
+                offset += 3;
+            }
             while (offset < bytes.Length && bytes[offset] == ' ' || bytes[offset] == '\t' || bytes[offset] == '\r' || bytes[offset] == '\n' || bytes[offset] == '\f')
             {
                 offset++;
@@ -95,19 +100,20 @@ namespace Claunia.PropertyList
             //Skip any possible whitespace at the beginning of the file
             byte[] magicBytes = new byte[8];
             int b;
+            long index = -1;
+            bool bom = false;
             long mark;
             do
             {
                 mark = fs.Position;
                 b = fs.ReadByte();
+                index++;
+                //Check if we are reading the Unicode byte order mark (BOM) and skip it
+                bom = index < 3 && ((index == 0 && b == 0xEF) || (bom && ((index == 1 && b == 0xBB) || (index == 2 && b == 0xBF))));
             }
-            while(b != -1 && b == ' ' || b == '\t' || b == '\r' || b == '\n' || b == '\f');
+            while(b != -1 && b == ' ' || b == '\t' || b == '\r' || b == '\n' || b == '\f' || bom);
             magicBytes[0] = (byte)b;
             int read = fs.Read(magicBytes, 1, 7);
-
-            // Check for UTF-8 BOM prefixed XMLs first.
-            if (magicBytes[0] == 0xEF && magicBytes[1] == 0xBB && magicBytes[2] == 0xBF && magicBytes[3] == (byte)'<')
-                return TYPE_XML;
 
             int type = DetermineType(Encoding.ASCII.GetString(magicBytes, 0, read));
             fs.Seek(mark, SeekOrigin.Begin);

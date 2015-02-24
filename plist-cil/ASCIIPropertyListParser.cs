@@ -437,6 +437,9 @@ namespace Claunia.PropertyList
         public NSObject Parse()
         {
             index = 0;
+            //Skip Unicode byte order mark (BOM)
+            if (data.Length >= 3 && (data[0] & 0xFF) == 0xEF && (data[1] & 0xFF) == 0xBB && (data[2] & 0xFF) == 0xBF)
+                Skip(3);
             SkipWhitespacesAndComments();
             Expect(DICTIONARY_BEGIN_TOKEN, ARRAY_BEGIN_TOKEN, COMMENT_BEGIN_TOKEN);
             try
@@ -752,7 +755,7 @@ namespace Claunia.PropertyList
 
             //If the string can be represented in the ASCII codepage
             // --> use ASCII encoding
-            if(IsASCIIEncodable(result))
+            if (IsASCIIEncodable(result))
                 return Encoding.ASCII.GetString(Encoding.Convert(Encoding.BigEndianUnicode, Encoding.ASCII, bytArr));
             //The string contains characters outside the ASCII codepage
             // --> use the UTF-8 encoded string

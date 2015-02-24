@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Claunia.PropertyList</RootNamespace>
     <AssemblyName>plist-cil</AssemblyName>
-    <ReleaseVersion>1.13</ReleaseVersion>
+    <ReleaseVersion>1.14</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -233,6 +233,6 @@ Global
 		$37.IncludeDirectoryPaths = True
 		$36.inheritsSet = Mono
 		description = @This library enables .NET applications to work with property lists in various formats.\n\tSupported formats for reading and writing are OS X/iOS binary and XML property lists.\n        ASCII property lists are also supported.\n\tThe library also provides access to basic functions of NeXTSTEP/Cocoa classes like\n        NSDictionary, NSArray, etc.
-		version = 1.13
+		version = 1.14
 	EndGlobalSection
 EndGlobal

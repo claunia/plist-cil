@@ -1,3 +1,17 @@
+2015-02-24  Natalia Portillo  <claunia@claunia.com>
+
+	* PropertyListParser.cs:
+	* ASCIIPropertyListParser.cs:
+	  Sync BOM skipping code with upstream.
+
+	* BinaryPropertyListParser.cs:
+	  Sync code with upstream.
+	Added UTF-8 string decoding on binary property lists.
+
+	* plist-cil.csproj:
+	* Properties/AssemblyInfo.cs:
+	  Bump to 1.14 (upstream r114).
+
 2015-02-20  Natalia Portillo  <claunia@claunia.com>
 
 	* UID.cs:
