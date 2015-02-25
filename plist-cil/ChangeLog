@@ -1,6 +1,11 @@
 2015-02-25  Natalia Portillo  <claunia@claunia.com>
 
 	* plist-cil.nuspec:
+	  Added gnustep tag to NuSpec
+
+2015-02-25  Natalia Portillo  <claunia@claunia.com>
+
+	* plist-cil.nuspec:
 	  Added summary and better description.
 
 2015-02-25  Natalia Portillo  <claunia@claunia.com>

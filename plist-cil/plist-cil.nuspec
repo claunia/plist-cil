@@ -13,7 +13,7 @@
 		<summary>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats.</summary>
 		<releaseNotes>Added support for UTF-8 strings in binary property lists</releaseNotes>
 		<copyright>Copyright (C) 2015 Natalia Portillo</copyright>
-		<tags>plist apple propertylist property list</tags>
+		<tags>plist apple propertylist property list gnustep</tags>
 	</metadata>
 	<files>
 		<file src="bin/Release/*.dll" target="lib"/>
