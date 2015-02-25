@@ -9,7 +9,8 @@
 		<licenseUrl>https://raw.githubusercontent.com/claunia/plist-cil/master/LICENSE</licenseUrl>
 		<projectUrl>https://github.com/claunia/plist-cil</projectUrl>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
-		<description>C#/.NET parser for Apple and GnuStep Property List (aka plist), based on Java's dd-plist</description>
+		<description>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats, based on Java's dd-plist.</description>
+		<summary>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats.</summary>
 		<releaseNotes>Added support for UTF-8 strings in binary property lists</releaseNotes>
 		<copyright>Copyright (C) 2015 Natalia Portillo</copyright>
 		<tags>plist apple propertylist property list</tags>
