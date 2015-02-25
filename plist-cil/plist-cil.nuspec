@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>plist-cil</id>
+		<version>1.14</version>
+		<title>plist-cil</title>
+		<authors>Natalia Portillo</authors>
+		<owners>Natalia Portillo</owners>
+		<licenseUrl>https://raw.githubusercontent.com/claunia/plist-cil/master/LICENSE</licenseUrl>
+		<projectUrl>https://github.com/claunia/plist-cil</projectUrl>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<description>C#/.NET parser for Apple and GnuStep Property List (aka plist), based on Java's dd-plist</description>
+		<releaseNotes>Added support for UTF-8 strings in binary property lists</releaseNotes>
+		<copyright>Copyright (C) 2015 Natalia Portillo</copyright>
+		<tags>plist apple propertylist property list</tags>
+	</metadata>
+	<files>
+		<file src="bin/Release/*.dll" target="lib"/>
+		<file src="bin/Release/ChangeLog.txt" target="content\docs"/>
+		<file src="bin/Release/LICENSE.txt" target="content\docs"/>
+		<file src="bin/Release/*.xml" target="lib"/>
+		<file src="bin/Release/README.txt" target="content\docs"/>
+		<file src="bin/Release/docs/**/*.*"  target="content\docs"/>
+	</files>
+</package>

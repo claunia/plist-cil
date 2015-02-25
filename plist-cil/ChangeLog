@@ -1,3 +1,9 @@
+2015-02-25  Natalia Portillo  <claunia@claunia.com>
+
+	* plist-cil.nuspec:
+	* plist-cil.csproj:
+	  Added NuGet package.
+
 2015-02-24  Natalia Portillo  <claunia@claunia.com>
 
 	* PropertyListParser.cs:

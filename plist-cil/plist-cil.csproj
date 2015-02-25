@@ -31,6 +31,10 @@
         <Command type="AfterBuild" command="monodocer -pretty -importslashdoc:plist-cil.xml -assembly:plist-cil.dll -path:docs/mono" workingdir="${TargetDir}" />
         <Command type="AfterBuild" command="mdoc export-html -o docs/html docs/mono" workingdir="${TargetDir}" />
         <Command type="AfterBuild" command="zip -9r ${ProjectName}.zip ." workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="cp README.md README.txt" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="cp ChangeLog ChangeLog.txt" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="cp LICENSE LICENSE.txt" workingdir="${TargetDir}" />
+        <Command type="AfterBuild" command="nuget pack plist-cil.nuspec -Verbosity Detailed" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -134,5 +138,6 @@
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="plist-cil.nuspec" />
   </ItemGroup>
 </Project>
