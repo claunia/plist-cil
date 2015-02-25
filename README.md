@@ -22,10 +22,10 @@ The provided API mimics the Cocoa/NeXTSTEP API, and where applicable, the .NET A
 
 ###Download
 
-The latest releases can be downloaded [here](https://github.com/claunia/plist-cil/releases):
+The latest releases can be downloaded [here](https://github.com/claunia/plist-cil/releases).
 
 ###NuGet support
-Coming soon......
+You can download the NuGet package directly from the [release](https://github.com/claunia/plist-cil/releases) page or from the [NuGet Gallery](https://www.nuget.org/) or from [here](https://www.nuget.org/packages/plist-cil/).
 
 ###Help
 The API documentation is included in the download.
