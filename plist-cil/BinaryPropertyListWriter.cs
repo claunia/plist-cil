@@ -298,8 +298,8 @@ namespace Claunia.PropertyList
 
         internal void WriteIntHeader(int kind, int value)
         {
-            if (value <= 0)
-                throw new ArgumentException("value must be greater than 0", "value");
+            if (value < 0)
+                throw new ArgumentException("value must be greater than or equal to 0", "value");
 
             if (value < 15)
             {
