@@ -363,9 +363,14 @@ namespace Claunia.PropertyList
         internal override void AssignIDs(BinaryPropertyListWriter outPlist)
         {
             base.AssignIDs(outPlist);
+
             foreach (KeyValuePair<string, NSObject> entry in dict)
             {
                 new NSString(entry.Key).AssignIDs(outPlist);
+            }
+
+            foreach (KeyValuePair<string, NSObject> entry in dict)
+            {
                 entry.Value.AssignIDs(outPlist);
             }
         }
