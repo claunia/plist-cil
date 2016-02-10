@@ -186,29 +186,29 @@ namespace Claunia.PropertyList
         void Write(NSObject root)
         {
             // magic bytes
-            Write(new []{ (byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t' });
+            Write(new[] { (byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t' });
 
             //version
             switch (version)
             {
                 case VERSION_00:
                     {
-                        Write(new []{ (byte)'0', (byte)'0' });
+                        Write(new[] { (byte)'0', (byte)'0' });
                         break;
                     }
                 case VERSION_10:
                     {
-                        Write(new []{ (byte)'1', (byte)'0' });
+                        Write(new[] { (byte)'1', (byte)'0' });
                         break;
                     }
                 case VERSION_15:
                     {
-                        Write(new []{ (byte)'1', (byte)'5' });
+                        Write(new[] { (byte)'1', (byte)'5' });
                         break;
                     }
                 case VERSION_20:
                     {
-                        Write(new []{ (byte)'2', (byte)'0' });
+                        Write(new[] { (byte)'2', (byte)'0' });
                         break;
                     }
             }
@@ -222,7 +222,7 @@ namespace Claunia.PropertyList
             long[] offsets = new long[idMap.Count];
 
             // write each object, save offset
-            for(int i = 0; i < idMap.Count; i++)
+            for (int i = 0; i < idMap.Count; i++)
             {
                 NSObject obj = idMap[i];
                 int id = i;
@@ -268,11 +268,11 @@ namespace Claunia.PropertyList
 
         internal void AssignID(NSObject obj)
         {
-            if(obj is UID)
+            if (obj is UID || obj is NSArray)
             {
                 idMap.Add(obj);
             }
-            else if(!idMap.Contains(obj))
+            else if (!idMap.Contains(obj))
             {
                 idMap.Add(obj);
             }
@@ -285,6 +285,21 @@ namespace Claunia.PropertyList
                 var uid = obj as UID;
                 var first = idMap.OfType<UID>().First(v => NSObject.ArrayEquals(v.Bytes, uid.Bytes));
                 return idMap.IndexOf(first);
+            }
+            else if (obj is NSArray)
+            {
+                int index = 0;
+
+                for (int i = 0; i < idMap.Count; i++)
+                {
+                    if (idMap[i] == obj)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+
+                return index;
             }
             else
             {
