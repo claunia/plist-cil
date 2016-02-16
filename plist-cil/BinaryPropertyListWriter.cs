@@ -24,7 +24,9 @@
 // SOFTWARE.
 using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Claunia.PropertyList
 {
@@ -162,7 +164,7 @@ namespace Claunia.PropertyList
         long count;
 
         // map from object to its ID
-        Dictionary<NSObject, int> idMap = new Dictionary<NSObject, int>();
+        Collection<NSObject> idMap = new Collection<NSObject>(); //(new IdentityEqualityComparer<NSObject>());
         int idSizeInBytes;
 
         /// <summary>
@@ -184,29 +186,29 @@ namespace Claunia.PropertyList
         void Write(NSObject root)
         {
             // magic bytes
-            Write(new []{ (byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t' });
+            Write(new[] { (byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t' });
 
             //version
             switch (version)
             {
                 case VERSION_00:
                     {
-                        Write(new []{ (byte)'0', (byte)'0' });
+                        Write(new[] { (byte)'0', (byte)'0' });
                         break;
                     }
                 case VERSION_10:
                     {
-                        Write(new []{ (byte)'1', (byte)'0' });
+                        Write(new[] { (byte)'1', (byte)'0' });
                         break;
                     }
                 case VERSION_15:
                     {
-                        Write(new []{ (byte)'1', (byte)'5' });
+                        Write(new[] { (byte)'1', (byte)'5' });
                         break;
                     }
                 case VERSION_20:
                     {
-                        Write(new []{ (byte)'2', (byte)'0' });
+                        Write(new[] { (byte)'2', (byte)'0' });
                         break;
                     }
             }
@@ -220,10 +222,10 @@ namespace Claunia.PropertyList
             long[] offsets = new long[idMap.Count];
 
             // write each object, save offset
-            foreach (KeyValuePair<NSObject, int> entry in idMap)
+            for (int i = 0; i < idMap.Count; i++)
             {
-                NSObject obj = entry.Key;
-                int id = entry.Value;
+                NSObject obj = idMap[i];
+                int id = i;
                 offsets[id] = count;
                 if (obj == null)
                 {
@@ -255,8 +257,7 @@ namespace Claunia.PropertyList
                 // number of objects
                 WriteLong(idMap.Count);
                 // top object
-                int rootID;
-                idMap.TryGetValue(root, out rootID);
+                int rootID = idMap.IndexOf(root);
                 WriteLong(rootID);
                 // offset table offset
                 WriteLong(offsetTableOffset);
@@ -267,17 +268,43 @@ namespace Claunia.PropertyList
 
         internal void AssignID(NSObject obj)
         {
-            if (!idMap.ContainsKey(obj))
+            if (obj is UID || obj is NSArray)
             {
-                idMap.Add(obj, idMap.Count);
+                idMap.Add(obj);
+            }
+            else if (!idMap.Contains(obj))
+            {
+                idMap.Add(obj);
             }
         }
 
         internal int GetID(NSObject obj)
         {
-            int ID;
-            idMap.TryGetValue(obj, out ID);
-            return ID;
+            if (obj is UID)
+            {
+                var uid = obj as UID;
+                var first = idMap.OfType<UID>().First(v => NSObject.ArrayEquals(v.Bytes, uid.Bytes));
+                return idMap.IndexOf(first);
+            }
+            else if (obj is NSArray)
+            {
+                int index = 0;
+
+                for (int i = 0; i < idMap.Count; i++)
+                {
+                    if (idMap[i] == obj)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+
+                return index;
+            }
+            else
+            {
+                return idMap.IndexOf(obj);
+            }
         }
 
         static int ComputeIdSizeInBytes(int numberOfIds)
@@ -298,8 +325,8 @@ namespace Claunia.PropertyList
 
         internal void WriteIntHeader(int kind, int value)
         {
-            if (value <= 0)
-                throw new ArgumentException("value must be greater than 0", "value");
+            if (value < 0)
+                throw new ArgumentException("value must be greater than or equal to 0", "value");
 
             if (value < 15)
             {
