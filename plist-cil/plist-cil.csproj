@@ -8,16 +8,19 @@
     <RootNamespace>Claunia.PropertyList</RootNamespace>
     <AssemblyName>plist-cil</AssemblyName>
     <ReleaseVersion>1.14</ReleaseVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -37,6 +40,8 @@
         <Command type="AfterBuild" command="nuget pack plist-cil.nuspec -Verbosity Detailed" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>NET40</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -55,6 +60,7 @@
     <Compile Include="NSNumber.cs" />
     <Compile Include="NSString.cs" />
     <Compile Include="NSSet.cs" />
+    <Compile Include="PropertyListException.cs" />
     <Compile Include="UID.cs" />
     <Compile Include="NSDate.cs" />
     <Compile Include="NSArray.cs" />

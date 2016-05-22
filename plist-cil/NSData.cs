@@ -65,9 +65,10 @@ namespace Claunia.PropertyList
         public NSData(FileInfo file)
         {
             bytes = new byte[(int)file.Length];
-            FileStream raf = file.OpenRead();
-            raf.Read(bytes, 0, (int)file.Length);
-            raf.Close();
+            using (FileStream raf = file.OpenRead())
+            {
+                raf.Read(bytes, 0, (int)file.Length);
+            }
         }
 
         /// <summary>

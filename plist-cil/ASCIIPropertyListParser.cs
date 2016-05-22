@@ -79,7 +79,8 @@ namespace Claunia.PropertyList
         public static NSObject Parse(Stream fs)
         {
             byte[] buf = PropertyListParser.ReadAll(fs);
-            fs.Close();
+            // Don't close the stream - that would be the responisibility of code that class
+            // Parse
             return Parse(buf);
         }
 
