@@ -163,7 +163,7 @@ namespace Claunia.PropertyList
                 }
                 catch (Exception ex)
                 {
-                    throw new SystemException("Could not encode the NSString into UTF-8: " + ex.Message);
+                    throw new PropertyListException("Could not encode the NSString into UTF-8: " + ex.Message);
                 }
             }
 

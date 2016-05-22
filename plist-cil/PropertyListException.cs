@@ -1,5 +1,6 @@
 ﻿// plist-cil - An open source library to parse and generate property lists for .NET
 // Copyright (C) 2015 Natalia Portillo
+// Copyright (C) 2016 Quamotion
 //
 // This code is based on:
 // plist - An open source library to parse and generate property lists
@@ -23,24 +24,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
+using System.Runtime.Serialization;
 
 namespace Claunia.PropertyList
 {
     /// <summary>
-    /// A PropertyListFormatException is thrown by the various property list format parsers
-    /// when an error in the format of the given property list is encountered.
+    /// The exception that is thrown when an property list file could not be processed correctly.
     /// </summary>
-    /// @author Daniel Dreibrodt
-    /// @author Natalia Portillo
-    public class PropertyListFormatException : PropertyListException
+    [Serializable]
+    public class PropertyListException : Exception
     {
         /// <summary>
-        /// Creates a new exception with the given message.
+        /// Initializes a new instance of the <see cref="PropertyListException"/> class.
         /// </summary>
-        /// <param name="message">A message containing information about the nature of the exception.</param>
-        public PropertyListFormatException(string message) : base(message)
+        public PropertyListException()
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyListException"/> class.
+        /// </summary>
+        /// <param name="message">
+        /// The error message that explains the reason for the exception.
+        /// </param>
+        public PropertyListException(string message) 
+            : base(message)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyListException"/> class.
+        /// </summary>
+        /// <param name="message">
+        /// The error message that explains the reason for the exception.
+        /// </param>
+        /// <param name="inner">
+        /// The exception that is the cause of the current exception, or <see langword="null"/>
+        /// if no inner exception is specified.
+        /// </param>
+        public PropertyListException(string message, Exception inner) 
+            : base(message, inner)
+        {
+        }
+
+#if !NETCORE
+        protected PropertyListException(SerializationInfo info, StreamingContext context) 
+            : base(info, context)
+        {
+        }
+#endif
     }
 }
-
