@@ -25,6 +25,7 @@
 using System.Xml;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Claunia.PropertyList
 {
@@ -79,7 +80,10 @@ namespace Claunia.PropertyList
         /// <param name="doc">The XML document.</param>
         static NSObject ParseDocument(XmlDocument doc)
         {
-            XmlDocumentType docType = doc.DocumentType;
+            var docType = doc.ChildNodes
+                .OfType<XmlNode>()
+                .SingleOrDefault(n => n.NodeType == XmlNodeType.DocumentType);
+
             if (docType == null)
             {
                 if (!doc.DocumentElement.Name.Equals("plist"))
