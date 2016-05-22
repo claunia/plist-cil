@@ -144,6 +144,7 @@
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="NSArray.IList.cs" />
     <None Include="plist-cil.nuspec" />
     <None Include="plist-cil.snk" />
   </ItemGroup>
