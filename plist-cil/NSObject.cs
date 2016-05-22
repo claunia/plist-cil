@@ -184,7 +184,7 @@ namespace Claunia.PropertyList
             NSArray arr = new NSArray(value.Length);
             for (int i = 0; i < value.Length; i++)
             {
-                arr.SetValue(i, Wrap(value[i]));
+                arr.Add(Wrap(value[i]));
             }
             return arr;
         }
@@ -293,7 +293,7 @@ namespace Claunia.PropertyList
                     bool[] array = (bool[])o;
                     NSArray nsa = new NSArray(array.Length);
                     for (int i = 0; i < array.Length; i++)
-                        nsa.SetValue(i, Wrap(array[i]));
+                        nsa.Add(Wrap(array[i]));
                     return nsa;
                 }
                 if (cc.Equals(typeof(float)))
@@ -301,7 +301,7 @@ namespace Claunia.PropertyList
                     float[] array = (float[])o;
                     NSArray nsa = new NSArray(array.Length);
                     for (int i = 0; i < array.Length; i++)
-                        nsa.SetValue(i, Wrap(array[i]));
+                        nsa.Add(Wrap(array[i]));
                     return nsa;
                 }
                 if (cc.Equals(typeof(double)))
@@ -309,7 +309,7 @@ namespace Claunia.PropertyList
                     double[] array = (double[])o;
                     NSArray nsa = new NSArray(array.Length);
                     for (int i = 0; i < array.Length; i++)
-                        nsa.SetValue(i, Wrap(array[i]));
+                        nsa.Add(Wrap(array[i]));
                     return nsa;
                 }
                 if (cc.Equals(typeof(short)))
@@ -317,7 +317,7 @@ namespace Claunia.PropertyList
                     short[] array = (short[])o;
                     NSArray nsa = new NSArray(array.Length);
                     for (int i = 0; i < array.Length; i++)
-                        nsa.SetValue(i, Wrap(array[i]));
+                        nsa.Add(Wrap(array[i]));
                     return nsa;
                 }
                 if (cc.Equals(typeof(int)))
@@ -325,7 +325,7 @@ namespace Claunia.PropertyList
                     int[] array = (int[])o;
                     NSArray nsa = new NSArray(array.Length);
                     for (int i = 0; i < array.Length; i++)
-                        nsa.SetValue(i, Wrap(array[i]));
+                        nsa.Add(Wrap(array[i]));
                     return nsa;
                 }
                 if (cc.Equals(typeof(long)))
@@ -333,7 +333,7 @@ namespace Claunia.PropertyList
                     long[] array = (long[])o;
                     NSArray nsa = new NSArray(array.Length);
                     for (int i = 0; i < array.Length; i++)
-                        nsa.SetValue(i, Wrap(array[i]));
+                        nsa.Add(Wrap(array[i]));
                     return nsa;
                 }
                     return Wrap((Object[])o);
