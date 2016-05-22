@@ -140,7 +140,7 @@ namespace Claunia.PropertyList
                 NSArray array = new NSArray(children.Count);
                 for (int i = 0; i < children.Count; i++)
                 {
-                    array.SetValue(i, ParseObject(children[i]));
+                    array.Add(ParseObject(children[i]));
                 }
                 return array;
             }

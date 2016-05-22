@@ -313,7 +313,7 @@ namespace Claunia.PropertyList
                             int objRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
                                              offset + arrayOffset + i * objectRefSize,
                                              offset + arrayOffset + (i + 1) * objectRefSize));
-                            array.SetValue(i, ParseObject(objRef));
+                            array.Add(ParseObject(objRef));
                         }
                         return array;
 
