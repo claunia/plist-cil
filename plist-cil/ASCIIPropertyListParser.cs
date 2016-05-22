@@ -719,7 +719,6 @@ namespace Claunia.PropertyList
         /// <param name="s">The escaped string according to the ASCII property list format, without leading and trailing quotation marks.</param>
         /// <exception cref="ArgumentException">If the en-/decoder for the UTF-8 or ASCII encoding could not be loaded</exception>
         /// <exception cref="EncoderFallbackException">If the string is encoded neither in ASCII nor in UTF-8</exception>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public static string ParseQuotedString(string s)
         {
             List<byte> strBytes = new List<byte>();
