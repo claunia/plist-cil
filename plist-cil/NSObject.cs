@@ -351,7 +351,7 @@ namespace Claunia.PropertyList
             if (typeof(List<Object>).IsAssignableFrom(c))
                 return Wrap(((List<Object>)o).ToArray());
 
-            throw new PropertyListException($"Cannot wrap an object of type {o.GetType().Name}.");
+            throw new PropertyListException(string.Format("Cannot wrap an object of type {0}.", o.GetType().Name));
         }
 
         /// <summary>
