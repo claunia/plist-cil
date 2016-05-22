@@ -723,7 +723,9 @@ namespace Claunia.PropertyList
         public static string ParseQuotedString(string s)
         {
             List<byte> strBytes = new List<byte>();
-            CharEnumerator c = s.GetEnumerator();
+
+            var characters = (IEnumerable<char>)s.ToCharArray();
+            var c = characters.GetEnumerator();
 
             while (c.MoveNext())
             {
@@ -769,7 +771,7 @@ namespace Claunia.PropertyList
         /// <returns>The unescaped character as a string.</returns>
         /// <param name="iterator">The string character iterator pointing to the first character after the backslash</param>
         /// <exception cref="EncoderFallbackException">If an invalid Unicode or ASCII escape sequence is found.</exception>
-        private static string ParseEscapedSequence(CharEnumerator iterator)
+        private static string ParseEscapedSequence(IEnumerator<char> iterator)
         {
             iterator.MoveNext();
             char c = iterator.Current;
