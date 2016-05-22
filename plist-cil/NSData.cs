@@ -122,7 +122,7 @@ namespace Claunia.PropertyList
         /// <returns>The Base64 encoded data as a <c>string</c>.</returns>
         public string GetBase64EncodedData()
         {
-            return Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
+            return Convert.ToBase64String(bytes);
         }
 
         /// <summary>
