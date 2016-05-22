@@ -18,7 +18,7 @@ The provided API mimics the Cocoa/NeXTSTEP API, and where applicable, the .NET A
 | GNUstep ASCII          |  yes |  yes  |
 
 ###Requirements
-.NET Framework 4.0 or Mono.
+.NET Framework 4.0, Mono or .NET Core.
 
 ###Download
 
