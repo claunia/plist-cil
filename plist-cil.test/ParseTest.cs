@@ -112,7 +112,11 @@ namespace plistcil.test
             Assert.True(d.Count == 5);
             Assert.True(((NSString)d.ObjectForKey("keyA")).ToString().Equals("valueA"));
             Assert.True(((NSString)d.ObjectForKey("key&B")).ToString().Equals("value&B"));
-            Assert.True(((NSDate)d.ObjectForKey("date")).Date.Equals(new DateTime(2011, 11, 28, 9, 21, 30, DateTimeKind.Utc)));
+
+            var actualDate = (NSDate)d.ObjectForKey("date");
+            var expectedDate = new DateTime(2011, 11, 28, 9, 21, 30, DateTimeKind.Utc).ToLocalTime();
+
+            Assert.AreEqual(actualDate.Date, expectedDate);
             Assert.True(ArrayEquals(((NSData)d.ObjectForKey("data")).Bytes,
                 new byte[]{ 0x00, 0x00, 0x00, 0x04, 0x10, 0x41, 0x08, 0x20, (byte)0x82 }));
             NSArray a = (NSArray)d.ObjectForKey("array");
@@ -182,7 +186,6 @@ namespace plistcil.test
             DateTime date = new DateTime();
             string strg = "Hello World";
             byte[] bytes = new byte[] { (byte)0x00, (byte)0xAF, (byte)0xAF };
-            DirectoryInfo netObject = new DirectoryInfo(Environment.CurrentDirectory);
             Object[] array = new Object[] { bl, byt, shrt, i, lng, flt, dbl, date, strg, bytes };
             int[] array2 = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 3000 };
             List<Object> list = new List<Object>(array);
@@ -248,8 +251,6 @@ namespace plistcil.test
             Assert.True(WrappedO.GetType().Equals(typeof(NSArray)));
             objArray = (Object[])WrappedO.ToObject();
             Assert.True(objArray.Length == array.Length);
-
-            Assert.True(NSObject.Wrap((Object)netObject).GetType().Equals(typeof(NSData)));
 
             WrappedO = NSObject.Wrap((Object)map);
             Assert.True(WrappedO.GetType().Equals(typeof(NSDictionary)));
