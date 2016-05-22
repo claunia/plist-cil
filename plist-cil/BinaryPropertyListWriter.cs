@@ -117,9 +117,10 @@ namespace Claunia.PropertyList
         /// <exception cref="IOException"></exception>
         public static void Write(FileInfo file, NSObject root)
         {
-            FileStream fous = file.OpenWrite();
-            Write(fous, root);
-            fous.Close();
+            using (FileStream fous = file.OpenWrite())
+            {
+                Write(fous, root);
+            }
         }
 
         /// <summary>

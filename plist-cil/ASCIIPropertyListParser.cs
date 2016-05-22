@@ -79,7 +79,8 @@ namespace Claunia.PropertyList
         public static NSObject Parse(Stream fs)
         {
             byte[] buf = PropertyListParser.ReadAll(fs);
-            fs.Close();
+            // Don't close the stream - that would be the responisibility of code that class
+            // Parse
             return Parse(buf);
         }
 
@@ -718,11 +719,12 @@ namespace Claunia.PropertyList
         /// <param name="s">The escaped string according to the ASCII property list format, without leading and trailing quotation marks.</param>
         /// <exception cref="ArgumentException">If the en-/decoder for the UTF-8 or ASCII encoding could not be loaded</exception>
         /// <exception cref="EncoderFallbackException">If the string is encoded neither in ASCII nor in UTF-8</exception>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public static string ParseQuotedString(string s)
         {
             List<byte> strBytes = new List<byte>();
-            CharEnumerator c = s.GetEnumerator();
+
+            var characters = (IEnumerable<char>)s.ToCharArray();
+            var c = characters.GetEnumerator();
 
             while (c.MoveNext())
             {
@@ -768,7 +770,7 @@ namespace Claunia.PropertyList
         /// <returns>The unescaped character as a string.</returns>
         /// <param name="iterator">The string character iterator pointing to the first character after the backslash</param>
         /// <exception cref="EncoderFallbackException">If an invalid Unicode or ASCII escape sequence is found.</exception>
-        private static string ParseEscapedSequence(CharEnumerator iterator)
+        private static string ParseEscapedSequence(IEnumerator<char> iterator)
         {
             iterator.MoveNext();
             char c = iterator.Current;

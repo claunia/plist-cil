@@ -65,9 +65,10 @@ namespace Claunia.PropertyList
         public NSData(FileInfo file)
         {
             bytes = new byte[(int)file.Length];
-            FileStream raf = file.OpenRead();
-            raf.Read(bytes, 0, (int)file.Length);
-            raf.Close();
+            using (FileStream raf = file.OpenRead())
+            {
+                raf.Read(bytes, 0, (int)file.Length);
+            }
         }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace Claunia.PropertyList
         /// <returns>The Base64 encoded data as a <c>string</c>.</returns>
         public string GetBase64EncodedData()
         {
-            return Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
+            return Convert.ToBase64String(bytes);
         }
 
         /// <summary>

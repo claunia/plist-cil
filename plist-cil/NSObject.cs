@@ -25,8 +25,8 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Reflection;
 
 namespace Claunia.PropertyList
 {
@@ -350,31 +350,8 @@ namespace Claunia.PropertyList
             }
             if (typeof(List<Object>).IsAssignableFrom(c))
                 return Wrap(((List<Object>)o).ToArray());
-            return WrapSerialized(o);
-        }
 
-        /// <summary>
-        /// Serializes the given object using Java's default object serialization
-        /// and wraps the serialized object in a NSData object.
-        /// </summary>
-        /// <param name="o">The object to serialize and wrap.</param>
-        /// <returns>A NSData object</returns>
-        /// <exception cref="SystemException">When the object could not be serialized.</exception>
-        public static NSData WrapSerialized(Object o)
-        {
-            try
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    bf.Serialize(ms, o);
-                    return new NSData(ms.ToArray());
-                }
-            }
-            catch (IOException)
-            {
-                throw new SystemException("The given object of class " + o.GetType() + " could not be serialized and stored in a NSData object.");
-            }
+            throw new PropertyListException(string.Format("Cannot wrap an object of type {0}.", o.GetType().Name));
         }
 
         /// <summary>

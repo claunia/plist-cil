@@ -158,9 +158,13 @@ namespace Claunia.PropertyList
         /// <returns>The root object in the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
         public static NSObject Parse(FileInfo f)
         {
-            FileStream fis = f.OpenRead();
-            int type = DetermineType(fis);
-            fis.Close();
+            int type;
+
+            using (FileStream fis = f.OpenRead())
+            {
+                type = DetermineType(fis);
+            }
+
             switch (type)
             {
                 case TYPE_BINARY:
@@ -215,9 +219,10 @@ namespace Claunia.PropertyList
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
-            Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            SaveAsXml(root, fous);
-            fous.Close();
+            using (Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                SaveAsXml(root, fous);
+            }
         }
 
         /// <summary>
@@ -228,9 +233,18 @@ namespace Claunia.PropertyList
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
         public static void SaveAsXml(NSObject root, Stream outStream)
         {
+#if NET40
+            // The StreamWriter constructor which takes a "leaveOpen" parameter is
+            // not available on .NET 4.0
             StreamWriter w = new StreamWriter(outStream, Encoding.UTF8);
             w.Write(root.ToXmlPropertyList());
             w.Close();
+#else
+            using (StreamWriter w = new StreamWriter(outStream, Encoding.UTF8, bufferSize: 1024, leaveOpen: true))
+            {
+                w.Write(root.ToXmlPropertyList());
+            }
+#endif
         }
 
         /// <summary>
@@ -291,11 +305,11 @@ namespace Claunia.PropertyList
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
-            Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            StreamWriter w = new StreamWriter(fous, Encoding.ASCII);
-            w.Write(root.ToASCIIPropertyList());
-            w.Close();
-            fous.Close();
+            using (Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (StreamWriter w = new StreamWriter(fous, Encoding.ASCII))
+            {
+                w.Write(root.ToASCIIPropertyList());
+            }
         }
 
         /// <summary>
@@ -309,11 +323,11 @@ namespace Claunia.PropertyList
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
-            Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            StreamWriter w = new StreamWriter(fous, Encoding.ASCII);
-            w.Write(root.ToASCIIPropertyList());
-            w.Close();
-            fous.Close();
+            using (Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (StreamWriter w = new StreamWriter(fous, Encoding.ASCII))
+            {
+                w.Write(root.ToASCIIPropertyList());
+            }
         }
 
         /// <summary>
@@ -350,11 +364,11 @@ namespace Claunia.PropertyList
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
-            Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            StreamWriter w = new StreamWriter(fous, Encoding.ASCII);
-            w.Write(root.ToGnuStepASCIIPropertyList());
-            w.Close();
-            fous.Close();
+            using (Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (StreamWriter w = new StreamWriter(fous, Encoding.ASCII))
+            {
+                w.Write(root.ToGnuStepASCIIPropertyList());
+            }
         }
 
         /// <summary>
@@ -368,11 +382,11 @@ namespace Claunia.PropertyList
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
-            Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            StreamWriter w = new StreamWriter(fous, Encoding.ASCII);
-            w.Write(root.ToGnuStepASCIIPropertyList());
-            w.Close();
-            fous.Close();
+            using (Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (StreamWriter w = new StreamWriter(fous, Encoding.ASCII))
+            {
+                w.Write(root.ToGnuStepASCIIPropertyList());
+            }
         }
 
         /// <summary>

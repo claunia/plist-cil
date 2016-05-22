@@ -154,7 +154,8 @@ namespace Claunia.PropertyList
         {
             //Read all bytes into a list
             byte[] buf = PropertyListParser.ReadAll(fs);
-            fs.Close();
+            // Don't close the stream - that would be the responisibility of code that class
+            // Parse
             return Parse(buf);
         }
 
