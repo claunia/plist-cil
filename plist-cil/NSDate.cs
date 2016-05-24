@@ -38,7 +38,9 @@ namespace Claunia.PropertyList
 
         static readonly DateTime EPOCH = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        static readonly string sdfDefault = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+        // The datetime ends with 'Z', which indicates UTC time. To make sure .NET
+        // understands the 'Z' character as a timezone, specify the 'K' format string.
+        static readonly string sdfDefault = "yyyy-MM-dd'T'HH:mm:ssK";
         static readonly string sdfGnuStep = "yyyy-MM-dd HH:mm:ss zzz";
 
         static readonly System.Globalization.CultureInfo provider = System.Globalization.CultureInfo.InvariantCulture;
