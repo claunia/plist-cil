@@ -81,7 +81,7 @@ namespace Claunia.PropertyList
                 //Skip Unicode byte order mark (BOM)
                 offset += 3;
             }
-            while (offset < bytes.Length && bytes[offset] == ' ' || bytes[offset] == '\t' || bytes[offset] == '\r' || bytes[offset] == '\n' || bytes[offset] == '\f')
+            while (offset < bytes.Length && (bytes[offset] == ' ' || bytes[offset] == '\t' || bytes[offset] == '\r' || bytes[offset] == '\n' || bytes[offset] == '\f'))
             {
                 offset++;
             }
@@ -129,16 +129,11 @@ namespace Claunia.PropertyList
         /// <param name="fs">The Stream pointing to the data that should be stored in the array.</param>
         internal static byte[] ReadAll(Stream fs)
         {
-            MemoryStream outputStream = new MemoryStream();
-            byte[] buf = new byte[512];
-            int read = 512;
-            while (read == 512)
+            using (MemoryStream outputStream = new MemoryStream())
             {
-                read = fs.Read(buf, 0, 512);
-                if (read != -1)
-                    outputStream.Write(buf, 0, read);
+                fs.CopyTo(outputStream);
+                return outputStream.ToArray();
             }
-            return outputStream.ToArray();
         }
 
         /// <summary>
