@@ -88,7 +88,7 @@ namespace Claunia.PropertyList
         /// <inheritdoc/>
         public IEnumerator<NSObject> GetEnumerator()
         {
-            return this.GetEnumerator();
+            return this.array.GetEnumerator();
         }
 
         public int IndexOf(object item)

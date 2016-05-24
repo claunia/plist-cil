@@ -69,5 +69,28 @@ namespace plistcil.test
 
             Assert.AreEqual(0, array.Count);
         }
+
+        /// <summary>
+        /// Tests the <see cref="NSArray.GetEnumerator"/> method.
+        /// </summary>
+        [Test]
+        public void EnumeratorTest()
+        {
+            NSArray array = new NSArray();
+            array.Add(0);
+            array.Add(1);
+
+            var enumerator = array.GetEnumerator();
+
+            Assert.IsNull(enumerator.Current);
+
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(new NSNumber(0), enumerator.Current);
+
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(new NSNumber(1), enumerator.Current);
+
+            Assert.IsFalse(enumerator.MoveNext());
+        }
     }
 }
