@@ -69,9 +69,9 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="date">The date which should be represented.</param>
         /// <returns>The string representation of the date.</returns>
-        static string MakeDateString(DateTime date)
+        public static string MakeDateString(DateTime date)
         {
-            return date.ToString(sdfDefault);
+            return date.ToUniversalTime().ToString(sdfDefault);
         }
 
         /// <summary>

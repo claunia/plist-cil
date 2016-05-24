@@ -18,5 +18,15 @@ namespace plistcil.test
             var expected = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             Assert.AreEqual(expected, actual.Date.ToUniversalTime());
         }
+
+        [Test]
+        public static void MakeDateStringTest()
+        {
+            var date = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var expected = "2000-01-01T00:00:00Z";
+            var actual = NSDate.MakeDateString(date);
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
