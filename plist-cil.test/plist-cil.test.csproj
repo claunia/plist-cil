@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NSArrayTests.cs" />
+    <Compile Include="NSNumberTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ParseTest.cs" />
     <Compile Include="IssueTest.cs" />
@@ -111,6 +112,9 @@
     <None Include="..\test-files\test-ascii.plist">
       <Link>test-files\test-ascii.plist</Link>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="test-files\ResourceRules.plist">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

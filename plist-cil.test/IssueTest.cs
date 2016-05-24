@@ -126,6 +126,18 @@ namespace plistcil.test
             NSDictionary dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue49.plist"));
             Assert.AreEqual(0, dict.Count);
         }
+
+        [Test]
+        public static void TestRealInResourceRule()
+        {
+            NSDictionary dict = (NSDictionary)XmlPropertyListParser.Parse(new FileInfo("test-files/ResourceRules.plist"));
+            Assert.AreEqual(1, dict.Count);
+            Assert.IsTrue(dict.ContainsKey("weight"));
+
+            var weight = dict["weight"].ToObject();
+            Assert.IsInstanceOf<double>(weight);
+            Assert.AreEqual(10d, (double)weight);
+        }
     }
 }
 

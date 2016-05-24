@@ -44,7 +44,11 @@ namespace Claunia.PropertyList
         public static NSObject Parse(FileInfo f)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(f.OpenRead());
+
+            using (Stream stream = f.OpenRead())
+            {
+                doc.Load(stream);
+            }
 
             return ParseDocument(doc);
         }
@@ -153,9 +157,9 @@ namespace Claunia.PropertyList
             if (n.Name.Equals("false"))
                 return new NSNumber(false);
             if (n.Name.Equals("integer"))
-                return new NSNumber(GetNodeTextContents(n));
+                return new NSNumber(GetNodeTextContents(n), NSNumber.INTEGER);
             if (n.Name.Equals("real"))
-                return new NSNumber(GetNodeTextContents(n));
+                return new NSNumber(GetNodeTextContents(n), NSNumber.REAL);
             if (n.Name.Equals("string"))
                 return new NSString(GetNodeTextContents(n));
             if (n.Name.Equals("data"))
