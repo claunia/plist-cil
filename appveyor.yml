@@ -6,5 +6,5 @@ build_script:
 
 on_success:
   - cmd: cd plist-cil
-  - cmd: nuget pack plist-cil\plist-cil.nuspec -Version %APPVEYOR_BUILD_VERSION%
+  - cmd: nuget pack plist-cil.nuspec -Version %APPVEYOR_BUILD_VERSION%
   - ps: Push-AppveyorArtifact "plist-cil.$($env:APPVEYOR_BUILD_VERSION).nupkg"
