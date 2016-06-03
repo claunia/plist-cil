@@ -94,12 +94,12 @@ namespace Claunia.PropertyList
             {
                 case INTEGER:
                     {
-                        doubleValue = longValue = long.Parse(text);
+                        doubleValue = longValue = long.Parse(text, CultureInfo.InvariantCulture);
                         break;
                     }
                 case REAL:
                     {
-                        doubleValue = double.Parse(text);
+                        doubleValue = double.Parse(text, CultureInfo.InvariantCulture);
                         longValue = (long)Math.Round(doubleValue);
                         break;
                     }
@@ -126,12 +126,12 @@ namespace Claunia.PropertyList
             long l;
             double d;
 
-            if (long.TryParse(text, out l))
+            if (long.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out l))
             {
                 doubleValue = longValue = l;
                 type = INTEGER;
             }
-            else if (double.TryParse(text, out d))
+            else if (double.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out d))
             {
                 doubleValue = d;
                 longValue = (long)Math.Round(doubleValue);
@@ -139,8 +139,8 @@ namespace Claunia.PropertyList
             }
             else
             {
-                bool isTrue = text.ToLower().Equals("true") || text.ToLower().Equals("yes");
-                bool isFalse = text.ToLower().Equals("false") || text.ToLower().Equals("no");
+                bool isTrue = string.Equals(text, "true", StringComparison.InvariantCultureIgnoreCase) || string.Equals(text, "yes", StringComparison.InvariantCultureIgnoreCase);
+                bool isFalse = string.Equals(text, "false", StringComparison.InvariantCultureIgnoreCase) || string.Equals(text, "no", StringComparison.InvariantCultureIgnoreCase);
 
                 if (isTrue || isFalse)
                 {
