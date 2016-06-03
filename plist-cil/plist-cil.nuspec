@@ -17,10 +17,10 @@
 	</metadata>
 	<files>
 		<file src="bin/Release/*.dll" target="lib"/>
-		<file src="bin/Release/ChangeLog.txt" target="content\docs"/>
-		<file src="bin/Release/LICENSE.txt" target="content\docs"/>
+		<file src="bin/Release/ChangeLog" target="content\docs\ChangeLog.txt"/>
+		<file src="bin/Release/LICENSE" target="content\docs\LICENSE.txt"/>
 		<file src="bin/Release/*.xml" target="lib"/>
-		<file src="bin/Release/README.md" target="content\docs"/>
+		<file src="bin/Release/README.md" target="content\docs\README.md"/>
 		<file src="bin/Release/docs/**/*.*"  target="content\docs"/>
 	</files>
 </package>
