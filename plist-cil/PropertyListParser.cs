@@ -214,7 +214,10 @@ namespace Claunia.PropertyList
             string parent = outFile.DirectoryName;
             if (!Directory.Exists(parent))
                 Directory.CreateDirectory(parent);
-            using (Stream fous = outFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+
+            // Use Create here -- to make sure that when the updated file is shorter than
+            // the original file, no "obsolete" data is left at the end.
+            using (Stream fous = outFile.Open(FileMode.Create, FileAccess.ReadWrite))
             {
                 SaveAsXml(root, fous);
             }
