@@ -74,13 +74,32 @@ namespace Claunia.PropertyList
             switch (type)
             {
                 case INTEGER:
+                    doubleValue = longValue = BinaryPropertyListParser.ParseLong(bytes);
+                    break;
+
+                case REAL:
+                    doubleValue = BinaryPropertyListParser.ParseDouble(bytes);
+                    longValue = (long)Math.Round(doubleValue);
+                    break;
+
+                default:
+                    throw new ArgumentException("Type argument is not valid.");
+            }
+            this.type = type;
+        }
+
+        public NSNumber(string text, int type)
+        {
+            switch (type)
+            {
+                case INTEGER:
                     {
-                        doubleValue = longValue = BinaryPropertyListParser.ParseLong(bytes);
+                        doubleValue = longValue = long.Parse(text, CultureInfo.InvariantCulture);
                         break;
                     }
                 case REAL:
                     {
-                        doubleValue = BinaryPropertyListParser.ParseDouble(bytes);
+                        doubleValue = double.Parse(text, CultureInfo.InvariantCulture);
                         longValue = (long)Math.Round(doubleValue);
                         break;
                     }
@@ -103,36 +122,34 @@ namespace Claunia.PropertyList
         {
             if (text == null)
                 throw new ArgumentException("The given string is null and cannot be parsed as number.");
-            try
+
+            long l;
+            double d;
+
+            if (long.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out l))
             {
-                long l = long.Parse(text);
                 doubleValue = longValue = l;
                 type = INTEGER;
             }
-            catch (Exception)
+            else if (double.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out d))
             {
-                try
+                doubleValue = d;
+                longValue = (long)Math.Round(doubleValue);
+                type = REAL;
+            }
+            else
+            {
+                bool isTrue = string.Equals(text, "true", StringComparison.InvariantCultureIgnoreCase) || string.Equals(text, "yes", StringComparison.InvariantCultureIgnoreCase);
+                bool isFalse = string.Equals(text, "false", StringComparison.InvariantCultureIgnoreCase) || string.Equals(text, "no", StringComparison.InvariantCultureIgnoreCase);
+
+                if (isTrue || isFalse)
                 {
-                    doubleValue = double.Parse(text, CultureInfo.InvariantCulture);
-                    longValue = (long)Math.Round(doubleValue);
-                    type = REAL;
+                    type = BOOLEAN;
+                    doubleValue = longValue = boolValue ? 1 : 0;
                 }
-                catch (Exception)
+                else
                 {
-                    try
-                    {
-                        boolValue = text.ToLower().Equals("true") || text.ToLower().Equals("yes");
-                        if (!boolValue && !(text.ToLower().Equals("false") || text.ToLower().Equals("no")))
-                        {
-                            throw new Exception("not a bool");
-                        }
-                        type = BOOLEAN;
-                        doubleValue = longValue = boolValue ? 1 : 0;
-                    }
-                    catch (Exception)
-                    {
-                        throw new ArgumentException("The given string neither represents a double, an int nor a bool value.");
-                    }
+                    throw new ArgumentException("The given string neither represents a double, an int nor a bool value.");
                 }
             }
         }
