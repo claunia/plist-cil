@@ -354,7 +354,19 @@ namespace Claunia.PropertyList
                 case REAL:
                     {
                         xml.Append("<real>");
-                        xml.Append(ToDouble().ToString(CultureInfo.InvariantCulture));
+
+                        if (doubleValue == 0)
+                        {
+                            // 0 values appear to always roundtrip as 0.0,
+                            // but non-zero values do not include decimals if
+                            // not required (e.g. 10 -> "10")
+                            xml.Append("0.0");
+                        }
+                        else
+                        {
+                            xml.Append(ToDouble().ToString(CultureInfo.InvariantCulture));
+                        }
+
                         xml.Append("</real>");
                         break;
                     }

@@ -138,6 +138,16 @@ namespace plistcil.test
             Assert.IsInstanceOf<double>(weight);
             Assert.AreEqual(10d, (double)weight);
         }
+
+        [Test]
+        public static void RoundtripTest()
+        {
+            var expected = File.ReadAllText(@"test-files\Roundtrip.plist");
+            var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files\Roundtrip.plist"));
+            var actual = value.ToXmlPropertyList();
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
 

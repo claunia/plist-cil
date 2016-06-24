@@ -44,10 +44,10 @@ namespace Claunia.PropertyList
     {
         /// <summary>
         /// The newline character used for generating the XML output.
-        /// This constant will be different depending on the operating system on
-        /// which you use this library.
+        /// To maintain compatibility with the Apple format, only a newline character
+        /// is used (as opposed to cr+lf which is normally used on Windows).
         /// </summary>
-        readonly internal static string NEWLINE = Environment.NewLine;
+        readonly internal static string NEWLINE = "\n";
 
 
         /// <summary>
@@ -100,6 +100,7 @@ namespace Claunia.PropertyList
             ToXml(xml, 0);
             xml.Append(NSObject.NEWLINE);
             xml.Append("</plist>");
+            xml.Append(NSObject.NEWLINE);
             return xml.ToString();
         }
 

@@ -156,7 +156,7 @@ namespace Claunia.PropertyList
             string base64 = GetBase64EncodedData();
             foreach (string line in base64.Split('\n'))
             {
-                Indent(xml, level + 1);
+                Indent(xml, level);
                 xml.Append(line);
                 xml.Append(NSObject.NEWLINE);
             }
