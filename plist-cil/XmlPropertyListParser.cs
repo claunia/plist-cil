@@ -72,7 +72,14 @@ namespace Claunia.PropertyList
         public static NSObject Parse(Stream str)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(str);
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.DtdProcessing = DtdProcessing.Ignore;
+
+            using (XmlReader reader = XmlReader.Create(str, settings))
+            {
+                doc.Load(reader);
+            }
 
             return ParseDocument(doc);
         }
