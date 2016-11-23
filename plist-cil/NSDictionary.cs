@@ -187,7 +187,7 @@ namespace Claunia.PropertyList
                 if (o.GetType().Equals(typeof(NSString)))
                 {
                     NSString str = (NSString)o;
-                    if (str.GetContent().Equals(val))
+                    if (str.Content.Equals(val))
                         return true;
                 }
             }
