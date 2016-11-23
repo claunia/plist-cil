@@ -291,7 +291,7 @@ namespace Claunia.PropertyList
             {
                 idMap.Add(obj);
             }
-            else if(!this.ReuseObjectIds && obj is NSString && !IsSerializationPrimitive((NSString)obj))
+            else if (!this.ReuseObjectIds && obj is NSString && !IsSerializationPrimitive((NSString)obj))
             {
                 idMap.Add(obj);
             }
@@ -314,9 +314,9 @@ namespace Claunia.PropertyList
                 var first = idMap.OfType<UID>().First(v => NSObject.ArrayEquals(v.Bytes, uid.Bytes));
                 return idMap.IndexOf(first);
             }
-            else if (!this.ReuseObjectIds && obj is NSArray)
+            else if (!this.ReuseObjectIds && (obj is NSArray || (obj is NSString && !IsSerializationPrimitive((NSString)obj))))
             {
-                int index = 0;
+                int index = -1;
 
                 for (int i = 0; i < idMap.Count; i++)
                 {
@@ -325,6 +325,11 @@ namespace Claunia.PropertyList
                         index = i;
                         break;
                     }
+                }
+
+                if (index == -1)
+                {
+                    throw new InvalidOperationException();
                 }
 
                 return index;
