@@ -62,6 +62,21 @@ namespace Claunia.PropertyList
         public const int VERSION_20 = 20;
 
         /// <summary>
+        /// Gets or sets a value indicating whether two equivalent objects should be serialized once in the binary property list file, or whether
+        /// the value should be stored multiple times in the binary property list file. The default is <see langword="false"/>.
+        /// </summary>
+        /// <remarks>
+        /// In most scenarios, you want this to be <see langword="true"/>, as it reduces the size of the binary proeprty list file. However,
+        /// by default, the Apple tools do not seem to implement this optimization, so set this value to <see langword="false"/> if you
+        /// want to maintain binary compatibility with the Apple tools.
+        /// </remarks>
+        public bool ReuseObjectIds
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Finds out the minimum binary property list format version that
         /// can be used to save the given NSObject tree.
         /// </summary>
@@ -269,7 +284,14 @@ namespace Claunia.PropertyList
 
         internal void AssignID(NSObject obj)
         {
-            if (obj is UID || obj is NSArray)
+            // If binary compatibility with the Apple format is required,
+            // UID, NSArray and NSString objects are assigned a new ID,
+            // even if they already exist in the file.
+            if (!this.ReuseObjectIds && (obj is UID || obj is NSArray))
+            {
+                idMap.Add(obj);
+            }
+            else if(!this.ReuseObjectIds && obj is NSString && !IsSerializationPrimitive((NSString)obj))
             {
                 idMap.Add(obj);
             }
@@ -279,15 +301,20 @@ namespace Claunia.PropertyList
             }
         }
 
+        internal bool IsSerializationPrimitive(NSString obj)
+        {
+            return obj != null && obj.Content.StartsWith("$") || obj.Content.StartsWith("NS");
+        }
+
         internal int GetID(NSObject obj)
         {
-            if (obj is UID)
+            if (!this.ReuseObjectIds && obj is UID)
             {
                 var uid = obj as UID;
                 var first = idMap.OfType<UID>().First(v => NSObject.ArrayEquals(v.Bytes, uid.Bytes));
                 return idMap.IndexOf(first);
             }
-            else if (obj is NSArray)
+            else if (!this.ReuseObjectIds && obj is NSArray)
             {
                 int index = 0;
 
