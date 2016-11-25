@@ -188,18 +188,18 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="outStr">The output stream into which the binary property list will be written</param>
         /// <exception cref="IOException">If an error occured while writing to the stream</exception>
-        BinaryPropertyListWriter(Stream outStr)
+        public BinaryPropertyListWriter(Stream outStr)
         {
             outStream = outStr;
         }
 
-        BinaryPropertyListWriter(Stream outStr, int version)
+        public BinaryPropertyListWriter(Stream outStr, int version)
         {
             this.version = version;
             outStream = outStr;
         }
 
-        void Write(NSObject root)
+        public void Write(NSObject root)
         {
             // magic bytes
             Write(new[] { (byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t' });
@@ -287,7 +287,7 @@ namespace Claunia.PropertyList
             // If binary compatibility with the Apple format is required,
             // UID, NSArray and NSString objects are assigned a new ID,
             // even if they already exist in the file.
-            if (!this.ReuseObjectIds && (obj is UID || obj is NSArray))
+            if (!this.ReuseObjectIds && (obj is UID || obj is NSNumber || obj is NSArray))
             {
                 idMap.Add(obj);
             }
