@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>plist-cil</id>
-		<version>1.14</version>
+		<version>1.15</version>
 		<title>plist-cil</title>
 		<authors>Natalia Portillo</authors>
 		<owners>Natalia Portillo</owners>
@@ -20,7 +20,7 @@
 		<file src="bin/Release/ChangeLog.txt" target="content\docs"/>
 		<file src="bin/Release/LICENSE.txt" target="content\docs"/>
 		<file src="bin/Release/*.xml" target="lib"/>
-		<file src="bin/Release/README.txt" target="content\docs"/>
+		<file src="bin/Release/README.md" target="content\docs"/>
 		<file src="bin/Release/docs/**/*.*"  target="content\docs"/>
 	</files>
 </package>

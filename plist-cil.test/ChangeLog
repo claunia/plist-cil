@@ -1,3 +1,17 @@
+2017-02-22  Natalia Portillo  <claunia@claunia.com>
+
+	* Properties/AssemblyInfo.cs:
+	  Removed, no longer needed in .NET Core.
+
+	* plist-cil.test.csproj:
+	  Updated for .NET Core
+
+	* NSNumberTests.cs:
+	  Cannot test different locales with NUnit in .NET Core currently.
+
+	* PropertyListParserTests.cs:
+	  Use different way to test for exceptions compatible with NUnit 3.6 and .NET Core.
+
 2015-02-24  Natalia Portillo  <claunia@claunia.com>
 
 	* plist-cil.test.csproj:

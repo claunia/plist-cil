@@ -1,51 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{36AD4394-6A31-465F-BE8E-E4806A89CC38}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>plistcil.test</RootNamespace>
-    <AssemblyName>plist-cil.test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <ReleaseVersion>1.14</ReleaseVersion>
+    <TargetFrameworks>netcoreapp1.0;net40</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
+    <PackageReference Include="NUnit" Version="3.6.0" />
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
+    <DefineConstants>NETCOREAPP1_0;NETCORE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="NSArrayTests.cs" />
-    <Compile Include="NSNumberTests.cs" />
-    <Compile Include="NSDateTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ParseTest.cs" />
-    <Compile Include="IssueTest.cs" />
-    <Compile Include="PropertyListParserTests.cs" />
+    <ProjectReference Include="..\plist-cil\plist-cil.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="..\test-files\test1-ascii-gnustep.plist">
       <Link>test-files\test1-ascii-gnustep.plist</Link>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
@@ -123,14 +94,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\plist-cil\plist-cil.csproj">
-      <Project>{5EA40CD5-CB98-4FD5-8628-3B399EACB38B}</Project>
-      <Name>plist-cil</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
+
 </Project>

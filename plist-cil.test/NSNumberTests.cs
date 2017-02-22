@@ -27,6 +27,7 @@ namespace plistcil.test
         // <key>TimeZoneOffsetFromUTC</key>
         // <real>7200.000000</real>
 
+#if !NETCORE
         [Test]
         [SetCulture("en-US")]
         public static void ParseNumberEnTest()
@@ -71,5 +72,6 @@ namespace plistcil.test
             Assert.IsTrue(number.isReal());
             Assert.AreEqual(7200d, number.ToDouble());
         }
+#endif
     }
 }

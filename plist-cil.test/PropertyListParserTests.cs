@@ -8,8 +8,12 @@ namespace plistcil.test
     public class PropertyListParserTests
     {
         [Test]
-        [ExpectedException(typeof(PropertyListFormatException))]
         public static void ParseEmptyStreamTest()
+        {
+            Assert.Throws<PropertyListFormatException>(new TestDelegate(ParseEmptyStreamTestDelegate));
+        }
+
+        static void ParseEmptyStreamTestDelegate()
         {
             using (MemoryStream stream = new MemoryStream())
             {

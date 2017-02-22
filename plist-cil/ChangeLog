@@ -1,3 +1,17 @@
+2017-02-22  Natalia Portillo  <claunia@claunia.com>
+
+	* Properties/AssemblyInfo.cs:
+	  Removed, no longer needed in .NET Core.
+
+	* plist-cil.csproj:
+	  Updated for .NET Core.
+
+	* NSNumber.cs:
+	  InvariantCulture seems not to be supported in .NET Core, changed to CurrentCulture.
+
+	* plist-cil.nuspec:
+	  Updated version, not sure if needed with .NET Core auto-packaging.
+
 2015-02-25  Natalia Portillo  <claunia@claunia.com>
 
 	* plist-cil.nuspec:
