@@ -12,4 +12,3 @@ build_script:
 on_success:
   - cmd: dotnet pack -c Release --version-suffix r%APPVEYOR_BUILD_NUMBER%
   - ps: Push-AppveyorArtifact "bin\Release\plist-cil.1.15.0-r$($env:APPVEYOR_BUILD_NUMBER).nupkg"
-  - ps: Push-AppveyorArtifact "bin\Release\plist-cil.1.15.0-r$($env:APPVEYOR_BUILD_NUMBER).symbols.nupkg"
