@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;net40</TargetFrameworks>
-    <Version>1.15-*</Version>
+    <VersionPrefix>1.15.0</VersionPrefix>
     <Authors>Natalia Portillo</Authors>
     <Company>Claunia.com</Company>
     <Description>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats, based on Java's dd-plist.</Description>
