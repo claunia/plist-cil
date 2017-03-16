@@ -1,0 +1,14 @@
+install:
+  - choco install -y wget
+  - wget -q https://download.microsoft.com/download/5/F/E/5FEB7E95-C643-48D5-8329-9D2C63676CE8/dotnet-dev-win-x64.1.0.0-rc4-004771.exe
+  - dotnet-dev-win-x64.1.0.0-rc4-004771.exe /install /quiet /log dotnetinstall.log
+  - ps: Push-AppveyorArtifact "dotnetinstall.log"
+
+build_script:
+  - cmd: cd plist-cil
+  - cmd: dotnet restore
+  - cmd: dotnet build -c Release --version-suffix r%APPVEYOR_BUILD_NUMBER%
+
+on_success:
+  - cmd: dotnet pack -c Release --version-suffix r%APPVEYOR_BUILD_NUMBER%
+  - ps: Push-AppveyorArtifact "bin\Release\plist-cil.1.15.0-r$($env:APPVEYOR_BUILD_NUMBER).nupkg"
