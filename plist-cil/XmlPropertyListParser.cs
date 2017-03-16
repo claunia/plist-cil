@@ -45,9 +45,12 @@ namespace Claunia.PropertyList
         {
             XmlDocument doc = new XmlDocument();
 
+            var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore };
+
             using (Stream stream = f.OpenRead())
+            using (XmlReader reader = XmlReader.Create(stream, settings))
             {
-                doc.Load(stream);
+                doc.Load(reader);
             }
 
             return ParseDocument(doc);
