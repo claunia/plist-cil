@@ -61,18 +61,10 @@ namespace Claunia.PropertyList
         /// Gets this strings content.
         /// </summary>
         /// <returns>This NSString as .NET string object.</returns>
-        public string GetContent()
+        public string Content
         {
-            return content;
-        }
-
-        /// <summary>
-        /// Sets the contents of this string.
-        /// </summary>
-        /// <param name="c">The new content of this string object.</param>
-        public void SetContent(string c)
-        {
-            content = c;
+            get { return this.content; }
+            set { this.content = value; }
         }
 
         /// <summary>
@@ -81,7 +73,7 @@ namespace Claunia.PropertyList
         /// <param name="s">The string to append.</param>
         public void Append(NSString s)
         {
-            Append(s.GetContent());
+            Append(s.Content);
         }
 
         /// <summary>
@@ -108,7 +100,7 @@ namespace Claunia.PropertyList
         /// <param name="s">The string to prepend.</param>
         public void Prepend(NSString s)
         {
-            Prepend(s.GetContent());
+            Prepend(s.Content);
         }
 
         /// <summary>
@@ -290,9 +282,9 @@ namespace Claunia.PropertyList
         public int CompareTo(Object o)
         {
             if (o is NSString)
-                return string.Compare(GetContent(), ((NSString)o).GetContent(), StringComparison.Ordinal);
+                return string.Compare(Content, ((NSString)o).Content, StringComparison.Ordinal);
             if (o is String)
-                return string.Compare(GetContent(), ((String)o), StringComparison.Ordinal);
+                return string.Compare(Content, ((String)o), StringComparison.Ordinal);
             return -1;
         }
 

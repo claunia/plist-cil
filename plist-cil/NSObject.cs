@@ -422,7 +422,7 @@ namespace Claunia.PropertyList
             }
             if (this is NSString)
             {
-                return ((NSString)this).GetContent();
+                return ((NSString)this).Content;
             }
             if (this is NSData)
             {
