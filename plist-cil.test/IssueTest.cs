@@ -24,22 +24,21 @@
 // SOFTWARE.
 using System;
 using System.IO;
-using NUnit.Framework;
+using Xunit;
 using Claunia.PropertyList;
 
 namespace plistcil.test
 {
-    [TestFixture]
     public static class IssueTest
     {
-        [Test]
+        [Fact]
         public static void TestIssue4()
         {
             NSDictionary d = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue4.plist"));
             Assert.True(((NSString)d.ObjectForKey("Device Name")).ToString().Equals("Kid\u2019s iPhone"));
         }
 
-        [Test]
+        [Fact]
         public static void TestIssue7()
         {
             // also a test for issue 12
@@ -50,14 +49,14 @@ namespace plistcil.test
             Assert.True(x.Equals(y));
         }
 
-        [Test]
+        [Fact]
         public static void TestIssue16()
         {
             float x = ((NSNumber)PropertyListParser.Parse(new FileInfo("test-files/issue16.plist"))).floatValue();
             Assert.True(x == (float)2.71828);
         }
 
-        [Test]
+        [Fact]
         public static void TestIssue18()
         {
             NSNumber x = new NSNumber(-999);
@@ -66,14 +65,14 @@ namespace plistcil.test
             Assert.True(x.Equals(y));
         }
 
-        [Test]
+        [Fact]
         public static void TestIssue21()
         {
             String x = ((NSString)PropertyListParser.Parse(new FileInfo("test-files/issue21.plist"))).ToString();
             Assert.True(x.Equals("Lot&s of &persand&s and other escapable \"\'<>€ characters"));
         }
 
-        [Test]
+        [Fact]
         public static void TestIssue22()
         {
             NSDictionary x1 = ((NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue22-emoji.plist")));
@@ -96,7 +95,7 @@ namespace plistcil.test
             Assert.True(emojiString.Equals(y2.ObjectForKey("emojiString").ToString()));
         }
 
-        [Test]
+        [Fact]
         public static void TestIssue30()
         {
             #pragma warning disable 219
@@ -104,7 +103,7 @@ namespace plistcil.test
             #pragma warning restore 219
         }
 
-        [Test]
+        [Fact]
         public static void TestIssue33()
         {
             #pragma warning disable 219
@@ -112,7 +111,7 @@ namespace plistcil.test
             #pragma warning restore 219
         }
 
-        [Test]
+        [Fact]
         public static void TestIssue38()
         {
             NSDictionary dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue33.pbxproj"));
@@ -120,33 +119,33 @@ namespace plistcil.test
             Assert.True(fileRef.Equals(new NSString("65541A9B16D13B8C00A968D5")));
         }
 
-        [Test]
+        [Fact]
         public static void TestIssue49()
         {
             NSDictionary dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue49.plist"));
-            Assert.AreEqual(0, dict.Count);
+            Assert.Equal(0, dict.Count);
         }
 
-        [Test]
+        [Fact]
         public static void TestRealInResourceRule()
         {
             NSDictionary dict = (NSDictionary)XmlPropertyListParser.Parse(new FileInfo("test-files/ResourceRules.plist"));
-            Assert.AreEqual(1, dict.Count);
-            Assert.IsTrue(dict.ContainsKey("weight"));
+            Assert.Equal(1, dict.Count);
+            Assert.True(dict.ContainsKey("weight"));
 
             var weight = dict["weight"].ToObject();
-            Assert.IsInstanceOf<double>(weight);
-            Assert.AreEqual(10d, (double)weight);
+            Assert.IsType<double>(weight);
+            Assert.Equal(10d, (double)weight);
         }
 
-        [Test]
+        [Fact]
         public static void RoundtripTest()
         {
             var expected = File.ReadAllText(@"test-files\Roundtrip.plist");
             var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files\Roundtrip.plist"));
             var actual = value.ToXmlPropertyList();
 
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
     }
 }
