@@ -8,6 +8,7 @@ build_script:
   - cmd: cd plist-cil
   - cmd: dotnet restore
   - cmd: dotnet build -c Release --version-suffix r%APPVEYOR_BUILD_NUMBER%
+  - cmd: dotnet test plist-cil.test\plist-cil.test.csproj
 
 on_success:
   - cmd: dotnet pack -c Release --version-suffix r%APPVEYOR_BUILD_NUMBER%

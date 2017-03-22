@@ -1,16 +1,15 @@
 ﻿using Claunia.PropertyList;
-using NUnit.Framework;
+using Xunit;
 using System.IO;
 
 namespace plistcil.test
 {
-    [TestFixture]
     public class PropertyListParserTests
     {
-        [Test]
+        [Fact]
         public static void ParseEmptyStreamTest()
         {
-            Assert.Throws<PropertyListFormatException>(new TestDelegate(ParseEmptyStreamTestDelegate));
+            Assert.Throws<PropertyListFormatException>(() => ParseEmptyStreamTestDelegate());
         }
 
         static void ParseEmptyStreamTestDelegate()

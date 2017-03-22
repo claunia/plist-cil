@@ -24,19 +24,18 @@
 // SOFTWARE.
 using System;
 using System.IO;
-using NUnit.Framework;
+using Xunit;
 using Claunia.PropertyList;
 using System.Collections.Generic;
 
 namespace plistcil.test
 {
-    [TestFixture]
     public static class ParseTest
     {
         /**
      * Test the xml reader/writer
      */
-        [Test]
+        [Fact]
         public static void TestXml()
         {
             // Parse an example plist file
@@ -66,7 +65,7 @@ namespace plistcil.test
         /**
      *  Test the binary reader/writer.
      */
-        [Test]
+        [Fact]
         public static void TestBinary()
         {
             NSObject x = PropertyListParser.Parse(new FileInfo("test-files/test1.plist"));
@@ -82,7 +81,7 @@ namespace plistcil.test
      *  NSSets are not yet supported in reading/writing, as binary property list format v1+ is required.
      */
         /*
-        [Test]
+        [Fact]
         public static void TestSet()
         {
             NSSet s = new NSSet();
@@ -104,7 +103,7 @@ namespace plistcil.test
             Assert.True(ParsedRoot.Equals(dict));
         }*/
 
-        [Test]
+        [Fact]
         public static void TestASCII()
         {
             NSObject x = PropertyListParser.Parse(new FileInfo("test-files/test1-ascii.plist"));
@@ -116,7 +115,7 @@ namespace plistcil.test
             var actualDate = (NSDate)d.ObjectForKey("date");
             var expectedDate = new DateTime(2011, 11, 28, 9, 21, 30, DateTimeKind.Utc).ToLocalTime();
 
-            Assert.AreEqual(actualDate.Date, expectedDate);
+            Assert.Equal(actualDate.Date, expectedDate);
             Assert.True(ArrayEquals(((NSData)d.ObjectForKey("data")).Bytes,
                 new byte[]{ 0x00, 0x00, 0x00, 0x04, 0x10, 0x41, 0x08, 0x20, (byte)0x82 }));
             NSArray a = (NSArray)d.ObjectForKey("array");
@@ -127,7 +126,7 @@ namespace plistcil.test
             Assert.True(a.ObjectAtIndex(3).Equals(new NSString("3.14159")));
         }
 
-        [Test]
+        [Fact]
         public static void TestGnuStepASCII()
         {
             NSObject x = PropertyListParser.Parse(new FileInfo("test-files/test1-ascii-gnustep.plist"));
@@ -146,7 +145,7 @@ namespace plistcil.test
             Assert.True(a.ObjectAtIndex(3).Equals(new NSNumber(3.14159)));
         }
 
-        [Test]
+        [Fact]
         public static void TestASCIIWriting()
         {
             FileInfo inf = new FileInfo("test-files/test1.plist");
@@ -162,7 +161,7 @@ namespace plistcil.test
             Assert.True(y.Equals(z));
         }
 
-        [Test]
+        [Fact]
         public static void TestGnuStepASCIIWriting()
         {
             FileInfo inf = new FileInfo("test-files/test1.plist");
@@ -173,7 +172,7 @@ namespace plistcil.test
             Assert.True(x.Equals(y));
         }
 
-        [Test]
+        [Fact]
         public static void TestWrap()
         {
             bool bl = true;
