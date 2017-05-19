@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.0;netstandard1.3;netstandard1.6;net40;net45</TargetFrameworks>
+    <TargetFrameworks>netcoreapp1.0;netstandard1.3;netstandard1.4;netstandard1.6;net40;net45</TargetFrameworks>
     <Version>1.15</Version>
     <Authors>Natalia Portillo</Authors>
     <Company>Claunia.com</Company>
@@ -29,7 +29,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0' Or '$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard1.6'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0' Or '$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard1.4' Or '$(TargetFramework)' == 'netstandard1.6'">
     <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
   </PropertyGroup>
 
@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0' Or '$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard1.6'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0' Or '$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard1.4' Or '$(TargetFramework)' == 'netstandard1.6'">
     <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Globalization" Version="4.3.0" />
