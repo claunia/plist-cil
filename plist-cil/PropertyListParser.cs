@@ -74,6 +74,9 @@ namespace Claunia.PropertyList
         /// <param name="bytes">The type of the property list</param>
         static int DetermineType(byte[] bytes)
         {
+            if (bytes.Length == 0)
+                return TYPE_ERROR_BLANK;
+
             //Skip any possible whitespace at the beginning of the file
             int offset = 0;
             if (bytes.Length >= 3 && (bytes[0] & 0xFF) == 0xEF && (bytes[1] & 0xFF) == 0xBB && (bytes[2] & 0xFF) == 0xBF)
@@ -95,30 +98,42 @@ namespace Claunia.PropertyList
         /// <param name="fs">An input stream pointing to the beginning of the property list data.
         /// The stream will be reset to the beginning of the property
         /// list data after the type has been determined.</param>
-        static int DetermineType(Stream fs)
+        static int DetermineType(Stream fs, long offset = 0)
         {
-            //Skip any possible whitespace at the beginning of the file
-            byte[] magicBytes = new byte[8];
+            if (fs.Length == 0)
+                return TYPE_ERROR_BLANK;
+
+            long index = offset;
+            long readLimit = index + 1024;
+            long mark = readLimit;
+            fs.Seek(offset, SeekOrigin.Current);
             int b;
-            long index = -1;
             bool bom = false;
-            long mark;
+
+            //Skip any possible whitespace at the beginning of the file
             do
             {
-                mark = fs.Position;
+                if(++index > readLimit)
+                {
+                    fs.Seek(mark, SeekOrigin.Begin);
+                    return DetermineType(fs, readLimit);
+                }
                 b = fs.ReadByte();
-                index++;
+
                 //Check if we are reading the Unicode byte order mark (BOM) and skip it
                 bom = index < 3 && ((index == 0 && b == 0xEF) || (bom && ((index == 1 && b == 0xBB) || (index == 2 && b == 0xBF))));
             }
-            while(b != -1 && b == ' ' || b == '\t' || b == '\r' || b == '\n' || b == '\f' || bom);
+            while(b != -1 && (b == ' ' || b == '\t' || b == '\r' || b == '\n' || b == '\f' || bom));
+
+            if(b==-1)
+                return TYPE_ERROR_BLANK;
+
+            byte[] magicBytes = new byte[8];
             magicBytes[0] = (byte)b;
             int read = fs.Read(magicBytes, 1, 7);
 
             int type = DetermineType(Encoding.ASCII.GetString(magicBytes, 0, read));
             fs.Seek(mark, SeekOrigin.Begin);
-            //if(fs.markSupported())
-            //  fs.reset();
             return type;
         }
 
@@ -153,23 +168,9 @@ namespace Claunia.PropertyList
         /// <returns>The root object in the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
         public static NSObject Parse(FileInfo f)
         {
-            int type;
-
             using (FileStream fis = f.OpenRead())
             {
-                type = DetermineType(fis);
-            }
-
-            switch (type)
-            {
-                case TYPE_BINARY:
-                    return BinaryPropertyListParser.Parse(f);
-                case TYPE_XML:
-                    return XmlPropertyListParser.Parse(f);
-                case TYPE_ASCII:
-                    return ASCIIPropertyListParser.Parse(f);
-                default:
-                    throw new PropertyListFormatException("The given file is not a property list of a supported format.");
+                return Parse(fis);
             }
         }
 
