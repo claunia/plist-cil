@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;netstandard1.3;netstandard1.4;netstandard1.6;net40;net45</TargetFrameworks>
-    <Version>1.15</Version>
+    <Version>1.16</Version>
     <Authors>Natalia Portillo</Authors>
     <Company>Claunia.com</Company>
     <Description>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats, based on Java's dd-plist.</Description>
@@ -12,7 +12,12 @@
     <RepositoryUrl>http://www.github.com/claunia/plist-cil</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>apple propertylist property list gnustep plist</PackageTags>
-    <PackageReleaseNotes>Ported to .NET Core</PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for .NETStandard1.4.
+Enhanced binary compatibility with Apple.
+Correct opening of plists with unescaped UTF8 strings.
+Added support for parsing hex numbers.
+Added explicit casts for NSNumber, NSData, NSDate and NSString.
+Added examples to README.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>plist-cil.snk</AssemblyOriginatorKeyFile>
