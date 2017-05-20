@@ -210,6 +210,16 @@ namespace Claunia.PropertyList
 
             return ArrayEquals(bytes, ((NSData)obj).Bytes);
         }
+
+        static public explicit operator byte[](NSData value)
+        {
+            return value.bytes;
+        }
+
+        static public explicit operator NSData(byte[] value)
+        {
+            return new NSData(value);
+        }
     }
 }
 

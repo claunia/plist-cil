@@ -309,6 +309,16 @@ namespace Claunia.PropertyList
                     return false;
             return true;
         }
+
+        static public explicit operator string(NSString value)
+        {
+            return value.content;
+        }
+
+        static public explicit operator NSString(string value)
+        {
+            return new NSString(value);
+        }
     }
 }
 

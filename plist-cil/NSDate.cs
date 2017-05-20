@@ -203,6 +203,16 @@ namespace Claunia.PropertyList
 
             return equality == 0;
         }
+
+        static public explicit operator DateTime (NSDate value)
+        {
+            return value.date;
+        }
+
+        static public explicit operator NSDate(DateTime value)
+        {
+            return new NSDate(value);
+        }
     }
 }
 

@@ -579,6 +579,116 @@ namespace Claunia.PropertyList
                     return false;
             }
         }
+
+        static public explicit operator ulong(NSNumber value)
+        {
+            return (ulong)value.longValue;
+        }
+
+        static public explicit operator long(NSNumber value)
+        {
+            return value.longValue;
+        }
+
+        static public explicit operator uint(NSNumber value)
+        {
+            return (uint)value.longValue;
+        }
+
+        static public explicit operator int(NSNumber value)
+        {
+            return (int)value.longValue;
+        }
+
+        static public explicit operator ushort(NSNumber value)
+        {
+            return (ushort)value.longValue;
+        }
+
+        static public explicit operator short(NSNumber value)
+        {
+            return (short)value.longValue;
+        }
+
+        static public explicit operator byte(NSNumber value)
+        {
+            return (byte)value.longValue;
+        }
+
+        static public explicit operator sbyte(NSNumber value)
+        {
+            return (sbyte)value.longValue;
+        }
+
+        static public explicit operator double(NSNumber value)
+        {
+            return value.doubleValue;
+        }
+
+        static public explicit operator float(NSNumber value)
+        {
+            return (float)value.doubleValue;
+        }
+
+        static public explicit operator bool(NSNumber value)
+        {
+            return value.boolValue;
+        }
+
+        static public explicit operator NSNumber(ulong value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(long value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(uint value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(int value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(ushort value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(short value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(byte value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(sbyte value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(double value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(float value)
+        {
+            return new NSNumber(value);
+        }
+
+        static public explicit operator NSNumber(bool value)
+        {
+            return new NSNumber(value);
+        }
     }
 }
 
