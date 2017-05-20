@@ -145,7 +145,7 @@ namespace plistcil.test
             var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files\Roundtrip.plist"));
             var actual = value.ToXmlPropertyList();
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, false, true);
         }
     }
 }
