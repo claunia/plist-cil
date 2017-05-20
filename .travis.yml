@@ -12,3 +12,4 @@ mono:
  - 3.2.8
  - 2.10.8
 dotnet: 1.0.1
+dist: trusty
