@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>plist-cil</id>
-		<version>1.15</version>
+		<version>1.16</version>
 		<title>plist-cil</title>
 		<authors>Natalia Portillo</authors>
 		<owners>Natalia Portillo</owners>
@@ -11,8 +11,15 @@
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats, based on Java's dd-plist.</description>
 		<summary>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats.</summary>
-		<releaseNotes>Added support for UTF-8 strings in binary property lists</releaseNotes>
-		<copyright>Copyright (C) 2015 Natalia Portillo</copyright>
+    <releaseNotes>
+      Added support for .NETStandard1.4.
+      Enhanced binary compatibility with Apple.
+      Correct opening of plists with unescaped UTF8 strings.
+      Added support for parsing hex numbers.
+      Added explicit casts for NSNumber, NSData, NSDate and NSString.
+      Added examples to README.
+    </releaseNotes>
+		<copyright>Copyright (C) 2015-2017 Natalia Portillo</copyright>
 		<tags>plist apple propertylist property list gnustep</tags>
 	</metadata>
 	<files>
