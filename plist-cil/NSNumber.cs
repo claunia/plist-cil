@@ -126,6 +126,11 @@ namespace Claunia.PropertyList
             long l;
             double d;
 
+            if (text.StartsWith("0x") && long.TryParse("", NumberStyles.HexNumber, CultureInfo.InvariantCulture, out l))
+            {
+                doubleValue = longValue = l;
+                type = INTEGER;
+            }
             if (long.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out l))
             {
                 doubleValue = longValue = l;
