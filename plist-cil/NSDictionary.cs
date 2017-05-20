@@ -45,12 +45,17 @@ namespace Claunia.PropertyList
     {
         readonly Dictionary<string, NSObject> dict;
 
+        // Maps the keys in this dictionary to their NSString equivalent. Makes sure the NSString
+        // object remains constant accross calls to AssignIDs and ToBinary
+        readonly Dictionary<string, NSString> keys;
+
         /// <summary>
         /// Creates a new empty NSDictionary.
         /// </summary>
         public NSDictionary()
         {
             dict = new Dictionary<string, NSObject>();
+            keys = new Dictionary<string, NSString>();
         }
 
         /// <summary>
@@ -366,7 +371,7 @@ namespace Claunia.PropertyList
 
             foreach (KeyValuePair<string, NSObject> entry in dict)
             {
-                new NSString(entry.Key).AssignIDs(outPlist);
+                keys[entry.Key].AssignIDs(outPlist);
             }
 
             foreach (KeyValuePair<string, NSObject> entry in dict)
@@ -380,7 +385,7 @@ namespace Claunia.PropertyList
             outPlist.WriteIntHeader(0xD, dict.Count);
             foreach (KeyValuePair<String, NSObject> entry in dict)
             {
-                outPlist.WriteID(outPlist.GetID(new NSString(entry.Key)));
+                outPlist.WriteID(outPlist.GetID(keys[entry.Key]));
             }
             foreach (KeyValuePair<String, NSObject> entry in dict)
             {
@@ -488,6 +493,7 @@ namespace Claunia.PropertyList
         public void Add(string key, NSObject value)
         {
             dict.Add(key, value);
+            keys.Add(key, new NSString(key));
         }
 
         /// <summary>
@@ -516,6 +522,7 @@ namespace Claunia.PropertyList
         /// <param name="key">Key.</param>
         public bool Remove(string key)
         {
+            keys.Remove(key);
             return dict.Remove(key);
         }
 
@@ -534,7 +541,7 @@ namespace Claunia.PropertyList
         /// Gets or sets the <see cref="Claunia.PropertyList.NSObject"/> at the specified index.
         /// </summary>
         /// <param name="index">Index.</param>
-        public NSObject this [string index]
+        public NSObject this[string index]
         {
             get
             {
@@ -542,6 +549,11 @@ namespace Claunia.PropertyList
             }
             set
             {
+                if (!keys.ContainsKey(index))
+                {
+                    keys.Add(index, new NSString(index));
+                }
+
                 dict[index] = value;
             }
         }
@@ -579,6 +591,7 @@ namespace Claunia.PropertyList
         /// <param name="item">Item.</param>
         public void Add(KeyValuePair<string, NSObject> item)
         {
+            keys.Add(item.Key, new NSString(item.Key));
             dict.Add(item.Key, item.Value);
         }
 
@@ -587,6 +600,7 @@ namespace Claunia.PropertyList
         /// </summary>
         public void Clear()
         {
+            keys.Clear();
             dict.Clear();
         }
 
@@ -618,6 +632,7 @@ namespace Claunia.PropertyList
         /// <returns><c>true</c> if successfully removed, <c>false</c> if not, or if item is not in current instance.</returns>
         public bool Remove(KeyValuePair<string, NSObject> item)
         {
+            keys.Remove(item.Key);
             return dict.Remove(item.Key);
         }
 
