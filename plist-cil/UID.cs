@@ -23,6 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
+using System.Linq;
 using System.Text;
 
 namespace Claunia.PropertyList
@@ -44,8 +45,128 @@ namespace Claunia.PropertyList
         /// <param name="bytes">Bytes.</param>
         public UID(String name, byte[] bytes)
         {
+            if(bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
+                throw new ArgumentException("Type argument is not valid.");
             this.name = name;
             this.bytes = bytes;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 8-bit number.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="number">Unsigned 8-bit number.</param>
+        public UID(String name, byte number)
+        {
+            this.name = name;
+            this.bytes = new[] { number };
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using a signed 8-bit number.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="number">Unsigned 8-bit number.</param>
+        public UID(String name, sbyte number)
+        {
+            this.name = name;
+            this.bytes = new[] { (byte)number };
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 16-bit number.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="number">Unsigned 16-bit number.</param>
+        public UID(String name, ushort number)
+        {
+            this.name = name;
+            if(number <= byte.MaxValue)
+                this.bytes = new[] { (byte)number };
+            else
+                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using a signed 16-bit number.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="number">Signed 16-bit number.</param>
+        public UID(String name, short number)
+        {
+            this.name = name;
+            if(number >= sbyte.MinValue && number <= sbyte.MaxValue)
+                this.bytes = new[] { (byte)number };
+            else
+                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 32-bit number.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="number">Unsigned 32-bit number.</param>
+        public UID(String name, uint number)
+        {
+            this.name = name;
+            if(number <= byte.MaxValue)
+                this.bytes = new[] { (byte)number };
+            else if(number <= ushort.MaxValue)
+                this.bytes = BitConverter.GetBytes((ushort)number).Reverse().ToArray();
+            else
+                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using a signed 32-bit number.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="number">Signed 32-bit number.</param>
+        public UID(String name, int number)
+        {
+            this.name = name;
+            if(number >= sbyte.MinValue && number <= sbyte.MaxValue)
+                this.bytes = new[] { (byte)number };
+            if(number >= short.MinValue && number <= short.MaxValue)
+                this.bytes = BitConverter.GetBytes((short)number).Reverse().ToArray();
+            else
+                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 64-bit number.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="number">Unsigned 64-bit number.</param>
+        public UID(String name, ulong number)
+        {
+            this.name = name;
+            if(number <= byte.MaxValue)
+                this.bytes = new[] { (byte)number };
+            else if(number <= ushort.MaxValue)
+                this.bytes = BitConverter.GetBytes((ushort)number).Reverse().ToArray();
+            else if(number <= uint.MaxValue)
+                this.bytes = BitConverter.GetBytes((uint)number).Reverse().ToArray();
+            else
+                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using a signed 64-bit number.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="number">Signed 64-bit number.</param>
+        public UID(String name, long number)
+        {
+            this.name = name;
+            if(number >= sbyte.MinValue && number <= sbyte.MaxValue)
+                this.bytes = new[] { (byte)number };
+            if(number >= short.MinValue && number <= short.MaxValue)
+                this.bytes = BitConverter.GetBytes((short)number).Reverse().ToArray();
+            if(number >= int.MinValue && number <= int.MaxValue)
+                this.bytes = BitConverter.GetBytes((int)number).Reverse().ToArray();
+            else
+                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
         }
 
         /// <summary>
