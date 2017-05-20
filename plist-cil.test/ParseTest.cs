@@ -283,6 +283,16 @@ namespace plistcil.test
             return false;
         }
 
-    }
+        [Fact]
+        public static void testAsciiUtf8CharactersInQuotedString()
+        {
+            NSObject x = PropertyListParser.Parse(new FileInfo("test-files/test-ascii-utf8.plist"));
+            NSDictionary d = (NSDictionary)x;
+            Assert.Equal(2, d.Count);
+            Assert.Equal("JÔÖú@2x.jpg", d.ObjectForKey("path").ToString());
+            Assert.Equal("QÔÖú@2x 啕.jpg", d.ObjectForKey("Key QÔÖª@2x 䌡").ToString());
+        }
+
+}
 }
 

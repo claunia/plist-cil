@@ -92,7 +92,7 @@ namespace Claunia.PropertyList
         /// <exception cref="FormatException">When an error occurs during parsing.</exception>
         public static NSObject Parse(byte[] bytes)
         {
-            ASCIIPropertyListParser parser = new ASCIIPropertyListParser(bytes);
+            ASCIIPropertyListParser parser = new ASCIIPropertyListParser(Encoding.UTF8.GetString(bytes).ToCharArray());
             return parser.Parse();
         }
 
@@ -235,7 +235,7 @@ namespace Claunia.PropertyList
         /**
         * Property list source data
         */
-        byte[] data;
+        char[] data;
         /**
         * Current parsing index
         */
@@ -253,7 +253,7 @@ namespace Claunia.PropertyList
         /// Creates a new parser for the given property list content.
         /// </summary>
         /// <param name="propertyListContent">The content of the property list that is to be parsed.</param>
-        ASCIIPropertyListParser(byte[] propertyListContent)
+        ASCIIPropertyListParser(char[] propertyListContent)
         {
             data = propertyListContent;
         }
@@ -311,7 +311,7 @@ namespace Claunia.PropertyList
                 for (int i = 1; i < expectedSymbols.Length; i++)
                     excString += " or '" + expectedSymbols[i] + "'";
 
-                excString += " but found '" + (char)data[index] + "'";
+                excString += " but found '" + data[index] + "'";
                 throw new FormatException(String.Format("{0} at {1}", excString, index));
             }
         }
@@ -407,7 +407,7 @@ namespace Claunia.PropertyList
             string s = "";
             while (!Accept(symbols))
             {
-                s += (char)data[index];
+                s += data[index];
                 Skip();
             }
             return s;
@@ -423,7 +423,7 @@ namespace Claunia.PropertyList
             String s = "";
             while (!Accept(symbol))
             {
-                s += (char)data[index];
+                s += data[index];
                 Skip();
             }
             return s;
@@ -463,19 +463,19 @@ namespace Claunia.PropertyList
         {
             switch (data[index])
             {
-                case (byte)ARRAY_BEGIN_TOKEN:
+                case ARRAY_BEGIN_TOKEN:
                     {
                         return ParseArray();
                     }
-                case (byte)DICTIONARY_BEGIN_TOKEN:
+                case DICTIONARY_BEGIN_TOKEN:
                     {
                         return ParseDictionary();
                     }
-                case (byte)DATA_BEGIN_TOKEN:
+                case DATA_BEGIN_TOKEN:
                     {
                         return ParseData();
                     }
-                case (byte)QUOTEDSTRING_BEGIN_TOKEN:
+                case QUOTEDSTRING_BEGIN_TOKEN:
                     {
                         string quotedString = ParseQuotedString();
                         //apple dates are quoted strings of length 20 and after the 4 year digits a dash is found
@@ -690,7 +690,7 @@ namespace Claunia.PropertyList
             //Read from opening quotation marks to closing quotation marks and skip escaped quotation marks
             while (data[index] != QUOTEDSTRING_END_TOKEN || (data[index - 1] == QUOTEDSTRING_ESCAPE_TOKEN && unescapedBackslash))
             {
-                quotedString += (char)data[index];
+                quotedString += data[index];
                 if (Accept(QUOTEDSTRING_ESCAPE_TOKEN))
                 {
                     unescapedBackslash = !(data[index - 1] == QUOTEDSTRING_ESCAPE_TOKEN && unescapedBackslash);
@@ -739,8 +739,7 @@ namespace Claunia.PropertyList
                         }
                     default:
                         { //a normal ASCII char
-                            strBytes.Add((byte)0);
-                            strBytes.Add((byte)c.Current);
+                            strBytes.AddRange(Encoding.BigEndianUnicode.GetBytes(new[] { c.Current }));
                             break;
                         }
                 }
