@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{25B9F55C-9830-4526-9539-949838B09EAC}"
-	ProjectSection(SolutionItems) = preProject
-		SvnInfo.txt = SvnInfo.txt
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plist-cil", "plist-cil\plist-cil.csproj", "{2A906AEB-BDE0-4356-8114-064F80596C7D}"
 EndProject
