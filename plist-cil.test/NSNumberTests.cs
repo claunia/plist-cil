@@ -20,6 +20,13 @@ namespace plistcil.test
             Assert.Equal(10032936613, number.ToObject());
         }
 
+        [Fact]
+        public static void NSNumberWithDecimalTest()
+        {
+            var number = new NSNumber("1360155352.748765", NSNumber.REAL);
+            Assert.Equal("1360155352.748765", number.ToString());
+        }
+
         // The tests below make sure the numbers are being parsed correctly, and do not depend on the culture info
         // being set. Especially, decimal point may vary between cultures and we don't want to take a dependency on that
         // The value being used comes seen in a real property list:
