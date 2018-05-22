@@ -151,8 +151,8 @@ namespace plistcil.test
         [Fact]
         public static void RoundtripRealTest()
         {
-            var expected = File.ReadAllText(@"test-files\RoundtripReal.plist");
-            var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files\RoundtripReal.plist"));
+            var expected = File.ReadAllText(@"test-files/RoundtripReal.plist");
+            var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files/RoundtripReal.plist"));
             var actual = value.ToXmlPropertyList();
 
             Assert.Equal(expected, actual, false, true);
