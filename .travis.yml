@@ -11,5 +11,5 @@ mono:
  - 3.8.0
  - 3.2.8
  - 2.10.8
-dotnet: 1.0.1
+dotnet: 2.1.200
 dist: trusty
