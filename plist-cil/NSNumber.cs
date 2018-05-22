@@ -331,7 +331,7 @@ namespace Claunia.PropertyList
                     }
                 case REAL:
                     {
-                        return ToDouble().ToString("G17", CultureInfo.InvariantCulture);
+                        return ToDouble().ToString("R", CultureInfo.InvariantCulture);
                     }
                 case BOOLEAN:
                     {
@@ -369,9 +369,9 @@ namespace Claunia.PropertyList
                         }
                         else
                         {
-                            // ToString() can truncate the decimals, so use "G17". See
+                            // ToString() can truncate the decimals, so use "R". See
                             // https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings#the-round-trip-r-format-specifier
-                            xml.Append(ToDouble().ToString("G17", CultureInfo.InvariantCulture));
+                            xml.Append(ToDouble().ToString("R", CultureInfo.InvariantCulture));
                         }
 
                         xml.Append("</real>");
