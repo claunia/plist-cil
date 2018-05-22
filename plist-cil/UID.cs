@@ -84,7 +84,10 @@ namespace Claunia.PropertyList
             if(number <= byte.MaxValue)
                 this.bytes = new[] { (byte)number };
             else
-                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+            {
+                this.bytes = BitConverter.GetBytes(number);
+                Array.Reverse(this.bytes);
+            }
         }
 
         /// <summary>
@@ -98,7 +101,10 @@ namespace Claunia.PropertyList
             if(number >= sbyte.MinValue && number <= sbyte.MaxValue)
                 this.bytes = new[] { (byte)number };
             else
-                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+            { 
+                this.bytes = BitConverter.GetBytes(number);
+                Array.Reverse(this.bytes);
+            }
         }
 
         /// <summary>
@@ -112,9 +118,15 @@ namespace Claunia.PropertyList
             if(number <= byte.MaxValue)
                 this.bytes = new[] { (byte)number };
             else if(number <= ushort.MaxValue)
-                this.bytes = BitConverter.GetBytes((ushort)number).Reverse().ToArray();
+            {
+                this.bytes = BitConverter.GetBytes((ushort)number);
+                Array.Reverse(this.bytes);
+            }
             else
-                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+            {
+                this.bytes = BitConverter.GetBytes(number);
+                Array.Reverse(this.bytes);
+            }
         }
 
         /// <summary>
@@ -128,9 +140,15 @@ namespace Claunia.PropertyList
             if(number >= sbyte.MinValue && number <= sbyte.MaxValue)
                 this.bytes = new[] { (byte)number };
             if(number >= short.MinValue && number <= short.MaxValue)
-                this.bytes = BitConverter.GetBytes((short)number).Reverse().ToArray();
+            { 
+                this.bytes = BitConverter.GetBytes((short)number);
+                Array.Reverse(this.bytes);
+            }
             else
-                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+            { 
+                this.bytes = BitConverter.GetBytes(number);
+                Array.Reverse(this.bytes);
+            }
         }
 
         /// <summary>
@@ -144,11 +162,20 @@ namespace Claunia.PropertyList
             if(number <= byte.MaxValue)
                 this.bytes = new[] { (byte)number };
             else if(number <= ushort.MaxValue)
-                this.bytes = BitConverter.GetBytes((ushort)number).Reverse().ToArray();
+            { 
+                this.bytes = BitConverter.GetBytes((ushort)number);
+                Array.Reverse(this.bytes);
+            }
             else if(number <= uint.MaxValue)
-                this.bytes = BitConverter.GetBytes((uint)number).Reverse().ToArray();
+            { 
+                this.bytes = BitConverter.GetBytes((uint)number);
+                Array.Reverse(this.bytes);
+            }
             else
-                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+            { 
+                this.bytes = BitConverter.GetBytes(number);
+                Array.Reverse(this.bytes);
+            }
         }
 
         /// <summary>
@@ -162,11 +189,20 @@ namespace Claunia.PropertyList
             if(number >= sbyte.MinValue && number <= sbyte.MaxValue)
                 this.bytes = new[] { (byte)number };
             if(number >= short.MinValue && number <= short.MaxValue)
-                this.bytes = BitConverter.GetBytes((short)number).Reverse().ToArray();
+            { 
+                this.bytes = BitConverter.GetBytes((short)number);
+                Array.Reverse(this.bytes);
+            }
             if(number >= int.MinValue && number <= int.MaxValue)
-                this.bytes = BitConverter.GetBytes((int)number).Reverse().ToArray();
+            { 
+                this.bytes = BitConverter.GetBytes((int)number);
+                Array.Reverse(this.bytes);
+            }
             else
-                this.bytes = BitConverter.GetBytes(number).Reverse().ToArray();
+            {
+                this.bytes = BitConverter.GetBytes(number);
+                Array.Reverse(this.bytes);
+            }
         }
 
         /// <summary>

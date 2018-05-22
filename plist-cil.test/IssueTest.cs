@@ -95,7 +95,7 @@ namespace plistcil.test
             Assert.True(emojiString.Equals(y2.ObjectForKey("emojiString").ToString()));
         }
 
-        [Fact]
+        [Fact(Skip = "Support for property lists with a root element which is not plist is not implemented")]
         public static void TestIssue30()
         {
             #pragma warning disable 219
@@ -141,8 +141,8 @@ namespace plistcil.test
         [Fact]
         public static void RoundtripTest()
         {
-            var expected = File.ReadAllText(@"test-files\Roundtrip.plist");
-            var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files\Roundtrip.plist"));
+            var expected = File.ReadAllText(@"test-files/Roundtrip.plist");
+            var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files/Roundtrip.plist"));
             var actual = value.ToXmlPropertyList();
 
             Assert.Equal(expected, actual, false, true);
