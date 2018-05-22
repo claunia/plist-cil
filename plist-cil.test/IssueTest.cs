@@ -95,7 +95,7 @@ namespace plistcil.test
             Assert.True(emojiString.Equals(y2.ObjectForKey("emojiString").ToString()));
         }
 
-        [Fact]
+        [Fact(Skip = "Support for property lists with a root element which is not plist is not implemented")]
         public static void TestIssue30()
         {
             #pragma warning disable 219
