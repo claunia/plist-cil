@@ -35,7 +35,7 @@ namespace plistcil.test
         public static void TestIssue4()
         {
             NSDictionary d = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue4.plist"));
-            Assert.True(((NSString)d.ObjectForKey("Device Name")).ToString().Equals("Kid\u2019s iPhone"));
+            Assert.Equal("Kid\u2019s iPhone", ((NSString)d.ObjectForKey("Device Name")).ToString());
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace plistcil.test
         public static void TestIssue21()
         {
             String x = ((NSString)PropertyListParser.Parse(new FileInfo("test-files/issue21.plist"))).ToString();
-            Assert.True(x.Equals("Lot&s of &persand&s and other escapable \"\'<>€ characters"));
+            Assert.Equal("Lot&s of &persand&s and other escapable \"\'<>€ characters", x);
         }
 
         [Fact]
@@ -89,10 +89,10 @@ namespace plistcil.test
 
             String emojiString = "Test Test, \uD83D\uDE30\u2754\uD83D\uDC4D\uD83D\uDC4E\uD83D\uDD25";
 
-            Assert.True(emojiString.Equals(x1.ObjectForKey("emojiString").ToString()));
-            Assert.True(emojiString.Equals(x2.ObjectForKey("emojiString").ToString()));
-            Assert.True(emojiString.Equals(y1.ObjectForKey("emojiString").ToString()));
-            Assert.True(emojiString.Equals(y2.ObjectForKey("emojiString").ToString()));
+            Assert.Equal(emojiString, x1.ObjectForKey("emojiString").ToString());
+            Assert.Equal(emojiString, x2.ObjectForKey("emojiString").ToString());
+            Assert.Equal(emojiString, y1.ObjectForKey("emojiString").ToString());
+            Assert.Equal(emojiString, y2.ObjectForKey("emojiString").ToString());
         }
 
         [Fact(Skip = "Support for property lists with a root element which is not plist is not implemented")]
@@ -123,14 +123,14 @@ namespace plistcil.test
         public static void TestIssue49()
         {
             NSDictionary dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue49.plist"));
-            Assert.Equal(0, dict.Count);
+            Assert.Empty(dict);
         }
 
         [Fact]
         public static void TestRealInResourceRule()
         {
             NSDictionary dict = (NSDictionary)XmlPropertyListParser.Parse(new FileInfo("test-files/ResourceRules.plist"));
-            Assert.Equal(1, dict.Count);
+            Assert.Single(dict);
             Assert.True(dict.ContainsKey("weight"));
 
             var weight = dict["weight"].ToObject();

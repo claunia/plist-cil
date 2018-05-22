@@ -44,18 +44,18 @@ namespace plistcil.test
             // check the data in it
             NSDictionary d = (NSDictionary)x;
             Assert.True(d.Count == 5);
-            Assert.True(((NSString)d.ObjectForKey("keyA")).ToString().Equals("valueA"));
-            Assert.True(((NSString)d.ObjectForKey("key&B")).ToString().Equals("value&B"));
+            Assert.Equal("valueA", ((NSString)d.ObjectForKey("keyA")).ToString());
+            Assert.Equal("value&B", ((NSString)d.ObjectForKey("key&B")).ToString());
             Assert.True(((NSDate)d.ObjectForKey("date")).Date.Equals(new DateTime(2011, 11, 28, 10, 21, 30, DateTimeKind.Utc)) ||
                 ((NSDate)d.ObjectForKey("date")).Date.Equals(new DateTime(2011, 11, 28, 9, 21, 30, DateTimeKind.Utc)));
             Assert.True(ArrayEquals(((NSData)d.ObjectForKey("data")).Bytes,
                 new byte[]{ 0x00, 0x00, 0x00, 0x04, 0x10, 0x41, 0x08, 0x20, (byte)0x82 }));
             NSArray a = (NSArray)d.ObjectForKey("array");
             Assert.True(a.Count == 4);
-            Assert.True(a.ObjectAtIndex(0).Equals(new NSNumber(true)));
-            Assert.True(a.ObjectAtIndex(1).Equals(new NSNumber(false)));
-            Assert.True(a.ObjectAtIndex(2).Equals(new NSNumber(87)));
-            Assert.True(a.ObjectAtIndex(3).Equals(new NSNumber(3.14159)));
+            Assert.True(a[0].Equals(new NSNumber(true)));
+            Assert.True(a[1].Equals(new NSNumber(false)));
+            Assert.True(a[2].Equals(new NSNumber(87)));
+            Assert.True(a[3].Equals(new NSNumber(3.14159)));
 
             // read/write it, make sure we get the same thing
             PropertyListParser.SaveAsXml(x, new FileInfo("test-files/out-testXml.plist"));
@@ -110,8 +110,8 @@ namespace plistcil.test
             NSObject x = PropertyListParser.Parse(new FileInfo("test-files/test1-ascii.plist"));
             NSDictionary d = (NSDictionary)x;
             Assert.True(d.Count == 5);
-            Assert.True(((NSString)d.ObjectForKey("keyA")).ToString().Equals("valueA"));
-            Assert.True(((NSString)d.ObjectForKey("key&B")).ToString().Equals("value&B"));
+            Assert.Equal("valueA", ((NSString)d.ObjectForKey("keyA")).ToString());
+            Assert.Equal("value&B", ((NSString)d.ObjectForKey("key&B")).ToString());
 
             var actualDate = (NSDate)d.ObjectForKey("date");
             var expectedDate = new DateTime(2011, 11, 28, 9, 21, 30, DateTimeKind.Utc).ToLocalTime();
@@ -121,10 +121,10 @@ namespace plistcil.test
                 new byte[]{ 0x00, 0x00, 0x00, 0x04, 0x10, 0x41, 0x08, 0x20, (byte)0x82 }));
             NSArray a = (NSArray)d.ObjectForKey("array");
             Assert.True(a.Count == 4);
-            Assert.True(a.ObjectAtIndex(0).Equals(new NSString("YES")));
-            Assert.True(a.ObjectAtIndex(1).Equals(new NSString("NO")));
-            Assert.True(a.ObjectAtIndex(2).Equals(new NSString("87")));
-            Assert.True(a.ObjectAtIndex(3).Equals(new NSString("3.14159")));
+            Assert.True(a[0].Equals(new NSString("YES")));
+            Assert.True(a[1].Equals(new NSString("NO")));
+            Assert.True(a[2].Equals(new NSString("87")));
+            Assert.True(a[3].Equals(new NSString("3.14159")));
         }
 
         [Fact]
@@ -133,17 +133,17 @@ namespace plistcil.test
             NSObject x = PropertyListParser.Parse(new FileInfo("test-files/test1-ascii-gnustep.plist"));
             NSDictionary d = (NSDictionary)x;
             Assert.True(d.Count == 5);
-            Assert.True(((NSString)d.ObjectForKey("keyA")).ToString().Equals("valueA"));
-            Assert.True(((NSString)d.ObjectForKey("key&B")).ToString().Equals("value&B"));
+            Assert.Equal("valueA", ((NSString)d.ObjectForKey("keyA")).ToString());
+            Assert.Equal("value&B", ((NSString)d.ObjectForKey("key&B")).ToString());
             Assert.True(((NSDate)d.ObjectForKey("date")).Date.Equals(new DateTime(2011, 11, 28, 9, 21, 30, DateTimeKind.Utc).ToLocalTime()));
             Assert.True(ArrayEquals(((NSData)d.ObjectForKey("data")).Bytes,
                 new byte[]{ 0x00, 0x00, 0x00, 0x04, 0x10, 0x41, 0x08, 0x20, (byte)0x82 }));
             NSArray a = (NSArray)d.ObjectForKey("array");
             Assert.True(a.Count == 4);
-            Assert.True(a.ObjectAtIndex(0).Equals(new NSNumber(true)));
-            Assert.True(a.ObjectAtIndex(1).Equals(new NSNumber(false)));
-            Assert.True(a.ObjectAtIndex(2).Equals(new NSNumber(87)));
-            Assert.True(a.ObjectAtIndex(3).Equals(new NSNumber(3.14159)));
+            Assert.True(a[0].Equals(new NSNumber(true)));
+            Assert.True(a[1].Equals(new NSNumber(false)));
+            Assert.True(a[2].Equals(new NSNumber(87)));
+            Assert.True(a[3].Equals(new NSNumber(3.14159)));
         }
 
         [Fact]
@@ -229,7 +229,7 @@ namespace plistcil.test
 
             WrappedO = NSObject.Wrap((Object)strg);
             Assert.True(WrappedO.GetType().Equals(typeof(NSString)));
-            Assert.True(((string)WrappedO.ToObject()).Equals(strg));
+            Assert.Equal(((string)WrappedO.ToObject()), strg);
 
             WrappedO = NSObject.Wrap((Object)bytes);
             Assert.True(WrappedO.GetType().Equals(typeof(NSData)));
