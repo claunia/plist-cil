@@ -88,6 +88,23 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
+        /// Parses a XML property list from a string.
+        /// </summary>
+        /// <param name="value">The string pointing to the property list's data.</param>
+        /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
+        public static NSObject ParseString(string value)
+        {
+            XmlDocument doc = new XmlDocument();
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.DtdProcessing = DtdProcessing.Ignore;
+
+            doc.LoadXml(value);
+
+            return ParseDocument(doc);
+        }
+
+        /// <summary>
         /// Parses the XML document by generating the appropriate NSObjects for each XML node.
         /// </summary>
         /// <returns>The root NSObject of the property list contained in the XML document.</returns>

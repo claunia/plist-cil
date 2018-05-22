@@ -92,7 +92,18 @@ namespace Claunia.PropertyList
         /// <exception cref="FormatException">When an error occurs during parsing.</exception>
         public static NSObject Parse(byte[] bytes)
         {
-            ASCIIPropertyListParser parser = new ASCIIPropertyListParser(Encoding.UTF8.GetString(bytes).ToCharArray());
+            return ParseString(Encoding.UTF8.GetString(bytes));
+        }
+
+        /// <summary>
+        /// Parses an ASCII property list from a string.
+        /// </summary>
+        /// <param name="value">The ASCII property list data.</param>
+        /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
+        /// <exception cref="FormatException">When an error occurs during parsing.</exception>
+        public static NSObject ParseString(string value)
+        {
+            ASCIIPropertyListParser parser = new ASCIIPropertyListParser(value.ToCharArray());
             return parser.Parse();
         }
 
