@@ -35,6 +35,9 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class NSData : NSObject
     {
+        // In the XML property list format, the base-64 encoded data is split across multiple lines.
+        // Each line contains 68 characters.
+        private const int DataLineLength = 68;
         readonly byte[] bytes;
 
         /// <summary>
@@ -157,8 +160,12 @@ namespace Claunia.PropertyList
             foreach (string line in base64.Split('\n'))
             {
                 Indent(xml, level);
-                xml.Append(line);
-                xml.Append(NSObject.NEWLINE);
+
+                for (int offset = 0; offset < base64.Length; offset += DataLineLength)
+                {
+                    xml.Append(line.Substring(offset, Math.Min(DataLineLength, line.Length - offset)));
+                    xml.Append(NSObject.NEWLINE);
+                }
             }
             Indent(xml, level);
             xml.Append("</data>");

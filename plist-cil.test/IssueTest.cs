@@ -157,6 +157,19 @@ namespace plistcil.test
 
             Assert.Equal(expected, actual, false, true);
         }
+
+        /// <summary>
+        /// Makes sure that binary data is line-wrapped correctly when being serialized.
+        /// </summary>
+        [Fact]
+        public static void RoundtripDataTest()
+        {
+            var expected = File.ReadAllText(@"test-files\RoundtripBinary.plist");
+            var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files\RoundtripBinary.plist"));
+            var actual = value.ToXmlPropertyList();
+
+            Assert.Equal(expected, actual, false, true);
+        }
     }
 }
 
