@@ -102,7 +102,7 @@ namespace Claunia.PropertyList
             else if (root is NSArray)
             {
                 NSArray array = (NSArray)root;
-                foreach (NSObject o in array.GetArray())
+                foreach (NSObject o in array)
                 {
                     int v = GetMinimumRequiredVersion(o);
                     if (v > minVersion)

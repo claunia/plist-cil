@@ -23,10 +23,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
-using System.Text;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace Claunia.PropertyList
 {
@@ -372,13 +372,13 @@ namespace Claunia.PropertyList
         {
             if (this is NSArray)
             {
-                NSObject[] arrayA = ((NSArray)this).GetArray();
-                Object[] arrayB = new Object[arrayA.Length];
-                for (int i = 0; i < arrayA.Length; i++)
+                var nsArray = (NSArray)this;
+                object[] array = new object[nsArray.Count];
+                for (int i = 0; i < nsArray.Count; i++)
                 {
-                    arrayB[i] = arrayA[i].ToObject();
+                    array[i] = nsArray[i].ToObject();
                 }
-                return arrayB;
+                return array;
             }
             if (this is NSDictionary)
             {
@@ -451,11 +451,11 @@ namespace Claunia.PropertyList
             return false;
         }
 
-        internal static bool ArrayEquals(NSObject[] arrayA, NSObject[] arrayB)
+        internal static bool ArrayEquals(IList<NSObject> arrayA, IList<NSObject> arrayB)
         {
-            if (arrayA.Length == arrayB.Length)
+            if (arrayA.Count == arrayB.Count)
             {
-                for (int i = 0; i < arrayA.Length; i++)
+                for (int i = 0; i < arrayA.Count; i++)
                 {
                     if (arrayA[i] != arrayB[i])
                     {

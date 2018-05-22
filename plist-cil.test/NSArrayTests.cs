@@ -52,7 +52,7 @@ namespace plistcil.test
             array.Insert(1, "test");
 
             Assert.Equal(4, array.Count);
-            Assert.Equal("test", array.ObjectAtIndex(1).ToObject());
+            Assert.Equal("test", array[1].ToObject());
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace plistcil.test
             Assert.False(array.Remove((object)1));
             Assert.True(array.Remove((object)0));
 
-            Assert.Equal(0, array.Count);
+            Assert.Empty(array);
         }
 
         /// <summary>

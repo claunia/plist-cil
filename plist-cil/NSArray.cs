@@ -212,14 +212,14 @@ namespace Claunia.PropertyList
         {
             if (obj.GetType().Equals(typeof(NSArray)))
             {
-                return ArrayEquals(((NSArray)obj).GetArray(), this.GetArray());
+                return ArrayEquals(((NSArray)obj), this);
             }
             else
             {
                 NSObject nso = NSObject.Wrap(obj);
                 if (nso.GetType().Equals(typeof(NSArray)))
                 {
-                    return ArrayEquals(((NSArray)nso).GetArray(), this.GetArray());
+                    return ArrayEquals(((NSArray)nso), this);
                 }
             }
             return false;
@@ -390,7 +390,7 @@ namespace Claunia.PropertyList
                 return false;
 
             for (int i = 0; i < array.Count; i++)
-                if (!array[i].Equals(((NSArray)obj).ObjectAtIndex(i)))
+                if (!array[i].Equals(((NSArray)obj)[i]))
                     return false;
 
             return true;
