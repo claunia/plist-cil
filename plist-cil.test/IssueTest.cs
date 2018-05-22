@@ -159,7 +159,8 @@ namespace plistcil.test
         }
 
         /// <summary>
-        /// Makes sure that binary data is line-wrapped correctly when being serialized.
+        /// Makes sure that binary data is line-wrapped correctly when being serialized, in a scenario
+        /// where the binary data is not indented (no leading whitespace).
         /// </summary>
         [Fact]
         public static void RoundtripDataTest()
@@ -168,7 +169,21 @@ namespace plistcil.test
             var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files/RoundtripBinary.plist"));
             var actual = value.ToXmlPropertyList();
 
-            Assert.Equal(expected, actual, false, true);
+            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
+        }
+
+        /// <summary>
+        /// Makes sure that binary data is line-wrapped correctly when being serialized, in a scenario
+        /// where the binary data is indented.
+        /// </summary>
+        [Fact]
+        public static void RoundtripDataTest2()
+        {
+            var expected = File.ReadAllText(@"test-files/RoundtripBinaryIndentation.plist");
+            var value = XmlPropertyListParser.Parse(new FileInfo(@"test-files/RoundtripBinaryIndentation.plist"));
+            var actual = value.ToXmlPropertyList();
+
+            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
     }
 }
