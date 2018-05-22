@@ -1,10 +1,9 @@
 language: csharp
 solution: plist-cil.sln
 mono:
- - latest
- - alpha
- - beta
- - weekly
- - 5.0.0
+ - none
 dotnet: 2.1.200
 dist: trusty
+script:
+ - dotnet build -c Release
+ - dotnet test plist-cil.test/plist-cil.test.csproj
