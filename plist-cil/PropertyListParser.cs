@@ -72,7 +72,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The very first bytes of data of the property list (minus any whitespace)</returns>
         /// <param name="bytes">The type of the property list</param>
-        static int DetermineType(byte[] bytes)
+        static int DetermineType(ReadOnlySpan<byte> bytes)
         {
             if (bytes.Length == 0)
                 return TYPE_ERROR_BLANK;
@@ -88,7 +88,13 @@ namespace Claunia.PropertyList
             {
                 offset++;
             }
-            return DetermineType(Encoding.ASCII.GetString(bytes, offset, Math.Min(8, bytes.Length - offset)));
+
+            var header = bytes.Slice(offset, Math.Min(8, bytes.Length - offset));
+#if NATIVE_SPAN
+            return DetermineType(Encoding.ASCII.GetString(header));
+#else
+            return DetermineType(Encoding.ASCII.GetString(header.ToArray(), 0, header.Length));
+#endif
         }
 
         /// <summary>
@@ -187,6 +193,38 @@ namespace Claunia.PropertyList
                     return BinaryPropertyListParser.Parse(bytes);
                 case TYPE_XML:
                     return XmlPropertyListParser.Parse(bytes);
+                case TYPE_ASCII:
+                    return ASCIIPropertyListParser.Parse(bytes);
+                default:
+                    throw new PropertyListFormatException("The given data is not a property list of a supported format.");
+            }
+        }
+
+        /// <summary>
+        /// Parses a property list from a byte array.
+        /// </summary>
+        /// <param name="bytes">The property list data as a byte array.</param>
+        /// <param name="offset">The length of the property list.</param>
+        /// <param name="count">The offset at which to start reading the property list.</param>
+        /// <returns>The root object in the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
+        public static NSObject Parse(byte[] bytes, int offset, int length)
+        {
+            return Parse(bytes.AsSpan(offset, length));
+        }
+
+        /// <summary>
+        /// Parses a property list from a byte span.
+        /// </summary>
+        /// <param name="bytes">The property list data as a byte array.</param>
+        /// <returns>The root object in the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
+        public static NSObject Parse(ReadOnlySpan<byte> bytes)
+        {
+            switch (DetermineType(bytes))
+            {
+                case TYPE_BINARY:
+                    return BinaryPropertyListParser.Parse(bytes);
+                case TYPE_XML:
+                    return XmlPropertyListParser.Parse(bytes.ToArray());
                 case TYPE_ASCII:
                     return ASCIIPropertyListParser.Parse(bytes);
                 default:

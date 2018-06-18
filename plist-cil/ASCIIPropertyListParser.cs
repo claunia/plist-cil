@@ -92,7 +92,35 @@ namespace Claunia.PropertyList
         /// <exception cref="FormatException">When an error occurs during parsing.</exception>
         public static NSObject Parse(byte[] bytes)
         {
+            return Parse(bytes.AsSpan());
+        }
+
+        /// <summary>
+        /// Parses an ASCII property list from a byte array.
+        /// </summary>
+        /// <param name="bytes">The ASCII property list data.</param>
+        /// <param name="count">The offset at which to start reading the property list.</param>
+        /// <param name="offset">The length of the property list.</param>
+        /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
+        /// <exception cref="FormatException">When an error occurs during parsing.</exception>
+        public static NSObject Parse(byte[] bytes, int offset, int count)
+        {
+            return Parse(bytes.AsSpan(offset, count));
+        }
+
+        /// <summary>
+        /// Parses an ASCII property list from a byte span.
+        /// </summary>
+        /// <param name="bytes">The ASCII property list data.</param>
+        /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
+        /// <exception cref="FormatException">When an error occurs during parsing.</exception>
+        public static NSObject Parse(ReadOnlySpan<byte> bytes)
+        {
+#if NATIVE_SPAN
             return ParseString(Encoding.UTF8.GetString(bytes));
+#else
+            return ParseString(Encoding.UTF8.GetString(bytes.ToArray()));
+#endif
         }
 
         /// <summary>
