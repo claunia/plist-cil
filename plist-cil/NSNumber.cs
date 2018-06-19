@@ -69,7 +69,7 @@ namespace Claunia.PropertyList
         /// <param name="type">The type of number</param>
         /// <seealso cref="INTEGER"/>
         /// <seealso cref="REAL"/>
-        public NSNumber(byte[] bytes, int type)
+        public NSNumber(ReadOnlySpan<byte> bytes, int type)
         {
             switch (type)
             {
