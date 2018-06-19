@@ -265,6 +265,7 @@ namespace Claunia.PropertyList
             Indent(xml, level);
             xml.Append("<string>");
             Span<byte> bytes = stackalloc byte[this.length];
+            this.GetBytes(bytes);
             foreach (byte b in bytes)
                 xml.Append(String.Format("{0:x2}", b));
             xml.Append("</string>");
@@ -274,6 +275,7 @@ namespace Claunia.PropertyList
         {
             outPlist.Write(0x80 + this.length - 1);
             Span<byte> bytes = stackalloc byte[this.length];
+            this.GetBytes(bytes);
             outPlist.Write(bytes);
         }
 
@@ -282,6 +284,7 @@ namespace Claunia.PropertyList
             Indent(ascii, level);
             ascii.Append("\"");
             Span<byte> bytes = stackalloc byte[this.length];
+            this.GetBytes(bytes);
             foreach (byte b in bytes)
                 ascii.Append(String.Format("{0:x2}", b));
             ascii.Append("\"");
@@ -300,6 +303,12 @@ namespace Claunia.PropertyList
         /// <see cref="Claunia.PropertyList.UID"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(NSObject obj)
         {
+            return Equals((object)obj);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
             var uid = obj as UID;
 
             if (uid == null)
@@ -309,6 +318,13 @@ namespace Claunia.PropertyList
                 && uid.length == length
                 && uid.value == value;
         }
+
+#if HAS_HASHCODE
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.name, this.length, this.value);
+        }
+#endif
     }
 }
 
