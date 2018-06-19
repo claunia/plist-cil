@@ -99,7 +99,7 @@ namespace plistcil.test
                 BinaryPropertyListWriter.Write(stream, original);
                 stream.Position = 0;
                 var roundtrip = BinaryPropertyListParser.Parse(stream) as UID;
-                Assert.Equal(original, roundtrip);
+                Assert.Equal(original.Bytes, roundtrip.Bytes);
             }
         }
 
