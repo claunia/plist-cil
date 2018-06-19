@@ -49,22 +49,34 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The type of the property list</returns>
         /// <param name="dataBeginning">The very first bytes of data of the property list (minus any whitespace) as a string</param>
-        static int DetermineType(string dataBeginning)
+        static int DetermineTypeExact(ReadOnlySpan<byte> dataBeginning)
         {
-            dataBeginning = dataBeginning.Trim();
             if (dataBeginning.Length == 0)
             {
                 return TYPE_ERROR_BLANK;
             }
-            if (dataBeginning.StartsWith("bplist"))
-            {
-                return TYPE_BINARY;
-            }
-            if (dataBeginning.StartsWith("(") || dataBeginning.StartsWith("{") || dataBeginning.StartsWith("/"))
+            else if (dataBeginning[0] == '(' || dataBeginning[0] == '{' || dataBeginning[0] == '/')
             {
                 return TYPE_ASCII;
             }
-            return dataBeginning.StartsWith("<") ? TYPE_XML : TYPE_ERROR_UNKNOWN;
+            else if (dataBeginning[0] == '<')
+            {
+                return TYPE_XML;
+            }
+            else if (dataBeginning.Length >= 6
+                && dataBeginning[0] == 'b'
+                && dataBeginning[1] == 'p'
+                && dataBeginning[2] == 'l'
+                && dataBeginning[3] == 'i'
+                && dataBeginning[4] == 's'
+                && dataBeginning[5] == 't')
+            {
+                return TYPE_BINARY;
+            }
+            else
+            {
+                return TYPE_ERROR_UNKNOWN;
+            }
         }
 
         /// <summary>
@@ -90,11 +102,7 @@ namespace Claunia.PropertyList
             }
 
             var header = bytes.Slice(offset, Math.Min(8, bytes.Length - offset));
-#if NATIVE_SPAN
-            return DetermineType(Encoding.ASCII.GetString(header));
-#else
-            return DetermineType(Encoding.ASCII.GetString(header.ToArray(), 0, header.Length));
-#endif
+            return DetermineTypeExact(header);
         }
 
         /// <summary>
@@ -138,7 +146,7 @@ namespace Claunia.PropertyList
             magicBytes[0] = (byte)b;
             int read = fs.Read(magicBytes, 1, 7);
 
-            int type = DetermineType(Encoding.ASCII.GetString(magicBytes, 0, read));
+            int type = DetermineTypeExact(magicBytes.AsSpan(0, read));
             fs.Seek(mark, SeekOrigin.Begin);
             return type;
         }

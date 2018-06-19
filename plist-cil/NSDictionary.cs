@@ -50,12 +50,23 @@ namespace Claunia.PropertyList
         readonly Dictionary<string, NSString> keys;
 
         /// <summary>
+        /// Creates a new empty NSDictionary with a specific capacity.
+        /// </summary>
+        /// <param name="capacity">
+        /// The capacity of the dictionary.
+        /// </param>
+        public NSDictionary(int capacity)
+        {
+            dict = new Dictionary<string, NSObject>(capacity);
+            keys = new Dictionary<string, NSString>(capacity);
+        }
+
+        /// <summary>
         /// Creates a new empty NSDictionary.
         /// </summary>
         public NSDictionary()
+            : this(0)
         {
-            dict = new Dictionary<string, NSObject>();
-            keys = new Dictionary<string, NSString>();
         }
 
         /// <summary>
