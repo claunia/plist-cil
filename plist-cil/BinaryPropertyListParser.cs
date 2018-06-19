@@ -54,11 +54,6 @@ namespace Claunia.PropertyList
         int minorVersion;
 
         /// <summary>
-        /// Property list in bytes
-        /// </summary>
-        byte[] bytes;
-
-        /// <summary>
         /// Length of an object reference in bytes
         /// </summary>
         int objectRefSize;
@@ -85,6 +80,30 @@ namespace Claunia.PropertyList
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
         public static NSObject Parse(byte[] data)
         {
+            return Parse(data.AsSpan());
+        }
+
+        /// <summary>
+        /// Parses a binary property list from a byte array.
+        /// </summary>
+        /// <param name="data">The binary property list's data.</param>
+        /// <param name="offset">The length of the property list.</param>
+        /// <param name="count">The offset at which to start reading the property list.</param>
+        /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
+        /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
+        public static NSObject Parse(byte[] data, int offset, int length)
+        {
+            return Parse(data.AsSpan(offset, length));
+        }
+
+        /// <summary>
+        /// Parses a binary property list from a byte span.
+        /// </summary>
+        /// <param name="data">The binary property list's data.</param>
+        /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
+        /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
+        public static NSObject Parse(ReadOnlySpan<byte> data)
+        {
             BinaryPropertyListParser parser = new BinaryPropertyListParser();
             return parser.DoParse(data);
         }
@@ -93,11 +112,10 @@ namespace Claunia.PropertyList
         /// Parses a binary property list from a byte array.
         /// </summary>
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
-        /// <param name="data">The binary property list's data.</param>
+        /// <param name="bytes">The binary property list's data.</param>
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
-        NSObject DoParse(byte[] data)
+        private NSObject DoParse(ReadOnlySpan<byte> bytes)
         {
-            bytes = data;
             string magic = Encoding.ASCII.GetString(CopyOfRange(bytes, 0, 8));
             if (!magic.StartsWith("bplist", StringComparison.Ordinal))
             {
@@ -142,7 +160,7 @@ namespace Claunia.PropertyList
                 offsetTable[i] = (int)ParseUnsignedInt(offsetBytes);
             }
 
-            return ParseObject(topObject);
+            return ParseObject(bytes, topObject);
         }
 
         /// <summary>
@@ -180,7 +198,7 @@ namespace Claunia.PropertyList
         /// <returns>The parsed object.</returns>
         /// <param name="obj">The object ID.</param>
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
-        NSObject ParseObject(int obj)
+        NSObject ParseObject(ReadOnlySpan<byte> bytes, int obj)
         {
             int offset = offsetTable[obj];
             byte type = bytes[offset];
@@ -258,7 +276,7 @@ namespace Claunia.PropertyList
                 case 0x4:
                     {
                         //Data
-                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
                         int length = lengthAndOffset[0];
                         int dataoffset = lengthAndOffset[1];
 
@@ -267,7 +285,7 @@ namespace Claunia.PropertyList
                 case 0x5:
                     {
                         //ASCII String
-                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
                         int length = lengthAndOffset[0]; //Each character is 1 byte
                         int stroffset = lengthAndOffset[1];
 
@@ -276,7 +294,7 @@ namespace Claunia.PropertyList
                 case 0x6:
                     {
                         //UTF-16-BE String
-                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
                         int length = lengthAndOffset[0];
                         int stroffset = lengthAndOffset[1];
 
@@ -288,7 +306,7 @@ namespace Claunia.PropertyList
                 case 0x7:
                     {
                         //UTF-8 string (v1.0 and later)
-                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
                         int strOffset = lengthAndOffset[1];
                         int characters = lengthAndOffset[0];
                         //UTF-8 characters can have variable length, so we need to calculate the byte length dynamically
@@ -305,7 +323,7 @@ namespace Claunia.PropertyList
                 case 0xA:
                     {
                         //Array
-                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
                         int length = lengthAndOffset[0];
                         int arrayOffset = lengthAndOffset[1];
 
@@ -315,7 +333,7 @@ namespace Claunia.PropertyList
                             int objRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
                                              offset + arrayOffset + i * objectRefSize,
                                              offset + arrayOffset + (i + 1) * objectRefSize));
-                            array.Add(ParseObject(objRef));
+                            array.Add(ParseObject(bytes, objRef));
                         }
                         return array;
 
@@ -323,7 +341,7 @@ namespace Claunia.PropertyList
                 case 0xB:
                     {
                         //Ordered set (v1.0 and later)
-                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
                         int length = lengthAndOffset[0];
                         int contentOffset = lengthAndOffset[1];
 
@@ -333,14 +351,14 @@ namespace Claunia.PropertyList
                             int objRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
                                              offset + contentOffset + i * objectRefSize,
                                              offset + contentOffset + (i + 1) * objectRefSize));
-                            set.AddObject(ParseObject(objRef));
+                            set.AddObject(ParseObject(bytes, objRef));
                         }
                         return set;
                     }
                 case 0xC:
                     {
                         //Set (v1.0 and later)
-                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
                         int length = lengthAndOffset[0];
                         int contentOffset = lengthAndOffset[1];
 
@@ -350,14 +368,14 @@ namespace Claunia.PropertyList
                             int objRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
                                              offset + contentOffset + i * objectRefSize,
                                              offset + contentOffset + (i + 1) * objectRefSize));
-                            set.AddObject(ParseObject(objRef));
+                            set.AddObject(ParseObject(bytes, objRef));
                         }
                         return set;
                     }
                 case 0xD:
                     {
                         //Dictionary
-                        int[] lengthAndOffset = ReadLengthAndOffset(objInfo, offset);
+                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
                         int length = lengthAndOffset[0];
                         int contentOffset = lengthAndOffset[1];
 
@@ -371,8 +389,8 @@ namespace Claunia.PropertyList
                             int valRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
                                              offset + contentOffset + (length * objectRefSize) + i * objectRefSize,
                                              offset + contentOffset + (length * objectRefSize) + (i + 1) * objectRefSize));
-                            NSObject key = ParseObject(keyRef);
-                            NSObject val = ParseObject(valRef);
+                            NSObject key = ParseObject(bytes, keyRef);
+                            NSObject val = ParseObject(bytes, valRef);
                             dict.Add(key.ToString(), val);
                         }
                         return dict;
@@ -392,7 +410,7 @@ namespace Claunia.PropertyList
         /// <returns>An array with the length two. First entry is the length, second entry the offset at which the content starts.</returns>
         /// <param name="objInfo">Object information byte.</param>
         /// <param name="offset">Offset in the byte array at which the object is located.</param>
-        int[] ReadLengthAndOffset(int objInfo, int offset)
+        int[] ReadLengthAndOffset(ReadOnlySpan<byte> bytes, int objInfo, int offset)
         {
             int lengthValue = objInfo;
             int offsetValue = 1;
@@ -434,7 +452,7 @@ namespace Claunia.PropertyList
         /// <param name="bytes">Array containing the UTF-8 string.</param>
         /// <param name="offset">Offset in the array where the UTF-8 string resides.</param>
         /// <param name="numCharacters">How many UTF-8 characters are in the string.</param>
-        int CalculateUtf8StringLength(byte[] bytes, int offset, int numCharacters)
+        int CalculateUtf8StringLength(ReadOnlySpan<byte> bytes, int offset, int numCharacters)
         {
             int length = 0;
             for (int i = 0; i < numCharacters; i++)
@@ -603,16 +621,15 @@ namespace Claunia.PropertyList
         /// <param name="src">The source array.</param>
         /// <param name="startIndex">The index from which to start copying.</param>
         /// <param name="endIndex">The index until which to copy.</param>
-        public static byte[] CopyOfRange(byte[] src, int startIndex, int endIndex)
+        public static byte[] CopyOfRange(ReadOnlySpan<byte> src, int startIndex, int endIndex)
         {
             int length = endIndex - startIndex;
             if (length < 0)
             {
                 throw new ArgumentOutOfRangeException("startIndex (" + startIndex + ")" + " > endIndex (" + endIndex + ")");
             }
-            byte[] dest = new byte[length];
-            Array.Copy(src, startIndex, dest, 0, length);
-            return dest;
+
+            return src.Slice(startIndex, endIndex - startIndex).ToArray();
         }
     }
 }
