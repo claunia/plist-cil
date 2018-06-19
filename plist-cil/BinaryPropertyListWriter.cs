@@ -399,6 +399,16 @@ namespace Claunia.PropertyList
             count += bytes.Length;
         }
 
+        internal void Write(Span<byte> bytes)
+        {
+#if SPAN_NATIVE
+            outStream.Write(bytes);
+            count += bytes.Length;
+#else
+            this.Write(bytes.ToArray());
+#endif
+        }
+
         internal void WriteBytes(long value, int bytes)
         {
             // write low-order bytes big-endian style
