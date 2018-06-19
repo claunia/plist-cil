@@ -23,6 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
+using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Text;
 using System.IO;
@@ -116,7 +117,13 @@ namespace Claunia.PropertyList
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
         private NSObject DoParse(ReadOnlySpan<byte> bytes)
         {
-            string magic = Encoding.ASCII.GetString(CopyOfRange(bytes, 0, 8));
+            string magic = Encoding.ASCII.GetString(
+#if NATIVE_SPAN
+                 bytes.Slice(0, 8));
+#else
+                 bytes.Slice(0, 8).ToArray());
+#endif
+
             if (!magic.StartsWith("bplist", StringComparison.Ordinal))
             {
                 throw new PropertyListFormatException("The given data is no binary property list. Wrong magic bytes: " + magic);
@@ -139,24 +146,24 @@ namespace Claunia.PropertyList
             }
 
             /*
-         * Handle trailer, last 32 bytes of the file
-         */
-            byte[] trailer = CopyOfRange(bytes, bytes.Length - 32, bytes.Length);
+             * Handle trailer, last 32 bytes of the file
+             */
+            var trailer = bytes.Slice(bytes.Length - 32, 32);
             //6 null bytes (index 0 to 5)
-            int offsetSize = (int)ParseUnsignedInt(trailer, 6, 7);
-            objectRefSize = (int)ParseUnsignedInt(trailer, 7, 8);
-            int numObjects = (int)ParseUnsignedInt(trailer, 8, 16);
-            int topObject = (int)ParseUnsignedInt(trailer, 16, 24);
-            int offsetTableOffset = (int)ParseUnsignedInt(trailer, 24, 32);
+            int offsetSize = trailer[6];
+            objectRefSize = trailer[7];
+            int numObjects = (int)BinaryPrimitives.ReadUInt64BigEndian(trailer.Slice(8, 8));
+            int topObject = (int)BinaryPrimitives.ReadUInt64BigEndian(trailer.Slice(16, 8));
+            int offsetTableOffset = (int)BinaryPrimitives.ReadUInt64BigEndian(trailer.Slice(24, 8));
 
             /*
-         * Handle offset table
-         */
+             * Handle offset table
+             */
             offsetTable = new int[numObjects];
 
             for (int i = 0; i < numObjects; i++)
             {
-                byte[] offsetBytes = CopyOfRange(bytes, offsetTableOffset + i * offsetSize, offsetTableOffset + (i + 1) * offsetSize);
+                var offsetBytes = bytes.Slice(offsetTableOffset + i * offsetSize, offsetSize);
                 offsetTable[i] = (int)ParseUnsignedInt(offsetBytes);
             }
 
@@ -256,13 +263,13 @@ namespace Claunia.PropertyList
                     {
                         //integer
                         int length = (int)Math.Pow(2, objInfo);
-                        return new NSNumber(CopyOfRange(bytes, offset + 1, offset + 1 + length), NSNumber.INTEGER);
+                        return new NSNumber(bytes.Slice(offset + 1, length), NSNumber.INTEGER);
                     }
                 case 0x2:
                     {
                         //real
                         int length = (int)Math.Pow(2, objInfo);
-                        return new NSNumber(CopyOfRange(bytes, offset + 1, offset + 1 + length), NSNumber.REAL);
+                        return new NSNumber(bytes.Slice(offset + 1, length), NSNumber.REAL);
                     }
                 case 0x3:
                     {
@@ -271,7 +278,7 @@ namespace Claunia.PropertyList
                         {
                             throw new PropertyListFormatException("The given binary property list contains a date object of an unknown type (" + objInfo + ")");
                         }
-                        return new NSDate(CopyOfRange(bytes, offset + 1, offset + 9));
+                        return new NSDate(bytes.Slice(offset + 1, 8));
                     }
                 case 0x4:
                     {
@@ -289,7 +296,7 @@ namespace Claunia.PropertyList
                         int length = lengthAndOffset[0]; //Each character is 1 byte
                         int stroffset = lengthAndOffset[1];
 
-                        return new NSString(CopyOfRange(bytes, offset + stroffset, offset + stroffset + length), "ASCII");
+                        return new NSString(bytes.Slice(offset + stroffset, length), "ASCII");
                     }
                 case 0x6:
                     {
@@ -301,7 +308,7 @@ namespace Claunia.PropertyList
                         //UTF-16 characters can have variable length, but the Core Foundation reference implementation
                         //assumes 2 byte characters, thus only covering the Basic Multilingual Plane
                         length *= 2;
-                        return new NSString(CopyOfRange(bytes, offset + stroffset, offset + stroffset + length), "UTF-16BE");
+                        return new NSString(bytes.Slice(offset + stroffset, length), "UTF-16BE");
                     }
                 case 0x7:
                     {
@@ -312,7 +319,7 @@ namespace Claunia.PropertyList
                         //UTF-8 characters can have variable length, so we need to calculate the byte length dynamically
                         //by reading the UTF-8 characters one by one
                         int length = CalculateUtf8StringLength(bytes, offset + strOffset, characters);
-                        return new NSString(CopyOfRange(bytes, offset + strOffset, offset + strOffset + length), "UTF-8");
+                        return new NSString(bytes.Slice(offset + strOffset, length), "UTF-8");
                     }
                 case 0x8:
                     {
@@ -330,9 +337,7 @@ namespace Claunia.PropertyList
                         NSArray array = new NSArray(length);
                         for (int i = 0; i < length; i++)
                         {
-                            int objRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
-                                             offset + arrayOffset + i * objectRefSize,
-                                             offset + arrayOffset + (i + 1) * objectRefSize));
+                            int objRef = (int)ParseUnsignedInt(bytes.Slice(offset + arrayOffset + i * objectRefSize,objectRefSize));
                             array.Add(ParseObject(bytes, objRef));
                         }
                         return array;
@@ -348,9 +353,7 @@ namespace Claunia.PropertyList
                         NSSet set = new NSSet(true);
                         for (int i = 0; i < length; i++)
                         {
-                            int objRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
-                                             offset + contentOffset + i * objectRefSize,
-                                             offset + contentOffset + (i + 1) * objectRefSize));
+                            int objRef = (int)ParseUnsignedInt(bytes.Slice(offset + contentOffset + i * objectRefSize, objectRefSize));
                             set.AddObject(ParseObject(bytes, objRef));
                         }
                         return set;
@@ -365,9 +368,7 @@ namespace Claunia.PropertyList
                         NSSet set = new NSSet();
                         for (int i = 0; i < length; i++)
                         {
-                            int objRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
-                                             offset + contentOffset + i * objectRefSize,
-                                             offset + contentOffset + (i + 1) * objectRefSize));
+                            int objRef = (int)ParseUnsignedInt(bytes.Slice(offset + contentOffset + i * objectRefSize, objectRefSize));
                             set.AddObject(ParseObject(bytes, objRef));
                         }
                         return set;
@@ -383,12 +384,8 @@ namespace Claunia.PropertyList
                         NSDictionary dict = new NSDictionary();
                         for (int i = 0; i < length; i++)
                         {
-                            int keyRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
-                                             offset + contentOffset + i * objectRefSize,
-                                             offset + contentOffset + (i + 1) * objectRefSize));
-                            int valRef = (int)ParseUnsignedInt(CopyOfRange(bytes,
-                                             offset + contentOffset + (length * objectRefSize) + i * objectRefSize,
-                                             offset + contentOffset + (length * objectRefSize) + (i + 1) * objectRefSize));
+                            int keyRef = (int)ParseUnsignedInt(bytes.Slice(offset + contentOffset + i * objectRefSize, objectRefSize));
+                            int valRef = (int)ParseUnsignedInt(bytes.Slice(offset + contentOffset + (length * objectRefSize) + i * objectRefSize, objectRefSize));
                             NSObject key = ParseObject(bytes, keyRef);
                             NSObject val = ParseObject(bytes, valRef);
                             dict.Add(key.ToString(), val);
@@ -427,22 +424,20 @@ namespace Claunia.PropertyList
                 offsetValue = 2 + intLength;
                 if (intLength < 3)
                 {
-                    lengthValue = (int)ParseUnsignedInt(CopyOfRange(bytes, offset + 2, offset + 2 + intLength));
+                    lengthValue = (int)ParseUnsignedInt(bytes.Slice(offset + 2, intLength));
                 }
                 else
                 {
                     // BigInteger is Little-Endian in .NET, swap the thing.
                     // Also BigInteger is of .NET 4.0, maybe there's a better way to do it.
-                    byte[] bigEBigInteger = CopyOfRange(bytes, offset + 2, offset + 2 + intLength);
-                    byte[] litEBigInteger = new byte[bigEBigInteger.Length + 1];
-                    for (int i = 0, j = bigEBigInteger.Length - 1; i < bigEBigInteger.Length && j >= 0; i++, j--)
-                        litEBigInteger[i] = bigEBigInteger[j];
-                    litEBigInteger[litEBigInteger.Length - 1] = (byte)0x00; // Be sure to get unsigned BigInteger
+                    byte[] bigEBigInteger = bytes.Slice(offset + 2, intLength).ToArray();
+                    Array.Reverse(bigEBigInteger);
+                    bigEBigInteger[bigEBigInteger.Length - 1] = 0x00; // Be sure to get unsigned BigInteger
 
-                    lengthValue = (int)new System.Numerics.BigInteger(litEBigInteger);
+                    lengthValue = (int)new System.Numerics.BigInteger(bigEBigInteger);
                 }
             }
-            return new []{ lengthValue, offsetValue };
+            return new[] { lengthValue, offsetValue };
         }
 
         /// <summary>
@@ -507,43 +502,30 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
+        /// Parses an unsigned integers from a span.
+        /// </summary>
+        /// <returns>The byte array containing the unsigned integer.</returns>
+        /// <param name="bytes">The unsigned integer represented by the given bytes.</param>
+        public static long ParseUnsignedInt(ReadOnlySpan<byte> bytes)
+        {
+            if (bytes.Length <= 4)
+            {
+                return ParseLong(bytes);
+            }
+            else
+            {
+                return ParseLong(bytes) & 0xFFFFFFFFL;
+            }
+        }
+
+        /// <summary>
         /// Parses an unsigned integers from a byte array.
         /// </summary>
         /// <returns>The byte array containing the unsigned integer.</returns>
         /// <param name="bytes">The unsigned integer represented by the given bytes.</param>
         public static long ParseUnsignedInt(byte[] bytes)
         {
-            long l = 0;
-            foreach (byte b in bytes)
-            {
-                l <<= 8;
-                #pragma warning disable 675
-                l |= b & 0xFF;
-                #pragma warning restore 675
-            }
-            l &= 0xFFFFFFFFL;
-            return l;
-        }
-
-        /// <summary>
-        /// Parses an unsigned integer from a byte array.
-        /// </summary>
-        /// <returns>The unsigned integer represented by the given bytes.</returns>
-        /// <param name="bytes">The byte array containing the unsigned integer.</param>
-        /// <param name="startIndex">Beginning of the unsigned int in the byte array.</param>
-        /// <param name="endIndex">End of the unsigned int in the byte array.</param>
-        public static long ParseUnsignedInt(byte[] bytes, int startIndex, int endIndex)
-        {
-            long l = 0;
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                l <<= 8;
-                #pragma warning disable 675
-                l |= bytes[i] & 0xFF;
-                #pragma warning restore 675
-            }
-            l &= 0xFFFFFFFFL;
-            return l;
+            return ParseUnsignedInt(bytes.AsSpan());
         }
 
         /// <summary>
@@ -551,37 +533,28 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The long integer represented by the given bytes.</returns>
         /// <param name="bytes">The bytes representing the long integer.</param>
-        public static long ParseLong(byte[] bytes)
+        public static long ParseLong(ReadOnlySpan<byte> bytes)
         {
-            long l = 0;
-            foreach (byte b in bytes)
+            switch (bytes.Length)
             {
-                l <<= 8;
-                #pragma warning disable 675
-                l |= b & 0xFF;
-                #pragma warning restore 675
-            }
-            return l;
-        }
+                case 1:
+                    return bytes[0];
 
-        /// <summary>
-        /// Parses a long from a (big-endian) byte array.
-        /// </summary>
-        /// <returns>The long integer represented by the given bytes.</returns>
-        /// <param name="bytes">The bytes representing the long integer.</param>
-        /// <param name="startIndex">Beginning of the long in the byte array.</param>
-        /// <param name="endIndex">End of the long in the byte array.</param>
-        public static long ParseLong(byte[] bytes, int startIndex, int endIndex)
-        {
-            long l = 0;
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                l <<= 8;
-                #pragma warning disable 675
-                l |= bytes[i] & 0xFF;
-                #pragma warning restore 675
+                case 2:
+                    return BinaryPrimitives.ReadUInt16BigEndian(bytes);
+
+                case 3:
+                    throw new NotSupportedException();
+
+                case 4:
+                    return BinaryPrimitives.ReadUInt32BigEndian(bytes);
+
+                case 8:
+                    return (long)BinaryPrimitives.ReadUInt64BigEndian(bytes);
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(bytes), $"Cannot read a byte span of length {bytes.Length}");
             }
-            return l;
         }
 
         /// <summary>
@@ -589,29 +562,13 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <returns>The double represented by the given bytes.</returns>
         /// <param name="bytes">The bytes representing the double.</param>
-        public static double ParseDouble(byte[] bytes)
+        public static double ParseDouble(ReadOnlySpan<byte> bytes)
         {
             if (bytes.Length == 8)
                 return BitConverter.Int64BitsToDouble(ParseLong(bytes));
             if (bytes.Length == 4)
                 return BitConverter.ToSingle(BitConverter.GetBytes(ParseLong(bytes)), 0);
             throw new ArgumentException("bad byte array length " + bytes.Length);
-        }
-
-        /// <summary>
-        /// Parses a double from a (big-endian) byte array.
-        /// </summary>
-        /// <returns>The double represented by the given bytes.</returns>
-        /// <param name="bytes">The bytes representing the double.</param>
-        /// <param name="startIndex">Beginning of the double in the byte array.</param>
-        /// <param name="endIndex">End of the double in the byte array.</param>
-        public static double ParseDouble(byte[] bytes, int startIndex, int endIndex)
-        {
-            if (endIndex - startIndex == 8)
-                return BitConverter.Int64BitsToDouble(ParseLong(bytes, startIndex, endIndex));
-            if (endIndex - startIndex == 4)
-                return BitConverter.ToSingle(BitConverter.GetBytes(ParseLong(bytes, startIndex, endIndex)), 0);
-            throw new ArgumentException("endIndex (" + endIndex + ") - startIndex (" + startIndex + ") != 4 or 8");
         }
 
         /// <summary>

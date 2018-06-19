@@ -90,7 +90,7 @@ namespace Claunia.PropertyList
         /// Creates a date from its binary representation.
         /// </summary>
         /// <param name="bytes">bytes The date bytes</param>
-        public NSDate(byte[] bytes)
+        public NSDate(ReadOnlySpan<byte> bytes)
         {
             //dates are 8 byte big-endian double, seconds since the epoch
             date = EPOCH.AddSeconds(BinaryPropertyListParser.ParseDouble(bytes));
