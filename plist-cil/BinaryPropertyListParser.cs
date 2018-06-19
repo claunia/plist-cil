@@ -44,6 +44,8 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class BinaryPropertyListParser
     {
+        private readonly static Encoding utf16BigEndian = Encoding.GetEncoding("UTF-16BE");
+
         /// <summary>
         /// Major version of the property list format
         /// </summary>
@@ -290,7 +292,7 @@ namespace Claunia.PropertyList
                     {
                         //ASCII String, each character is 1 byte
                         ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int stroffset);
-                        return new NSString(bytes.Slice(offset + stroffset, length), "ASCII");
+                        return new NSString(bytes.Slice(offset + stroffset, length), Encoding.ASCII);
                     }
                 case 0x6:
                     {
@@ -300,7 +302,7 @@ namespace Claunia.PropertyList
                         //UTF-16 characters can have variable length, but the Core Foundation reference implementation
                         //assumes 2 byte characters, thus only covering the Basic Multilingual Plane
                         length *= 2;
-                        return new NSString(bytes.Slice(offset + stroffset, length), "UTF-16BE");
+                        return new NSString(bytes.Slice(offset + stroffset, length), utf16BigEndian);
                     }
                 case 0x7:
                     {
@@ -310,7 +312,7 @@ namespace Claunia.PropertyList
                         //UTF-8 characters can have variable length, so we need to calculate the byte length dynamically
                         //by reading the UTF-8 characters one by one
                         int length = CalculateUtf8StringLength(bytes, offset + strOffset, characters);
-                        return new NSString(bytes.Slice(offset + strOffset, length), "UTF-8");
+                        return new NSString(bytes.Slice(offset + strOffset, length), Encoding.UTF8);
                     }
                 case 0x8:
                     {
@@ -326,7 +328,7 @@ namespace Claunia.PropertyList
                         NSArray array = new NSArray(length);
                         for (int i = 0; i < length; i++)
                         {
-                            int objRef = (int)ParseUnsignedInt(bytes.Slice(offset + arrayOffset + i * objectRefSize,objectRefSize));
+                            int objRef = (int)ParseUnsignedInt(bytes.Slice(offset + arrayOffset + i * objectRefSize, objectRefSize));
                             array.Add(ParseObject(bytes, objRef));
                         }
                         return array;
