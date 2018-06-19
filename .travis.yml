@@ -2,8 +2,9 @@ language: csharp
 solution: plist-cil.sln
 mono:
  - none
-dotnet: 2.1.200
+dotnet: 2.1.300
 dist: trusty
 script:
  - dotnet build -c Release
  - dotnet test plist-cil.test/plist-cil.test.csproj
+ - dotnet run --project plist-cil.benchmark/plist-cil.benchmark.csproj -c Release

@@ -9,6 +9,10 @@
 *.user
 *.sln.docstates
 
+# BenchmarkDotNet artifacts
+BenchmarkDotNet.Artifacts
+*.etl
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

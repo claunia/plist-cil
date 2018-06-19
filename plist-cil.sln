@@ -5,9 +5,11 @@ VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{25B9F55C-9830-4526-9539-949838B09EAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plist-cil", "plist-cil\plist-cil.csproj", "{2A906AEB-BDE0-4356-8114-064F80596C7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "plist-cil", "plist-cil\plist-cil.csproj", "{2A906AEB-BDE0-4356-8114-064F80596C7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plist-cil.test", "plist-cil.test\plist-cil.test.csproj", "{17124CCE-32F1-4FD6-8703-32235BDEEEDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "plist-cil.test", "plist-cil.test\plist-cil.test.csproj", "{17124CCE-32F1-4FD6-8703-32235BDEEEDC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plist-cil.benchmark", "plist-cil.benchmark\plist-cil.benchmark.csproj", "{2AE44841-2E54-4310-843C-8DEE786E5052}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,9 +55,28 @@ Global
 		{17124CCE-32F1-4FD6-8703-32235BDEEEDC}.Release|x64.Build.0 = Release|Any CPU
 		{17124CCE-32F1-4FD6-8703-32235BDEEEDC}.Release|x86.ActiveCfg = Release|Any CPU
 		{17124CCE-32F1-4FD6-8703-32235BDEEEDC}.Release|x86.Build.0 = Release|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Debug|x64.Build.0 = Debug|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Debug|x86.Build.0 = Debug|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Release|ARM.Build.0 = Release|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Release|x64.ActiveCfg = Release|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Release|x64.Build.0 = Release|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Release|x86.ActiveCfg = Release|Any CPU
+		{2AE44841-2E54-4310-843C-8DEE786E5052}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2F7CD736-97E1-4DD8-B88D-FE77EDDA178E}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

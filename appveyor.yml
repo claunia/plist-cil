@@ -1,9 +1,11 @@
 build_script:
   - cmd: dotnet build -c Release --version-suffix r%APPVEYOR_BUILD_NUMBER%
   - cmd: dotnet test plist-cil.test\plist-cil.test.csproj
+  - cmd: dotnet run --project plist-cil.benchmark/plist-cil.benchmark.csproj -c Release
 
 on_success:
   - cmd: dotnet pack plist-cil\plist-cil.csproj -c Release --version-suffix r%APPVEYOR_BUILD_NUMBER%
 
 artifacts:
   - path: "plist-cil\\bin\\Release\\plist-cil.*.nupkg"
+  - path: "plist-cil.benchmark\\BenchmarkDotNet.Artifacts\\results\\*.*"
