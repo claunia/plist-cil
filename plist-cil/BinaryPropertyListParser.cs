@@ -283,27 +283,19 @@ namespace Claunia.PropertyList
                 case 0x4:
                     {
                         //Data
-                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
-                        int length = lengthAndOffset[0];
-                        int dataoffset = lengthAndOffset[1];
-
+                        ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int dataoffset);
                         return new NSData(CopyOfRange(bytes, offset + dataoffset, offset + dataoffset + length));
                     }
                 case 0x5:
                     {
-                        //ASCII String
-                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
-                        int length = lengthAndOffset[0]; //Each character is 1 byte
-                        int stroffset = lengthAndOffset[1];
-
+                        //ASCII String, each character is 1 byte
+                        ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int stroffset);
                         return new NSString(bytes.Slice(offset + stroffset, length), "ASCII");
                     }
                 case 0x6:
                     {
                         //UTF-16-BE String
-                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
-                        int length = lengthAndOffset[0];
-                        int stroffset = lengthAndOffset[1];
+                        ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int stroffset);
 
                         //UTF-16 characters can have variable length, but the Core Foundation reference implementation
                         //assumes 2 byte characters, thus only covering the Basic Multilingual Plane
@@ -313,9 +305,8 @@ namespace Claunia.PropertyList
                 case 0x7:
                     {
                         //UTF-8 string (v1.0 and later)
-                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
-                        int strOffset = lengthAndOffset[1];
-                        int characters = lengthAndOffset[0];
+                        ReadLengthAndOffset(bytes, objInfo, offset, out int strOffset, out int characters);
+
                         //UTF-8 characters can have variable length, so we need to calculate the byte length dynamically
                         //by reading the UTF-8 characters one by one
                         int length = CalculateUtf8StringLength(bytes, offset + strOffset, characters);
@@ -330,9 +321,7 @@ namespace Claunia.PropertyList
                 case 0xA:
                     {
                         //Array
-                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
-                        int length = lengthAndOffset[0];
-                        int arrayOffset = lengthAndOffset[1];
+                        ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int arrayOffset);
 
                         NSArray array = new NSArray(length);
                         for (int i = 0; i < length; i++)
@@ -346,9 +335,7 @@ namespace Claunia.PropertyList
                 case 0xB:
                     {
                         //Ordered set (v1.0 and later)
-                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
-                        int length = lengthAndOffset[0];
-                        int contentOffset = lengthAndOffset[1];
+                        ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int contentOffset);
 
                         NSSet set = new NSSet(true);
                         for (int i = 0; i < length; i++)
@@ -361,9 +348,7 @@ namespace Claunia.PropertyList
                 case 0xC:
                     {
                         //Set (v1.0 and later)
-                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
-                        int length = lengthAndOffset[0];
-                        int contentOffset = lengthAndOffset[1];
+                        ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int contentOffset);
 
                         NSSet set = new NSSet();
                         for (int i = 0; i < length; i++)
@@ -376,9 +361,7 @@ namespace Claunia.PropertyList
                 case 0xD:
                     {
                         //Dictionary
-                        int[] lengthAndOffset = ReadLengthAndOffset(bytes, objInfo, offset);
-                        int length = lengthAndOffset[0];
-                        int contentOffset = lengthAndOffset[1];
+                        ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int contentOffset);
 
                         //System.out.println("Parsing dictionary #"+obj);
                         NSDictionary dict = new NSDictionary();
@@ -407,10 +390,10 @@ namespace Claunia.PropertyList
         /// <returns>An array with the length two. First entry is the length, second entry the offset at which the content starts.</returns>
         /// <param name="objInfo">Object information byte.</param>
         /// <param name="offset">Offset in the byte array at which the object is located.</param>
-        int[] ReadLengthAndOffset(ReadOnlySpan<byte> bytes, int objInfo, int offset)
+        void ReadLengthAndOffset(ReadOnlySpan<byte> bytes, int objInfo, int offset, out int lengthValue, out int offsetValue)
         {
-            int lengthValue = objInfo;
-            int offsetValue = 1;
+            lengthValue = objInfo;
+            offsetValue = 1;
             if (objInfo == 0xF)
             {
                 int int_type = bytes[offset + 1];
@@ -437,7 +420,6 @@ namespace Claunia.PropertyList
                     lengthValue = (int)new System.Numerics.BigInteger(bigEBigInteger);
                 }
             }
-            return new[] { lengthValue, offsetValue };
         }
 
         /// <summary>
