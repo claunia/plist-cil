@@ -2,7 +2,7 @@ language: csharp
 solution: plist-cil.sln
 mono:
  - none
-dotnet: 2.1.200
+dotnet: 2.1.300
 dist: trusty
 script:
  - dotnet build -c Release
