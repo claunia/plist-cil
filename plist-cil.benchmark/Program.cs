@@ -8,6 +8,7 @@ namespace Claunia.PropertyList.Benchmark
         static void Main(string[] args)
         {
             var summary = BenchmarkRunner.Run<BinaryPropertyListParserBenchmarks>();
+            summary = BenchmarkRunner.Run<BinaryPropertyListWriterBenchmarks>();
         }
     }
 }
