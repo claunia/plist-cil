@@ -37,7 +37,24 @@ namespace Claunia.PropertyList
 
             public override int GetHashCode(NSObject obj)
             {
-                throw new NotImplementedException();
+                if (obj == null)
+                {
+                    return 0;
+                }
+
+                var u = obj as UID;
+                if (u != null)
+                {
+                    return u.GetHashCode();
+                }
+
+                var s = obj as NSString;
+                if (s != null && BinaryPropertyListWriter.IsSerializationPrimitive(s))
+                {
+                    return s.Content.GetHashCode();
+                }
+
+                return obj.GetHashCode();
             }
         }
     }

@@ -61,9 +61,6 @@ namespace Claunia.PropertyList
         /// </summary>
         public const int VERSION_20 = 20;
 
-        private readonly AddObjectEqualityComparer addObjectComparer = new AddObjectEqualityComparer();
-        private readonly GetObjectEqualityComparer getObjectComparer = new GetObjectEqualityComparer();
-
         /// <summary>
         /// Gets or sets a value indicating whether two equivalent objects should be serialized once in the binary property list file, or whether
         /// the value should be stored multiple times in the binary property list file. The default is <see langword="false"/>.
@@ -183,7 +180,9 @@ namespace Claunia.PropertyList
         long count;
 
         // map from object to its ID
-        Collection<NSObject> idMap = new Collection<NSObject>(); //(new IdentityEqualityComparer<NSObject>());
+        readonly Dictionary<NSObject, int> idDict = new Dictionary<NSObject, int>(new AddObjectEqualityComparer());
+        readonly Dictionary<NSObject, int> idDict2 = new Dictionary<NSObject, int>(new GetObjectEqualityComparer());
+        int currentId = 0;
         int idSizeInBytes;
 
         /// <summary>
@@ -235,16 +234,16 @@ namespace Claunia.PropertyList
             // assign IDs to all the objects.
             root.AssignIDs(this);
 
-            idSizeInBytes = ComputeIdSizeInBytes(idMap.Count);
+            idSizeInBytes = ComputeIdSizeInBytes(idDict.Count);
 
             // offsets of each object, indexed by ID
-            long[] offsets = new long[idMap.Count];
+            long[] offsets = new long[idDict.Count];
 
             // write each object, save offset
-            for (int i = 0; i < idMap.Count; i++)
+            foreach(var pair in idDict)
             {
-                NSObject obj = idMap[i];
-                int id = i;
+                NSObject obj = pair.Key;
+                int id = pair.Value;
                 offsets[id] = count;
                 if (obj == null)
                 {
@@ -274,9 +273,9 @@ namespace Claunia.PropertyList
                 // size of a ref
                 Write(idSizeInBytes);
                 // number of objects
-                WriteLong(idMap.Count);
+                WriteLong(idDict.Count);
                 // top object
-                int rootID = idMap.IndexOf(root);
+                int rootID = idDict[root];
                 WriteLong(rootID);
                 // offset table offset
                 WriteLong(offsetTableOffset);
@@ -289,16 +288,20 @@ namespace Claunia.PropertyList
         {
             if (this.ReuseObjectIds)
             {
-                if (!this.idMap.Contains(obj))
+                if (!this.idDict.ContainsKey(obj))
                 {
-                    idMap.Add(obj);
+                    idDict.Add(obj, currentId++);
                 }
             }
             else
             {
-                if (!this.idMap.Contains(obj, addObjectComparer))
+                if (!this.idDict2.ContainsKey(obj))
                 {
-                    idMap.Add(obj);
+                    idDict2.Add(obj, currentId);
+                }
+                if (!this.idDict.ContainsKey(obj))
+                {
+                    idDict.Add(obj, currentId++);
                 }
             }
         }
@@ -307,28 +310,11 @@ namespace Claunia.PropertyList
         {
             if (this.ReuseObjectIds)
             {
-                return idMap.IndexOf(obj);
+                return idDict[obj];
             }
             else
             {
-                if (obj is UID)
-                {
-                    var uid = obj as UID;
-                    var first = idMap.OfType<UID>().First(v => NSObject.ArrayEquals(v.Bytes, uid.Bytes));
-                    return idMap.IndexOf(first);
-                }
-                else
-                {
-                    for (int i = 0; i < idMap.Count; i++)
-                    {
-                        if (this.getObjectComparer.Equals(idMap[i], obj))
-                        {
-                            return i;
-                        }
-                    }
-
-                    throw new InvalidOperationException();
-                }
+                return idDict2[obj];
             }
         }
 
