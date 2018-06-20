@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\plist-cil.benchmark\plist.bin" Link="test-files\plist.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\test-files\test1-ascii-gnustep.plist">
       <Link>test-files\test1-ascii-gnustep.plist</Link>
       <Gettext-ScanForTranslations>False</Gettext-ScanForTranslations>
