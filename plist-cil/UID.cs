@@ -23,7 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
-using System.Linq;
+using System.Buffers.Binary;
 using System.Text;
 
 namespace Claunia.PropertyList
@@ -35,20 +35,30 @@ namespace Claunia.PropertyList
     /// @author Natalia Portillo
     public class UID : NSObject
     {
-        readonly byte[] bytes;
-        readonly string name;
+        readonly ulong value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="bytes">Bytes.</param>
-        public UID(String name, byte[] bytes)
+        [Obsolete("UIDs have not meaningful names")]
+        public UID(String name, ReadOnlySpan<byte> bytes)
         {
-            if(bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
+            if (bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
                 throw new ArgumentException("Type argument is not valid.");
-            this.name = name;
-            this.bytes = bytes;
+            this.value = (ulong)BinaryPropertyListParser.ParseLong(bytes);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class.
+        /// </summary>
+        /// <param name="bytes">Bytes.</param>
+        public UID(ReadOnlySpan<byte> bytes)
+        {
+            if (bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
+                throw new ArgumentException("Type argument is not valid.");
+            this.value = (ulong)BinaryPropertyListParser.ParseLong(bytes);
         }
 
         /// <summary>
@@ -56,10 +66,19 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 8-bit number.</param>
+        [Obsolete("UIDs have no meaningful names")]
         public UID(String name, byte number)
         {
-            this.name = name;
-            this.bytes = new[] { number };
+            this.value = number;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 8-bit number.
+        /// </summary>
+        /// <param name="number">Unsigned 8-bit number.</param>
+        public UID(byte number)
+        {
+            this.value = number;
         }
 
         /// <summary>
@@ -67,10 +86,10 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 8-bit number.</param>
+        [Obsolete("UIDs must be unsigned values")]
         public UID(String name, sbyte number)
         {
-            this.name = name;
-            this.bytes = new[] { (byte)number };
+            this.value = (ulong)number;
         }
 
         /// <summary>
@@ -78,16 +97,20 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 16-bit number.</param>
+        [Obsolete("UIDs have no meaningful names")]
         public UID(String name, ushort number)
         {
-            this.name = name;
-            if(number <= byte.MaxValue)
-                this.bytes = new[] { (byte)number };
-            else
-            {
-                this.bytes = BitConverter.GetBytes(number);
-                Array.Reverse(this.bytes);
-            }
+            this.value = number;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 16-bit number.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="number">Unsigned 16-bit number.</param>
+        public UID(ushort number)
+        {
+            this.value = number;
         }
 
         /// <summary>
@@ -95,16 +118,10 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Signed 16-bit number.</param>
+        [Obsolete("UIDs must be unsigned values")]
         public UID(String name, short number)
         {
-            this.name = name;
-            if(number >= sbyte.MinValue && number <= sbyte.MaxValue)
-                this.bytes = new[] { (byte)number };
-            else
-            { 
-                this.bytes = BitConverter.GetBytes(number);
-                Array.Reverse(this.bytes);
-            }
+            this.value = (ulong)number;
         }
 
         /// <summary>
@@ -112,21 +129,19 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 32-bit number.</param>
+        [Obsolete("UIDs have no meaningful names")]
         public UID(String name, uint number)
         {
-            this.name = name;
-            if(number <= byte.MaxValue)
-                this.bytes = new[] { (byte)number };
-            else if(number <= ushort.MaxValue)
-            {
-                this.bytes = BitConverter.GetBytes((ushort)number);
-                Array.Reverse(this.bytes);
-            }
-            else
-            {
-                this.bytes = BitConverter.GetBytes(number);
-                Array.Reverse(this.bytes);
-            }
+            this.value = number;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 32-bit number.
+        /// </summary>
+        /// <param name="number">Unsigned 32-bit number.</param>
+        public UID(uint number)
+        {
+            this.value = number;
         }
 
         /// <summary>
@@ -134,21 +149,10 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Signed 32-bit number.</param>
+        [Obsolete("UIDs must be unsigned values")]
         public UID(String name, int number)
         {
-            this.name = name;
-            if(number >= sbyte.MinValue && number <= sbyte.MaxValue)
-                this.bytes = new[] { (byte)number };
-            if(number >= short.MinValue && number <= short.MaxValue)
-            { 
-                this.bytes = BitConverter.GetBytes((short)number);
-                Array.Reverse(this.bytes);
-            }
-            else
-            { 
-                this.bytes = BitConverter.GetBytes(number);
-                Array.Reverse(this.bytes);
-            }
+            this.value = (ulong)number;
         }
 
         /// <summary>
@@ -156,26 +160,19 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 64-bit number.</param>
+        [Obsolete("UIDs have no meaningful names")]
         public UID(String name, ulong number)
         {
-            this.name = name;
-            if(number <= byte.MaxValue)
-                this.bytes = new[] { (byte)number };
-            else if(number <= ushort.MaxValue)
-            { 
-                this.bytes = BitConverter.GetBytes((ushort)number);
-                Array.Reverse(this.bytes);
-            }
-            else if(number <= uint.MaxValue)
-            { 
-                this.bytes = BitConverter.GetBytes((uint)number);
-                Array.Reverse(this.bytes);
-            }
-            else
-            { 
-                this.bytes = BitConverter.GetBytes(number);
-                Array.Reverse(this.bytes);
-            }
+            this.value = number;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 64-bit number.
+        /// </summary>
+        /// <param name="number">Unsigned 64-bit number.</param>
+        public UID(ulong number)
+        {
+            this.value = number;
         }
 
         /// <summary>
@@ -183,26 +180,10 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Signed 64-bit number.</param>
+        [Obsolete("UIDs must be unsigned values")]
         public UID(String name, long number)
         {
-            this.name = name;
-            if(number >= sbyte.MinValue && number <= sbyte.MaxValue)
-                this.bytes = new[] { (byte)number };
-            if(number >= short.MinValue && number <= short.MaxValue)
-            { 
-                this.bytes = BitConverter.GetBytes((short)number);
-                Array.Reverse(this.bytes);
-            }
-            if(number >= int.MinValue && number <= int.MaxValue)
-            { 
-                this.bytes = BitConverter.GetBytes((int)number);
-                Array.Reverse(this.bytes);
-            }
-            else
-            {
-                this.bytes = BitConverter.GetBytes(number);
-                Array.Reverse(this.bytes);
-            }
+            this.value = (ulong)number;
         }
 
         /// <summary>
@@ -213,7 +194,66 @@ namespace Claunia.PropertyList
         {
             get
             {
+                byte[] bytes = new byte[this.ByteCount];
+                this.GetBytes(bytes);
                 return bytes;
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of bytes required to represent this <see cref="UID"/>.
+        /// </summary>
+        public int ByteCount
+        {
+            get
+            {
+                if (this.value <= byte.MaxValue)
+                {
+                    return 1;
+                }
+                else if (this.value <= ushort.MaxValue)
+                {
+                    return 2;
+                }
+                else if (this.value <= uint.MaxValue)
+                {
+                    return 4;
+                }
+                else
+                {
+                    return 8;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Writes the bytes required to represent this <see cref="UID"/> to a byte span.
+        /// </summary>
+        /// <param name="bytes">
+        /// The byte span to which to write the byte representation of this UID.
+        /// </param>
+        public void GetBytes(Span<byte> bytes)
+        {
+            switch (this.ByteCount)
+            {
+                case 1:
+                    bytes[0] = (byte)this.value;
+                    break;
+
+                case 2:
+                    BinaryPrimitives.WriteUInt16BigEndian(bytes, (ushort)this.value);
+                    break;
+
+                case 4:
+                    BinaryPrimitives.WriteUInt32BigEndian(bytes, (uint)this.value);
+                    break;
+
+                case 8:
+                    BinaryPrimitives.WriteUInt64BigEndian(bytes, this.value);
+                    break;
+
+                default:
+                    throw new InvalidOperationException();
             }
         }
 
@@ -221,11 +261,12 @@ namespace Claunia.PropertyList
         /// Gets the name.
         /// </summary>
         /// <value>The name.</value>
+        [Obsolete("UIDs have no meaningful names")]
         public string Name
         {
             get
             {
-                return name;
+                return this.value.ToString();
             }
         }
 
@@ -239,6 +280,8 @@ namespace Claunia.PropertyList
         {
             Indent(xml, level);
             xml.Append("<string>");
+            Span<byte> bytes = stackalloc byte[this.ByteCount];
+            this.GetBytes(bytes);
             foreach (byte b in bytes)
                 xml.Append(String.Format("{0:x2}", b));
             xml.Append("</string>");
@@ -246,7 +289,9 @@ namespace Claunia.PropertyList
 
         internal override void ToBinary(BinaryPropertyListWriter outPlist)
         {
-            outPlist.Write(0x80 + bytes.Length - 1);
+            outPlist.Write(0x80 + this.ByteCount - 1);
+            Span<byte> bytes = stackalloc byte[this.ByteCount];
+            this.GetBytes(bytes);
             outPlist.Write(bytes);
         }
 
@@ -254,6 +299,8 @@ namespace Claunia.PropertyList
         {
             Indent(ascii, level);
             ascii.Append("\"");
+            Span<byte> bytes = stackalloc byte[this.ByteCount];
+            this.GetBytes(bytes);
             foreach (byte b in bytes)
                 ascii.Append(String.Format("{0:x2}", b));
             ascii.Append("\"");
@@ -272,13 +319,24 @@ namespace Claunia.PropertyList
         /// <see cref="Claunia.PropertyList.UID"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(NSObject obj)
         {
-            if (!(obj is UID))
+            return Equals((object)obj);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var uid = obj as UID;
+
+            if (uid == null)
                 return false;
 
-            if (((UID)obj).Name != name)
-                return false;
+            return uid.value == value;
+        }
 
-            return ArrayEquals(((UID)obj).Bytes, bytes);
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return this.value.GetHashCode();
         }
     }
 }

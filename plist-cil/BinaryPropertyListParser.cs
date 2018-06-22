@@ -318,7 +318,7 @@ namespace Claunia.PropertyList
                     {
                         //UID (v1.0 and later)
                         int length = objInfo + 1;
-                        return new UID(obj.ToString(), CopyOfRange(bytes, offset + 1, offset + 1 + length));
+                        return new UID(bytes.Slice(offset + 1, length));
                     }
                 case 0xA:
                     {
