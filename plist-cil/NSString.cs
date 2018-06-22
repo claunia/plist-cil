@@ -43,12 +43,22 @@ namespace Claunia.PropertyList
         /// <param name="encoding">The encoding of the binary representation, the name of a supported charset.</param>
         /// <exception cref="ArgumentException">The encoding charset is invalid or not supported by the underlying platform.</exception>
         public NSString(ReadOnlySpan<byte> bytes, String encoding)
+            : this(bytes, Encoding.GetEncoding(encoding))
         {
-            Encoding enc = Encoding.GetEncoding(encoding);
+        }
+
+        /// <summary>
+        /// Creates a NSString from its binary representation.
+        /// </summary>
+        /// <param name="bytes">The binary representation.</param>
+        /// <param name="encoding">The encoding of the binary representation.</param>
+        /// <exception cref="ArgumentException">The encoding charset is invalid or not supported by the underlying platform.</exception>
+        public NSString(ReadOnlySpan<byte> bytes, Encoding encoding)
+        {
 #if NATIVE_SPAN
-            content = enc.GetString(bytes);
+            content = encoding.GetString(bytes);
 #else
-            content = enc.GetString(bytes.ToArray());
+            content = encoding.GetString(bytes.ToArray());
 #endif
         }
 
