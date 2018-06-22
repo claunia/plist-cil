@@ -42,7 +42,7 @@ namespace Claunia.PropertyList
     /// </summary>
     /// @author Keith Randall
     /// @author Natalia Portillo
-    public class BinaryPropertyListWriter
+    public partial class BinaryPropertyListWriter
     {
         /// <summary>
         /// Binary property list version 0.0
@@ -60,6 +60,9 @@ namespace Claunia.PropertyList
         /// Binary property list version 2.0
         /// </summary>
         public const int VERSION_20 = 20;
+
+        private readonly AddObjectEqualityComparer addObjectComparer = new AddObjectEqualityComparer();
+        private readonly GetObjectEqualityComparer getObjectComparer = new GetObjectEqualityComparer();
 
         /// <summary>
         /// Gets or sets a value indicating whether two equivalent objects should be serialized once in the binary property list file, or whether
@@ -284,59 +287,48 @@ namespace Claunia.PropertyList
 
         internal void AssignID(NSObject obj)
         {
-            // If binary compatibility with the Apple format is required,
-            // UID, NSArray and NSString objects are assigned a new ID,
-            // even if they already exist in the file.
-            if (!this.ReuseObjectIds && (obj is UID || obj is NSNumber || obj is NSArray))
+            if (this.ReuseObjectIds)
             {
-                idMap.Add(obj);
+                if (!this.idMap.Contains(obj))
+                {
+                    idMap.Add(obj);
+                }
             }
-            else if (!this.ReuseObjectIds && obj is NSString && !IsSerializationPrimitive((NSString)obj))
+            else
             {
-                idMap.Add(obj);
+                if (!this.idMap.Contains(obj, addObjectComparer))
+                {
+                    idMap.Add(obj);
+                }
             }
-            else if (!idMap.Contains(obj))
-            {
-                idMap.Add(obj);
-            }
-        }
-
-        internal bool IsSerializationPrimitive(NSString obj)
-        {
-            return obj != null && obj.Content.StartsWith("$") || obj.Content.StartsWith("NS");
         }
 
         internal int GetID(NSObject obj)
         {
-            if (!this.ReuseObjectIds && obj is UID)
+            if (this.ReuseObjectIds)
             {
-                var uid = obj as UID;
-                var first = idMap.OfType<UID>().First(v => NSObject.ArrayEquals(v.Bytes, uid.Bytes));
-                return idMap.IndexOf(first);
-            }
-            else if (!this.ReuseObjectIds && (obj is NSArray || (obj is NSString && !IsSerializationPrimitive((NSString)obj))))
-            {
-                int index = -1;
-
-                for (int i = 0; i < idMap.Count; i++)
-                {
-                    if (idMap[i] == obj)
-                    {
-                        index = i;
-                        break;
-                    }
-                }
-
-                if (index == -1)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                return index;
+                return idMap.IndexOf(obj);
             }
             else
             {
-                return idMap.IndexOf(obj);
+                if (obj is UID)
+                {
+                    var uid = obj as UID;
+                    var first = idMap.OfType<UID>().First(v => NSObject.ArrayEquals(v.Bytes, uid.Bytes));
+                    return idMap.IndexOf(first);
+                }
+                else
+                {
+                    for (int i = 0; i < idMap.Count; i++)
+                    {
+                        if (this.getObjectComparer.Equals(idMap[i], obj))
+                        {
+                            return i;
+                        }
+                    }
+
+                    throw new InvalidOperationException();
+                }
             }
         }
 
@@ -421,6 +413,24 @@ namespace Claunia.PropertyList
         internal void WriteDouble(double value)
         {
             WriteLong(BitConverter.DoubleToInt64Bits(value));
+        }
+
+        internal static bool IsSerializationPrimitive(NSString obj)
+        {
+            var content = obj.Content;
+
+            // This is a list of "special" values which are only added once to a binary property
+            // list, and can be referenced multiple times.
+            return content == "$class"
+                || content == "$classes"
+                || content == "$classname"
+                || content == "NS.objects"
+                || content == "NS.keys"
+                || content == "NSDictionary"
+                || content == "NSObject"
+                || content == "NSMutableDictionary"
+                || content == "NSMutableArray"
+                || content == "NSArray";
         }
     }
 }
