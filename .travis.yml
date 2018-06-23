@@ -8,5 +8,3 @@ script:
  - dotnet build -c Release
  - dotnet test plist-cil.test/plist-cil.test.csproj
  - dotnet run --project plist-cil.benchmark/plist-cil.benchmark.csproj -c Release
- - git checkout master
- - dotnet run --project plist-cil.benchmark/plist-cil.benchmark.csproj -c Release
