@@ -119,20 +119,20 @@ namespace Claunia.PropertyList
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
         private NSObject DoParse(ReadOnlySpan<byte> bytes)
         {
-            string magic = Encoding.ASCII.GetString(
-#if NATIVE_SPAN
-                 bytes.Slice(0, 8));
-#else
-                 bytes.Slice(0, 8).ToArray());
-#endif
-
-            if (!magic.StartsWith("bplist", StringComparison.Ordinal))
+            if(bytes.Length < 8
+                || bytes[0] != 'b'
+                || bytes[1] != 'p'
+                || bytes[2] != 'l'
+                || bytes[3] != 'i'
+                || bytes[4] != 's'
+                || bytes[5] != 't')
             {
+                var magic = Encoding.ASCII.GetString(bytes.Slice(0, 8).ToArray());
                 throw new PropertyListFormatException("The given data is no binary property list. Wrong magic bytes: " + magic);
             }
 
-            majorVersion = magic[6] - 0x30; //ASCII number
-            minorVersion = magic[7] - 0x30; //ASCII number
+            majorVersion = bytes[6] - 0x30; //ASCII number
+            minorVersion = bytes[7] - 0x30; //ASCII number
 
             // 0.0 - OS X Tiger and earlier
             // 0.1 - Leopard
@@ -366,7 +366,7 @@ namespace Claunia.PropertyList
                         ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int contentOffset);
 
                         //System.out.println("Parsing dictionary #"+obj);
-                        NSDictionary dict = new NSDictionary();
+                        NSDictionary dict = new NSDictionary(length);
                         for (int i = 0; i < length; i++)
                         {
                             int keyRef = (int)ParseUnsignedInt(bytes.Slice(offset + contentOffset + i * objectRefSize, objectRefSize));
