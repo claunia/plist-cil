@@ -422,13 +422,17 @@ namespace Claunia.PropertyList
                 || content == "$classname"
                 || content == "NS.objects"
                 || content == "NS.keys"
+                || content == "NS.base"
+                || content == "NS.relative"
                 || content == "NSURL"
                 || content == "NSDictionary"
                 || content == "NSObject"
                 || content == "NSMutableDictionary"
                 || content == "NSMutableArray"
                 || content == "NSArray"
-                || content == "NSUUID";
+                || content == "NSUUID"
+                || content == "NSKeyedArchiver"
+                || content == "NSMutableString";
         }
 
         internal static bool IsSerializationPrimitive(NSNumber n)
