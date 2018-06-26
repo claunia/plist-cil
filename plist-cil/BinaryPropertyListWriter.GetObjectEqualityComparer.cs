@@ -25,6 +25,10 @@ namespace Claunia.PropertyList
                 {
                     return x.Equals(y);
                 }
+                else if (x is NSNumber && BinaryPropertyListWriter.IsSerializationPrimitive((NSNumber)x))
+                {
+                    return x.Equals(y);
+                }
                 else if (x is NSString && BinaryPropertyListWriter.IsSerializationPrimitive((NSString)x))
                 {
                     return x.Equals(y);
@@ -46,6 +50,12 @@ namespace Claunia.PropertyList
                 if (u != null)
                 {
                     return u.GetHashCode();
+                }
+
+                var n = obj as NSNumber;
+                if (n != null && BinaryPropertyListWriter.IsSerializationPrimitive(n))
+                {
+                    return n.ToObject().GetHashCode();
                 }
 
                 var s = obj as NSString;

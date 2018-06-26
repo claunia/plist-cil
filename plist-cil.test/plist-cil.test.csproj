@@ -116,6 +116,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="test-files\plist2.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="test-files\RoundtripBinaryIndentation.plist">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -240,7 +240,7 @@ namespace Claunia.PropertyList
             long[] offsets = new long[idDict.Count];
 
             // write each object, save offset
-            foreach(var pair in idDict)
+            foreach (var pair in idDict)
             {
                 NSObject obj = pair.Key;
                 int id = pair.Value;
@@ -422,11 +422,18 @@ namespace Claunia.PropertyList
                 || content == "$classname"
                 || content == "NS.objects"
                 || content == "NS.keys"
+                || content == "NSURL"
                 || content == "NSDictionary"
                 || content == "NSObject"
                 || content == "NSMutableDictionary"
                 || content == "NSMutableArray"
-                || content == "NSArray";
+                || content == "NSArray"
+                || content == "NSUUID";
+        }
+
+        internal static bool IsSerializationPrimitive(NSNumber n)
+        {
+            return n.isBoolean();
         }
     }
 }
