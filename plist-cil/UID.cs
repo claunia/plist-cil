@@ -338,6 +338,12 @@ namespace Claunia.PropertyList
         {
             return this.value.GetHashCode();
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{this.value} (UID)";
+        }
     }
 }
 
