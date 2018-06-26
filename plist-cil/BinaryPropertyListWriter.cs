@@ -424,6 +424,7 @@ namespace Claunia.PropertyList
                 || content == "NS.keys"
                 || content == "NS.base"
                 || content == "NS.relative"
+                || content == "NS.string"
                 || content == "NSURL"
                 || content == "NSDictionary"
                 || content == "NSObject"

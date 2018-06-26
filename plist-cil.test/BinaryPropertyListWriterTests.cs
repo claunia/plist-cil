@@ -53,5 +53,21 @@ namespace plistcil.test
                 writer.Write(root);
             }
         }
+
+        [Fact]
+        public void Roundtrip4Test()
+        {
+            byte[] data = File.ReadAllBytes("test-files/plist4.bin");
+            NSObject root = PropertyListParser.Parse(data);
+
+            using (MemoryStream actualOutput = new MemoryStream())
+            using (Stream expectedOutput = File.OpenRead("test-files/plist4.bin"))
+            using (ValidatingStream validatingStream = new ValidatingStream(actualOutput, expectedOutput))
+            {
+                BinaryPropertyListWriter writer = new BinaryPropertyListWriter(validatingStream);
+                writer.ReuseObjectIds = false;
+                writer.Write(root);
+            }
+        }
     }
 }
