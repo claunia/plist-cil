@@ -22,6 +22,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
 using System;
 using System.Buffers.Binary;
 using System.Text;
@@ -29,7 +30,7 @@ using System.Text;
 namespace Claunia.PropertyList
 {
     /// <summary>
-    /// An UID. Only found in binary property lists that are keyed archives.
+    ///     An UID. Only found in binary property lists that are keyed archives.
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
@@ -38,241 +39,226 @@ namespace Claunia.PropertyList
         readonly ulong value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="bytes">Bytes.</param>
         [Obsolete("UIDs have not meaningful names")]
-        public UID(String name, ReadOnlySpan<byte> bytes)
+        public UID(string name, ReadOnlySpan<byte> bytes)
         {
-            if (bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
+            if(bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
                 throw new ArgumentException("Type argument is not valid.");
-            this.value = (ulong)BinaryPropertyListParser.ParseLong(bytes);
+
+            value = (ulong)BinaryPropertyListParser.ParseLong(bytes);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class.
         /// </summary>
         /// <param name="bytes">Bytes.</param>
         public UID(ReadOnlySpan<byte> bytes)
         {
-            if (bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
+            if(bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
                 throw new ArgumentException("Type argument is not valid.");
-            this.value = (ulong)BinaryPropertyListParser.ParseLong(bytes);
+
+            value = (ulong)BinaryPropertyListParser.ParseLong(bytes);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 8-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 8-bit number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 8-bit number.</param>
         [Obsolete("UIDs have no meaningful names")]
-        public UID(String name, byte number)
+        public UID(string name, byte number)
         {
-            this.value = number;
+            value = number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 8-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 8-bit number.
         /// </summary>
         /// <param name="number">Unsigned 8-bit number.</param>
         public UID(byte number)
         {
-            this.value = number;
+            value = number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using a signed 8-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using a signed 8-bit number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 8-bit number.</param>
         [Obsolete("UIDs must be unsigned values")]
-        public UID(String name, sbyte number)
+        public UID(string name, sbyte number)
         {
-            this.value = (ulong)number;
+            value = (ulong)number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 16-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 16-bit number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 16-bit number.</param>
         [Obsolete("UIDs have no meaningful names")]
-        public UID(String name, ushort number)
+        public UID(string name, ushort number)
         {
-            this.value = number;
+            value = number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 16-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 16-bit number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 16-bit number.</param>
         public UID(ushort number)
         {
-            this.value = number;
+            value = number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using a signed 16-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using a signed 16-bit number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Signed 16-bit number.</param>
         [Obsolete("UIDs must be unsigned values")]
-        public UID(String name, short number)
+        public UID(string name, short number)
         {
-            this.value = (ulong)number;
+            value = (ulong)number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 32-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 32-bit number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 32-bit number.</param>
         [Obsolete("UIDs have no meaningful names")]
-        public UID(String name, uint number)
+        public UID(string name, uint number)
         {
-            this.value = number;
+            value = number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 32-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 32-bit number.
         /// </summary>
         /// <param name="number">Unsigned 32-bit number.</param>
         public UID(uint number)
         {
-            this.value = number;
+            value = number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using a signed 32-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using a signed 32-bit number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Signed 32-bit number.</param>
         [Obsolete("UIDs must be unsigned values")]
-        public UID(String name, int number)
+        public UID(string name, int number)
         {
-            this.value = (ulong)number;
+            value = (ulong)number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 64-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 64-bit number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 64-bit number.</param>
         [Obsolete("UIDs have no meaningful names")]
-        public UID(String name, ulong number)
+        public UID(string name, ulong number)
         {
-            this.value = number;
+            value = number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using an unsigned 64-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 64-bit number.
         /// </summary>
         /// <param name="number">Unsigned 64-bit number.</param>
         public UID(ulong number)
         {
-            this.value = number;
+            value = number;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Claunia.PropertyList.UID"/> class using a signed 64-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using a signed 64-bit number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Signed 64-bit number.</param>
         [Obsolete("UIDs must be unsigned values")]
-        public UID(String name, long number)
+        public UID(string name, long number)
         {
-            this.value = (ulong)number;
+            value = (ulong)number;
         }
 
         /// <summary>
-        /// Gets the bytes.
+        ///     Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
         public byte[] Bytes
         {
             get
             {
-                byte[] bytes = new byte[this.ByteCount];
-                this.GetBytes(bytes);
+                byte[] bytes = new byte[ByteCount];
+                GetBytes(bytes);
                 return bytes;
             }
         }
 
         /// <summary>
-        /// Gets the number of bytes required to represent this <see cref="UID"/>.
+        ///     Gets the number of bytes required to represent this <see cref="UID" />.
         /// </summary>
         public int ByteCount
         {
             get
             {
-                if (this.value <= byte.MaxValue)
-                {
-                    return 1;
-                }
-                else if (this.value <= ushort.MaxValue)
-                {
-                    return 2;
-                }
-                else if (this.value <= uint.MaxValue)
-                {
-                    return 4;
-                }
-                else
-                {
-                    return 8;
-                }
+                if(value <= byte.MaxValue) return 1;
+
+                if(value <= ushort.MaxValue) return 2;
+                if(value <= uint.MaxValue) return 4;
+
+                return 8;
             }
         }
 
         /// <summary>
-        /// Writes the bytes required to represent this <see cref="UID"/> to a byte span.
-        /// </summary>
-        /// <param name="bytes">
-        /// The byte span to which to write the byte representation of this UID.
-        /// </param>
-        public void GetBytes(Span<byte> bytes)
-        {
-            switch (this.ByteCount)
-            {
-                case 1:
-                    bytes[0] = (byte)this.value;
-                    break;
-
-                case 2:
-                    BinaryPrimitives.WriteUInt16BigEndian(bytes, (ushort)this.value);
-                    break;
-
-                case 4:
-                    BinaryPrimitives.WriteUInt32BigEndian(bytes, (uint)this.value);
-                    break;
-
-                case 8:
-                    BinaryPrimitives.WriteUInt64BigEndian(bytes, this.value);
-                    break;
-
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
-
-        /// <summary>
-        /// Gets the name.
+        ///     Gets the name.
         /// </summary>
         /// <value>The name.</value>
         [Obsolete("UIDs have no meaningful names")]
-        public string Name
+        public string Name => value.ToString();
+
+        /// <summary>
+        ///     Writes the bytes required to represent this <see cref="UID" /> to a byte span.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The byte span to which to write the byte representation of this UID.
+        /// </param>
+        public void GetBytes(Span<byte> bytes)
         {
-            get
+            switch(ByteCount)
             {
-                return this.value.ToString();
+                case 1:
+                    bytes[0] = (byte)value;
+                    break;
+
+                case 2:
+                    BinaryPrimitives.WriteUInt16BigEndian(bytes, (ushort)value);
+                    break;
+
+                case 4:
+                    BinaryPrimitives.WriteUInt32BigEndian(bytes, (uint)value);
+                    break;
+
+                case 8:
+                    BinaryPrimitives.WriteUInt64BigEndian(bytes, value);
+                    break;
+
+                default: throw new InvalidOperationException();
             }
         }
 
         /// <summary>
-        /// There is no XML representation specified for UIDs.
-        /// In this implementation UIDs are represented as strings in the XML output.
+        ///     There is no XML representation specified for UIDs.
+        ///     In this implementation UIDs are represented as strings in the XML output.
         /// </summary>
         /// <param name="xml">The xml StringBuilder</param>
         /// <param name="level">The indentation level</param>
@@ -280,18 +266,17 @@ namespace Claunia.PropertyList
         {
             Indent(xml, level);
             xml.Append("<string>");
-            Span<byte> bytes = stackalloc byte[this.ByteCount];
-            this.GetBytes(bytes);
-            foreach (byte b in bytes)
-                xml.Append(String.Format("{0:x2}", b));
+            Span<byte> bytes = stackalloc byte[ByteCount];
+            GetBytes(bytes);
+            foreach(byte b in bytes) xml.Append(string.Format("{0:x2}", b));
             xml.Append("</string>");
         }
 
         internal override void ToBinary(BinaryPropertyListWriter outPlist)
         {
-            outPlist.Write(0x80 + this.ByteCount - 1);
-            Span<byte> bytes = stackalloc byte[this.ByteCount];
-            this.GetBytes(bytes);
+            outPlist.Write(0x80 + ByteCount - 1);
+            Span<byte> bytes = stackalloc byte[ByteCount];
+            GetBytes(bytes);
             outPlist.Write(bytes);
         }
 
@@ -299,10 +284,9 @@ namespace Claunia.PropertyList
         {
             Indent(ascii, level);
             ascii.Append("\"");
-            Span<byte> bytes = stackalloc byte[this.ByteCount];
-            this.GetBytes(bytes);
-            foreach (byte b in bytes)
-                ascii.Append(String.Format("{0:x2}", b));
+            Span<byte> bytes = stackalloc byte[ByteCount];
+            GetBytes(bytes);
+            foreach(byte b in bytes) ascii.Append(string.Format("{0:x2}", b));
             ascii.Append("\"");
         }
 
@@ -312,38 +296,42 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.UID"/>.
+        ///     Determines whether the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.UID" />.
         /// </summary>
-        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.UID"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
-        /// <see cref="Claunia.PropertyList.UID"/>; otherwise, <c>false</c>.</returns>
+        /// <param name="obj">
+        ///     The <see cref="Claunia.PropertyList.NSObject" /> to compare with the current
+        ///     <see cref="Claunia.PropertyList.UID" />.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.UID" />; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(NSObject obj)
         {
             return Equals((object)obj);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            var uid = obj as UID;
+            UID uid = obj as UID;
 
-            if (uid == null)
-                return false;
+            if(uid == null) return false;
 
             return uid.value == value;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override int GetHashCode()
         {
-            return this.value.GetHashCode();
+            return value.GetHashCode();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override string ToString()
         {
-            return $"{this.value} (UID)";
+            return $"{value} (UID)";
         }
     }
 }
-

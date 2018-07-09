@@ -1,6 +1,6 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.IO;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
-using System.IO;
 
 namespace Claunia.PropertyList.Benchmark
 {
@@ -8,7 +8,7 @@ namespace Claunia.PropertyList.Benchmark
     [MemoryDiagnoser]
     public class BinaryPropertyListParserBenchmarks
     {
-        private byte[] data = null;
+        byte[] data;
 
         [GlobalSetup]
         public void Setup()
@@ -19,7 +19,7 @@ namespace Claunia.PropertyList.Benchmark
         [Benchmark]
         public NSObject ReadLargePropertylistTest()
         {
-            var nsObject = PropertyListParser.Parse(this.data);
+            NSObject nsObject = PropertyListParser.Parse(data);
             return nsObject;
         }
     }

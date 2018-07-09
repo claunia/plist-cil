@@ -22,171 +22,61 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
 using System;
-using System.IO;
-using System.Linq;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.IO;
 
 namespace Claunia.PropertyList
 {
     /// <summary>
-    /// <para>
-    /// A BinaryPropertyListWriter is a helper class for writing out
-    /// binary property list files.
-    /// </para><para>
-    /// It contains an output stream and various structures for keeping track
-    /// of which NSObjects have already been serialized, and where they were
-    /// put in the file.
-    /// </para>
+    ///     <para>
+    ///         A BinaryPropertyListWriter is a helper class for writing out
+    ///         binary property list files.
+    ///     </para>
+    ///     <para>
+    ///         It contains an output stream and various structures for keeping track
+    ///         of which NSObjects have already been serialized, and where they were
+    ///         put in the file.
+    ///     </para>
     /// </summary>
     /// @author Keith Randall
     /// @author Natalia Portillo
     public partial class BinaryPropertyListWriter
     {
         /// <summary>
-        /// Binary property list version 0.0
+        ///     Binary property list version 0.0
         /// </summary>
         public const int VERSION_00 = 0;
         /// <summary>
-        /// Binary property list version 1.0
+        ///     Binary property list version 1.0
         /// </summary>
         public const int VERSION_10 = 10;
         /// <summary>
-        /// Binary property list version 1.5
+        ///     Binary property list version 1.5
         /// </summary>
         public const int VERSION_15 = 15;
         /// <summary>
-        /// Binary property list version 2.0
+        ///     Binary property list version 2.0
         /// </summary>
         public const int VERSION_20 = 20;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether two equivalent objects should be serialized once in the binary property list file, or whether
-        /// the value should be stored multiple times in the binary property list file. The default is <see langword="false"/>.
-        /// </summary>
-        /// <remarks>
-        /// In most scenarios, you want this to be <see langword="true"/>, as it reduces the size of the binary proeprty list file. However,
-        /// by default, the Apple tools do not seem to implement this optimization, so set this value to <see langword="false"/> if you
-        /// want to maintain binary compatibility with the Apple tools.
-        /// </remarks>
-        public bool ReuseObjectIds
-        {
-            get;
-            set;
-        }
+        // map from object to its ID
+        readonly Dictionary<NSObject, int> idDict  = new Dictionary<NSObject, int>(new AddObjectEqualityComparer());
+        readonly Dictionary<NSObject, int> idDict2 = new Dictionary<NSObject, int>(new GetObjectEqualityComparer());
 
-        /// <summary>
-        /// Finds out the minimum binary property list format version that
-        /// can be used to save the given NSObject tree.
-        /// </summary>
-        /// <returns>Version code</returns>
-        /// <param name="root">Object root.</param>
-        static int GetMinimumRequiredVersion(NSObject root)
-        {
-            int minVersion = VERSION_00;
-            if (root == null)
-            {
-                minVersion = VERSION_10;
-            }
-            if (root is NSDictionary)
-            {
-                NSDictionary dict = (NSDictionary)root;
-                foreach (NSObject o in dict.GetDictionary().Values)
-                {
-                    int v = GetMinimumRequiredVersion(o);
-                    if (v > minVersion)
-                        minVersion = v;
-                }
-            }
-            else if (root is NSArray)
-            {
-                NSArray array = (NSArray)root;
-                foreach (NSObject o in array)
-                {
-                    int v = GetMinimumRequiredVersion(o);
-                    if (v > minVersion)
-                        minVersion = v;
-                }
-            }
-            else if (root is NSSet)
-            {
-                //Sets are only allowed in property lists v1+
-                minVersion = VERSION_10;
-                NSSet set = (NSSet)root;
-                foreach (NSObject o in set.AllObjects())
-                {
-                    int v = GetMinimumRequiredVersion(o);
-                    if (v > minVersion)
-                        minVersion = v;
-                }
-            }
-            return minVersion;
-        }
-
-        /// <summary>
-        /// Writes a binary plist file with the given object as the root.
-        /// </summary>
-        /// <param name="file">the file to write to</param>
-        /// <param name="root">the source of the data to write to the file</param>
-        /// <exception cref="IOException"></exception>
-        public static void Write(FileInfo file, NSObject root)
-        {
-            using (FileStream fous = file.OpenWrite())
-            {
-                Write(fous, root);
-            }
-        }
-
-        /// <summary>
-        /// Writes a binary plist serialization of the given object as the root.
-        /// </summary>
-        /// <param name="outStream">the stream to write to</param>
-        /// <param name="root">the source of the data to write to the stream</param>
-        /// <exception cref="IOException"></exception>
-        public static void Write(Stream outStream, NSObject root)
-        {
-            int minVersion = GetMinimumRequiredVersion(root);
-            if (minVersion > VERSION_00)
-            {
-                string versionString = ((minVersion == VERSION_10) ? "v1.0" : ((minVersion == VERSION_15) ? "v1.5" : ((minVersion == VERSION_20) ? "v2.0" : "v0.0")));
-                throw new IOException("The given property list structure cannot be saved. " +
-                "The required version of the binary format (" + versionString + ") is not yet supported.");
-            }
-            BinaryPropertyListWriter w = new BinaryPropertyListWriter(outStream, minVersion);
-            w.Write(root);
-        }
-
-        /// <summary>
-        /// Writes a binary plist serialization of the given object as the root
-        /// into a byte array.
-        /// </summary>
-        /// <returns>The byte array containing the serialized property list</returns>
-        /// <param name="root">The root object of the property list</param>
-        /// <exception cref="IOException"></exception>
-        public static byte[] WriteToArray(NSObject root)
-        {
-            MemoryStream bout = new MemoryStream();
-            Write(bout, root);
-            return bout.ToArray();
-        }
-
-        int version = VERSION_00;
+        // # of bytes written so far
+        long count;
+        int  currentId;
+        int  idSizeInBytes;
 
         // raw output stream to result file
         Stream outStream;
 
-        // # of bytes written so far
-        long count;
-
-        // map from object to its ID
-        readonly Dictionary<NSObject, int> idDict = new Dictionary<NSObject, int>(new AddObjectEqualityComparer());
-        readonly Dictionary<NSObject, int> idDict2 = new Dictionary<NSObject, int>(new GetObjectEqualityComparer());
-        int currentId = 0;
-        int idSizeInBytes;
+        int version = VERSION_00;
 
         /// <summary>
-        /// Creates a new binary property list writer
+        ///     Creates a new binary property list writer
         /// </summary>
         /// <param name="outStr">The output stream into which the binary property list will be written</param>
         /// <exception cref="IOException">If an error occured while writing to the stream</exception>
@@ -198,37 +88,145 @@ namespace Claunia.PropertyList
         public BinaryPropertyListWriter(Stream outStr, int version)
         {
             this.version = version;
-            outStream = outStr;
+            outStream    = outStr;
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether two equivalent objects should be serialized once in the binary property
+        ///     list file, or whether
+        ///     the value should be stored multiple times in the binary property list file. The default is <see langword="false" />
+        ///     .
+        /// </summary>
+        /// <remarks>
+        ///     In most scenarios, you want this to be <see langword="true" />, as it reduces the size of the binary proeprty list
+        ///     file. However,
+        ///     by default, the Apple tools do not seem to implement this optimization, so set this value to
+        ///     <see langword="false" /> if you
+        ///     want to maintain binary compatibility with the Apple tools.
+        /// </remarks>
+        public bool ReuseObjectIds { get; set; }
+
+        /// <summary>
+        ///     Finds out the minimum binary property list format version that
+        ///     can be used to save the given NSObject tree.
+        /// </summary>
+        /// <returns>Version code</returns>
+        /// <param name="root">Object root.</param>
+        static int GetMinimumRequiredVersion(NSObject root)
+        {
+            int minVersion              = VERSION_00;
+            if(root == null) minVersion = VERSION_10;
+            if(root is NSDictionary)
+            {
+                NSDictionary dict = (NSDictionary)root;
+                foreach(NSObject o in dict.GetDictionary().Values)
+                {
+                    int v                         = GetMinimumRequiredVersion(o);
+                    if(v > minVersion) minVersion = v;
+                }
+            }
+            else if(root is NSArray)
+            {
+                NSArray array = (NSArray)root;
+                foreach(NSObject o in array)
+                {
+                    int v                         = GetMinimumRequiredVersion(o);
+                    if(v > minVersion) minVersion = v;
+                }
+            }
+            else if(root is NSSet)
+            {
+                //Sets are only allowed in property lists v1+
+                minVersion = VERSION_10;
+                NSSet set = (NSSet)root;
+                foreach(NSObject o in set.AllObjects())
+                {
+                    int v                         = GetMinimumRequiredVersion(o);
+                    if(v > minVersion) minVersion = v;
+                }
+            }
+
+            return minVersion;
+        }
+
+        /// <summary>
+        ///     Writes a binary plist file with the given object as the root.
+        /// </summary>
+        /// <param name="file">the file to write to</param>
+        /// <param name="root">the source of the data to write to the file</param>
+        /// <exception cref="IOException"></exception>
+        public static void Write(FileInfo file, NSObject root)
+        {
+            using(FileStream fous = file.OpenWrite()) Write(fous, root);
+        }
+
+        /// <summary>
+        ///     Writes a binary plist serialization of the given object as the root.
+        /// </summary>
+        /// <param name="outStream">the stream to write to</param>
+        /// <param name="root">the source of the data to write to the stream</param>
+        /// <exception cref="IOException"></exception>
+        public static void Write(Stream outStream, NSObject root)
+        {
+            int minVersion = GetMinimumRequiredVersion(root);
+            if(minVersion > VERSION_00)
+            {
+                string versionString = minVersion == VERSION_10
+                                           ? "v1.0"
+                                           : (minVersion == VERSION_15
+                                                  ? "v1.5"
+                                                  : (minVersion == VERSION_20 ? "v2.0" : "v0.0"));
+                throw new IOException("The given property list structure cannot be saved. " +
+                                      "The required version of the binary format ("         + versionString +
+                                      ") is not yet supported.");
+            }
+
+            BinaryPropertyListWriter w = new BinaryPropertyListWriter(outStream, minVersion);
+            w.Write(root);
+        }
+
+        /// <summary>
+        ///     Writes a binary plist serialization of the given object as the root
+        ///     into a byte array.
+        /// </summary>
+        /// <returns>The byte array containing the serialized property list</returns>
+        /// <param name="root">The root object of the property list</param>
+        /// <exception cref="IOException"></exception>
+        public static byte[] WriteToArray(NSObject root)
+        {
+            MemoryStream bout = new MemoryStream();
+            Write(bout, root);
+            return bout.ToArray();
         }
 
         public void Write(NSObject root)
         {
             // magic bytes
-            Write(new[] { (byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t' });
+            Write(new[] {(byte)'b', (byte)'p', (byte)'l', (byte)'i', (byte)'s', (byte)'t'});
 
             //version
-            switch (version)
+            switch(version)
             {
                 case VERSION_00:
-                    {
-                        Write(new[] { (byte)'0', (byte)'0' });
-                        break;
-                    }
+                {
+                    Write(new[] {(byte)'0', (byte)'0'});
+                    break;
+                }
                 case VERSION_10:
-                    {
-                        Write(new[] { (byte)'1', (byte)'0' });
-                        break;
-                    }
+                {
+                    Write(new[] {(byte)'1', (byte)'0'});
+                    break;
+                }
                 case VERSION_15:
-                    {
-                        Write(new[] { (byte)'1', (byte)'5' });
-                        break;
-                    }
+                {
+                    Write(new[] {(byte)'1', (byte)'5'});
+                    break;
+                }
                 case VERSION_20:
-                    {
-                        Write(new[] { (byte)'2', (byte)'0' });
-                        break;
-                    }
+                {
+                    Write(new[] {(byte)'2', (byte)'0'});
+                    break;
+                }
             }
 
             // assign IDs to all the objects.
@@ -240,30 +238,21 @@ namespace Claunia.PropertyList
             long[] offsets = new long[idDict.Count];
 
             // write each object, save offset
-            foreach (var pair in idDict)
+            foreach(KeyValuePair<NSObject, int> pair in idDict)
             {
                 NSObject obj = pair.Key;
-                int id = pair.Value;
+                int      id  = pair.Value;
                 offsets[id] = count;
-                if (obj == null)
-                {
-                    Write(0x00);
-                }
-                else
-                {
-                    obj.ToBinary(this);
-                }
+                if(obj == null) Write(0x00);
+                else obj.ToBinary(this);
             }
 
             // write offset table
             long offsetTableOffset = count;
-            int offsetSizeInBytes = ComputeOffsetSizeInBytes(count);
-            foreach (long offset in offsets)
-            {
-                WriteBytes(offset, offsetSizeInBytes);
-            }
+            int  offsetSizeInBytes = ComputeOffsetSizeInBytes(count);
+            foreach(long offset in offsets) WriteBytes(offset, offsetSizeInBytes);
 
-            if (version != VERSION_15)
+            if(version != VERSION_15)
             {
                 // write trailer
                 // 6 null bytes
@@ -286,70 +275,51 @@ namespace Claunia.PropertyList
 
         internal void AssignID(NSObject obj)
         {
-            if (this.ReuseObjectIds)
+            if(ReuseObjectIds)
             {
-                if (!this.idDict.ContainsKey(obj))
-                {
-                    idDict.Add(obj, currentId++);
-                }
+                if(!idDict.ContainsKey(obj)) idDict.Add(obj, currentId++);
             }
             else
             {
-                if (!this.idDict2.ContainsKey(obj))
-                {
-                    idDict2.Add(obj, currentId);
-                }
-                if (!this.idDict.ContainsKey(obj))
-                {
-                    idDict.Add(obj, currentId++);
-                }
+                if(!idDict2.ContainsKey(obj)) idDict2.Add(obj, currentId);
+                if(!idDict.ContainsKey(obj)) idDict.Add(obj, currentId++);
             }
         }
 
         internal int GetID(NSObject obj)
         {
-            if (this.ReuseObjectIds)
-            {
-                return idDict[obj];
-            }
-            else
-            {
-                return idDict2[obj];
-            }
+            if(ReuseObjectIds) return idDict[obj];
+
+            return idDict2[obj];
         }
 
         static int ComputeIdSizeInBytes(int numberOfIds)
         {
-            if (numberOfIds < 256)
-                return 1;
+            if(numberOfIds < 256) return 1;
+
             return numberOfIds < 65536 ? 2 : 4;
         }
 
         static int ComputeOffsetSizeInBytes(long maxOffset)
         {
-            if (maxOffset < 256)
-                return 1;
-            if (maxOffset < 65536)
-                return 2;
+            if(maxOffset < 256) return 1;
+            if(maxOffset < 65536) return 2;
+
             return maxOffset < 4294967296L ? 4 : 8;
         }
 
         internal void WriteIntHeader(int kind, int value)
         {
-            if (value < 0)
-                throw new ArgumentException("value must be greater than or equal to 0", "value");
+            if(value < 0) throw new ArgumentException("value must be greater than or equal to 0", "value");
 
-            if (value < 15)
-            {
-                Write((kind << 4) + value);
-            }
-            else if (value < 256)
+            if(value      < 15) Write((kind << 4) + value);
+            else if(value < 256)
             {
                 Write((kind << 4) + 15);
                 Write(0x10);
                 WriteBytes(value, 1);
             }
-            else if (value < 65536)
+            else if(value < 65536)
             {
                 Write((kind << 4) + 15);
                 Write(0x11);
@@ -379,21 +349,18 @@ namespace Claunia.PropertyList
 
         internal void Write(Span<byte> bytes)
         {
-#if SPAN_NATIVE
+            #if SPAN_NATIVE
             outStream.Write(bytes);
             count += bytes.Length;
 #else
-            this.Write(bytes.ToArray());
-#endif
+            Write(bytes.ToArray());
+            #endif
         }
 
         internal void WriteBytes(long value, int bytes)
         {
             // write low-order bytes big-endian style
-            for (int i = bytes - 1; i >= 0; i--)
-            {
-                Write((int)(value >> (8 * i)));
-            }
+            for(int i = bytes - 1; i >= 0; i--) Write((int)(value >> (8 * i)));
         }
 
         internal void WriteID(int id)
@@ -413,27 +380,17 @@ namespace Claunia.PropertyList
 
         internal static bool IsSerializationPrimitive(NSString obj)
         {
-            var content = obj.Content;
+            string content = obj.Content;
 
             // This is a list of "special" values which are only added once to a binary property
             // list, and can be referenced multiple times.
-            return content == "$class"
-                || content == "$classes"
-                || content == "$classname"
-                || content == "NS.objects"
-                || content == "NS.keys"
-                || content == "NS.base"
-                || content == "NS.relative"
-                || content == "NS.string"
-                || content == "NSURL"
-                || content == "NSDictionary"
-                || content == "NSObject"
-                || content == "NSMutableDictionary"
-                || content == "NSMutableArray"
-                || content == "NSArray"
-                || content == "NSUUID"
-                || content == "NSKeyedArchiver"
-                || content == "NSMutableString";
+            return content == "$class"              || content == "$classes" || content == "$classname" ||
+                   content == "NS.objects"          ||
+                   content == "NS.keys"             || content == "NS.base" || content == "NS.relative" ||
+                   content == "NS.string"           ||
+                   content == "NSURL"               || content == "NSDictionary"    || content == "NSObject" ||
+                   content == "NSMutableDictionary" || content == "NSMutableArray"  || content == "NSArray"  ||
+                   content == "NSUUID"              || content == "NSKeyedArchiver" || content == "NSMutableString";
         }
 
         internal static bool IsSerializationPrimitive(NSNumber n)
@@ -442,4 +399,3 @@ namespace Claunia.PropertyList
         }
     }
 }
-

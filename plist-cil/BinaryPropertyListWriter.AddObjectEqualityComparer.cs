@@ -6,45 +6,32 @@ namespace Claunia.PropertyList
     public partial class BinaryPropertyListWriter
     {
         /// <summary>
-        /// The equality comparer which is used when adding an object to the <see cref="BinaryPropertyListWriter.idMap" />. In most cases,
-        /// objects are always added. The only exception are very specific strings, which are only added once.
+        ///     The equality comparer which is used when adding an object to the <see cref="BinaryPropertyListWriter.idMap" />. In
+        ///     most cases,
+        ///     objects are always added. The only exception are very specific strings, which are only added once.
         /// </summary>
-        private class AddObjectEqualityComparer : EqualityComparer<NSObject>
+        class AddObjectEqualityComparer : EqualityComparer<NSObject>
         {
             public override bool Equals(NSObject x, NSObject y)
             {
-                var a = x as NSString;
-                var b = y as NSString;
+                NSString a = x as NSString;
+                NSString b = y as NSString;
 
-                if (a == null || b == null)
-                {
-                    return object.ReferenceEquals(x, y);
-                }
+                if(a == null || b == null) return ReferenceEquals(x, y);
 
-                if (!BinaryPropertyListWriter.IsSerializationPrimitive(a) || !BinaryPropertyListWriter.IsSerializationPrimitive(b))
-                {
-                    return object.ReferenceEquals(x, y);
-                }
+                if(!IsSerializationPrimitive(a) || !IsSerializationPrimitive(b)) return ReferenceEquals(x, y);
 
                 return string.Equals(a.Content, b.Content, StringComparison.Ordinal);
             }
 
             public override int GetHashCode(NSObject obj)
             {
-                if (obj == null)
-                {
-                    return 0;
-                }
+                if(obj == null) return 0;
 
-                var s = obj as NSString;
-                if (s != null && BinaryPropertyListWriter.IsSerializationPrimitive(s))
-                {
-                    return s.Content.GetHashCode();
-                }
-                else
-                {
-                    return obj.GetHashCode();
-                }
+                NSString s = obj as NSString;
+                if(s != null && IsSerializationPrimitive(s)) return s.Content.GetHashCode();
+
+                return obj.GetHashCode();
             }
         }
     }

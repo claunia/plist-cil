@@ -22,67 +22,74 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
 using System;
 using System.Text;
 
 namespace Claunia.PropertyList
 {
     /// <summary>
-    /// A NSString contains a string.
+    ///     A NSString contains a string.
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
     public class NSString : NSObject, IComparable
     {
-        string content;
+        static Encoding asciiEncoder, utf16beEncoder, utf8Encoder;
 
         /// <summary>
-        /// Creates a NSString from its binary representation.
+        ///     Creates a NSString from its binary representation.
         /// </summary>
         /// <param name="bytes">The binary representation.</param>
         /// <param name="encoding">The encoding of the binary representation, the name of a supported charset.</param>
         /// <exception cref="ArgumentException">The encoding charset is invalid or not supported by the underlying platform.</exception>
-        public NSString(ReadOnlySpan<byte> bytes, String encoding)
-            : this(bytes, Encoding.GetEncoding(encoding))
-        {
-        }
+        public NSString(ReadOnlySpan<byte> bytes, string encoding) : this(bytes, Encoding.GetEncoding(encoding)) { }
 
         /// <summary>
-        /// Creates a NSString from its binary representation.
+        ///     Creates a NSString from its binary representation.
         /// </summary>
         /// <param name="bytes">The binary representation.</param>
         /// <param name="encoding">The encoding of the binary representation.</param>
         /// <exception cref="ArgumentException">The encoding charset is invalid or not supported by the underlying platform.</exception>
         public NSString(ReadOnlySpan<byte> bytes, Encoding encoding)
         {
-#if NATIVE_SPAN
-            content = encoding.GetString(bytes);
-#else
-            content = encoding.GetString(bytes.ToArray());
-#endif
+            #if NATIVE_SPAN
+            Content = encoding.GetString(bytes);
+            #else
+            Content = encoding.GetString(bytes.ToArray());
+            #endif
         }
 
         /// <summary>
-        /// Creates a NSString from a string.
+        ///     Creates a NSString from a string.
         /// </summary>
         /// <param name="text">The string that will be contained in the NSString.</param>
         public NSString(string text)
         {
-            content = text;
+            Content = text;
         }
 
         /// <summary>
-        /// Gets this strings content.
+        ///     Gets this strings content.
         /// </summary>
         /// <returns>This NSString as .NET string object.</returns>
-        public string Content
+        public string Content { get; set; }
+
+        /// <summary>
+        ///     Compares the current <see cref="Claunia.PropertyList.NSString" /> to the specified object.
+        /// </summary>
+        /// <returns>A 32-bit signed integer that indicates the lexical relationship between the two comparands.</returns>
+        /// <param name="o">Object to compare to the current <see cref="Claunia.PropertyList.NSString" />.</param>
+        public int CompareTo(object o)
         {
-            get { return this.content; }
-            set { this.content = value; }
+            if(o is NSString) return string.Compare(Content, ((NSString)o).Content, StringComparison.Ordinal);
+            if(o is string) return string.Compare(Content,   (string)o,             StringComparison.Ordinal);
+
+            return -1;
         }
 
         /// <summary>
-        /// Appends a string to this string.
+        ///     Appends a string to this string.
         /// </summary>
         /// <param name="s">The string to append.</param>
         public void Append(NSString s)
@@ -91,25 +98,25 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Appends a string to this string.
+        ///     Appends a string to this string.
         /// </summary>
         /// <param name="s">The string to append.</param>
         public void Append(string s)
         {
-            content += s;
+            Content += s;
         }
 
         /// <summary>
-        /// Prepends a string to this string.
+        ///     Prepends a string to this string.
         /// </summary>
         /// <param name="s">The string to prepend.</param>
         public void Prepend(string s)
         {
-            content = s + content;
+            Content = s + Content;
         }
 
         /// <summary>
-        /// Prepends a string to this string.
+        ///     Prepends a string to this string.
         /// </summary>
         /// <param name="s">The string to prepend.</param>
         public void Prepend(NSString s)
@@ -118,38 +125,44 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="Claunia.PropertyList.NSString"/>.
+        ///     Determines whether the specified <see cref="System.Object" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSString" />.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="Claunia.PropertyList.NSString"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
-        /// <see cref="Claunia.PropertyList.NSString"/>; otherwise, <c>false</c>.</returns>
-        public override bool Equals(Object obj)
+        /// <param name="obj">
+        ///     The <see cref="System.Object" /> to compare with the current
+        ///     <see cref="Claunia.PropertyList.NSString" />.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSString" />; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
         {
-            if (!(obj is NSString))
-                return false;
-            return content.Equals(((NSString)obj).content);
+            if(!(obj is NSString)) return false;
+
+            return Content.Equals(((NSString)obj).Content);
         }
 
         /// <summary>
-        /// Serves as a hash function for a <see cref="Claunia.PropertyList.NSString"/> object.
+        ///     Serves as a hash function for a <see cref="Claunia.PropertyList.NSString" /> object.
         /// </summary>
-        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
-        /// hash table.</returns>
+        /// <returns>
+        ///     A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        ///     hash table.
+        /// </returns>
         public override int GetHashCode()
         {
-            return content.GetHashCode();
+            return Content.GetHashCode();
         }
 
         /// <summary>
-        /// The textual representation of this NSString.
+        ///     The textual representation of this NSString.
         /// </summary>
         /// <returns>The NSString's contents.</returns>
         public override string ToString()
         {
-            return content;
+            return Content;
         }
-
-        static Encoding asciiEncoder, utf16beEncoder, utf8Encoder;
 
         internal override void ToXml(StringBuilder xml, int level)
         {
@@ -157,17 +170,16 @@ namespace Claunia.PropertyList
             xml.Append("<string>");
 
             //Make sure that the string is encoded in UTF-8 for the XML output
-            lock (typeof(NSString))
+            lock(typeof(NSString))
             {
-                if (utf8Encoder == null)
-                    utf8Encoder = Encoding.GetEncoding("UTF-8");
+                if(utf8Encoder == null) utf8Encoder = Encoding.GetEncoding("UTF-8");
 
                 try
                 {
-                    byte[] bytes = utf8Encoder.GetBytes(content);
-                    content = utf8Encoder.GetString(bytes);
+                    byte[] bytes = utf8Encoder.GetBytes(Content);
+                    Content = utf8Encoder.GetString(bytes);
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     throw new PropertyListException("Could not encode the NSString into UTF-8: " + ex.Message);
                 }
@@ -175,44 +187,43 @@ namespace Claunia.PropertyList
 
             //According to http://www.w3.org/TR/REC-xml/#syntax node values must not
             //contain the characters < or &. Also the > character should be escaped.
-            if (content.Contains("&") || content.Contains("<") || content.Contains(">"))
+            if(Content.Contains("&") || Content.Contains("<") || Content.Contains(">"))
             {
                 xml.Append("<![CDATA[");
-                xml.Append(content.Replace("]]>", "]]]]><![CDATA[>"));
+                xml.Append(Content.Replace("]]>", "]]]]><![CDATA[>"));
                 xml.Append("]]>");
             }
-            else
-            {
-                xml.Append(content);
-            }
+            else xml.Append(Content);
+
             xml.Append("</string>");
         }
 
         internal override void ToBinary(BinaryPropertyListWriter outPlist)
         {
-            int kind;
+            int    kind;
             byte[] byteBuf;
-            lock (typeof(NSString))
+            lock(typeof(NSString))
             {
-                if (asciiEncoder == null)
+                if(asciiEncoder == null)
                     // Not much use, because some characters do not fallback to exception, even if not ASCII
-                    asciiEncoder = Encoding.GetEncoding("ascii", EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback);
+                    asciiEncoder = Encoding.GetEncoding("ascii", EncoderFallback.ExceptionFallback,
+                                                        DecoderFallback.ExceptionFallback);
 
-                if (IsASCIIEncodable(content))
+                if(IsASCIIEncodable(Content))
                 {
-                    kind = 0x5; // standard ASCII
-                    byteBuf = asciiEncoder.GetBytes(content);
+                    kind    = 0x5; // standard ASCII
+                    byteBuf = asciiEncoder.GetBytes(Content);
                 }
                 else
                 {
-                    if (utf16beEncoder == null)
-                        utf16beEncoder = Encoding.BigEndianUnicode;
+                    if(utf16beEncoder == null) utf16beEncoder = Encoding.BigEndianUnicode;
 
-                    kind = 0x6; // UTF-16-BE
-                    byteBuf = utf16beEncoder.GetBytes(content);
+                    kind    = 0x6; // UTF-16-BE
+                    byteBuf = utf16beEncoder.GetBytes(Content);
                 }
             }
-            outPlist.WriteIntHeader(kind, content.Length);
+
+            outPlist.WriteIntHeader(kind, Content.Length);
             outPlist.Write(byteBuf);
         }
 
@@ -224,7 +235,7 @@ namespace Claunia.PropertyList
             //non-ASCII characters are not escaped but simply written into the
             //file, thus actually violating the ASCII plain text format.
             //We will escape the string anyway because current Xcode project files (ASCII property lists) also escape their strings.
-            ascii.Append(EscapeStringForASCII(content));
+            ascii.Append(EscapeStringForASCII(Content));
             ascii.Append("\"");
         }
 
@@ -232,107 +243,75 @@ namespace Claunia.PropertyList
         {
             Indent(ascii, level);
             ascii.Append("\"");
-            ascii.Append(EscapeStringForASCII(content));
+            ascii.Append(EscapeStringForASCII(Content));
             ascii.Append("\"");
         }
 
         /// <summary>
-        /// Escapes a string for use in ASCII property lists.
+        ///     Escapes a string for use in ASCII property lists.
         /// </summary>
         /// <returns>The unescaped string.</returns>
         /// <param name="s">S.</param>
         internal static string EscapeStringForASCII(string s)
         {
             string outString = "";
-            char[] cArray = s.ToCharArray();
-            foreach (char c in cArray)
-            {
-                if (c > 127)
+            char[] cArray    = s.ToCharArray();
+            foreach(char c in cArray)
+                if(c > 127)
                 {
                     //non-ASCII Unicode
                     outString += "\\U";
-                    string hex = String.Format("{0:x}", c);
-                    while (hex.Length < 4)
-                        hex = "0" + hex;
+                    string hex                = string.Format("{0:x}", c);
+                    while(hex.Length < 4) hex = "0" + hex;
                     outString += hex;
                 }
-                else if (c == '\\')
-                {
-                    outString += "\\\\";
-                }
-                else if (c == '\"')
-                {
-                    outString += "\\\"";
-                }
-                else if (c == '\b')
-                {
-                    outString += "\\b";
-                }
-                else if (c == '\n')
-                {
-                    outString += "\\n";
-                }
-                else if (c == '\r')
-                {
-                    outString += "\\r";
-                }
-                else if (c == '\t')
-                {
-                    outString += "\\t";
-                }
-                else
-                {
-                    outString += c;
-                }
-            }
+                else if(c == '\\') outString += "\\\\";
+                else if(c == '\"') outString += "\\\"";
+                else if(c == '\b') outString += "\\b";
+                else if(c == '\n') outString += "\\n";
+                else if(c == '\r') outString += "\\r";
+                else if(c == '\t') outString += "\\t";
+                else outString               += c;
+
             return outString;
         }
 
         /// <summary>
-        /// Compares the current <see cref="Claunia.PropertyList.NSString"/> to the specified object.
+        ///     Determines whether the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSString" />.
         /// </summary>
-        /// <returns>A 32-bit signed integer that indicates the lexical relationship between the two comparands.</returns>
-        /// <param name="o">Object to compare to the current <see cref="Claunia.PropertyList.NSString"/>.</param>
-        public int CompareTo(Object o)
-        {
-            if (o is NSString)
-                return string.Compare(Content, ((NSString)o).Content, StringComparison.Ordinal);
-            if (o is String)
-                return string.Compare(Content, ((String)o), StringComparison.Ordinal);
-            return -1;
-        }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.NSString"/>.
-        /// </summary>
-        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSString"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
-        /// <see cref="Claunia.PropertyList.NSString"/>; otherwise, <c>false</c>.</returns>
+        /// <param name="obj">
+        ///     The <see cref="Claunia.PropertyList.NSObject" /> to compare with the current
+        ///     <see cref="Claunia.PropertyList.NSString" />.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSString" />; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(NSObject obj)
         {
-            if (!(obj is NSString))
-                return false;
+            if(!(obj is NSString)) return false;
 
-            return content == ((NSString)obj).content;
+            return Content == ((NSString)obj).Content;
         }
 
         internal static bool IsASCIIEncodable(string text)
         {
-            foreach (char c in text)
-                if ((int)c > 0x7F)
+            foreach(char c in text)
+                if(c > 0x7F)
                     return false;
+
             return true;
         }
 
-        static public explicit operator string(NSString value)
+        public static explicit operator string(NSString value)
         {
-            return value.content;
+            return value.Content;
         }
 
-        static public explicit operator NSString(string value)
+        public static explicit operator NSString(string value)
         {
             return new NSString(value);
         }
     }
 }
-

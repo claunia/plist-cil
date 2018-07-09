@@ -22,20 +22,22 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
 using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Claunia.PropertyList
 {
     /// <summary>
-    /// <para>
-    /// A set is an interface to an unordered collection of objects.
-    /// </para><para>
-    /// This implementation uses a <see cref="List{NSObject}"/>as the underlying
-    /// data structure.
-    /// </para>
+    ///     <para>
+    ///         A set is an interface to an unordered collection of objects.
+    ///     </para>
+    ///     <para>
+    ///         This implementation uses a <see cref="List{T}" />as the underlying
+    ///         data structure.
+    ///     </para>
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
@@ -46,7 +48,7 @@ namespace Claunia.PropertyList
         bool ordered;
 
         /// <summary>
-        /// Creates an empty unordered set.
+        ///     Creates an empty unordered set.
         /// </summary>
         public NSSet()
         {
@@ -54,18 +56,17 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Creates an empty set.
+        ///     Creates an empty set.
         /// </summary>
         /// <param name="ordered">Should the set be ordered on operations?</param>
         public NSSet(bool ordered)
         {
             this.ordered = ordered;
-            set = new List<NSObject>();
+            set          = new List<NSObject>();
         }
 
-
         /// <summary>
-        /// Creates a set and fill it with the given objects.
+        ///     Creates a set and fill it with the given objects.
         /// </summary>
         /// <param name="objects">The objects to populate the set.</param>
         public NSSet(params NSObject[] objects)
@@ -74,73 +75,87 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Creates a set and fill it with the given objects.
+        ///     Creates a set and fill it with the given objects.
         /// </summary>
         /// <param name="objects">The objects to populate the set.</param>
         /// <param name="ordered">Should the set be ordered on operations?</param>
         public NSSet(bool ordered, params NSObject[] objects)
         {
             this.ordered = ordered;
-            set = new List<NSObject>(objects);
-            if (ordered)
-                set.Sort();
+            set          = new List<NSObject>(objects);
+            if(ordered) set.Sort();
         }
 
         /// <summary>
-        /// Adds an object to the set.
+        ///     Gets the number of elements in the set.
+        /// </summary>
+        /// <value>The number of elements in the set.</value>
+        public int Count
+        {
+            get
+            {
+                lock(set) return set.Count;
+            }
+        }
+
+        /// <summary>
+        ///     Returns an enumerator object that lets you iterate over all elements of the set.
+        ///     This is the equivalent to <c>objectEnumerator</c> in the Cocoa implementation
+        ///     of NSSet.
+        /// </summary>
+        /// <returns>The iterator for the set.</returns>
+        public IEnumerator GetEnumerator()
+        {
+            lock(set) return set.GetEnumerator();
+        }
+
+        /// <summary>
+        ///     Adds an object to the set.
         /// </summary>
         /// <param name="obj">The object to add.</param>
         public void AddObject(NSObject obj)
         {
-            lock (set)
+            lock(set)
             {
                 set.Add(obj);
-                if (ordered)
-                    set.Sort();
+                if(ordered) set.Sort();
             }
         }
 
         /// <summary>
-        /// Removes an object from the set.
+        ///     Removes an object from the set.
         /// </summary>
         /// <param name="obj">The object to remove.</param>
         public void RemoveObject(NSObject obj)
         {
-            lock (set)
+            lock(set)
             {
                 set.Remove(obj);
-                if (ordered)
-                    set.Sort();
+                if(ordered) set.Sort();
             }
         }
 
         /// <summary>
-        /// Returns all objects contained in the set.
+        ///     Returns all objects contained in the set.
         /// </summary>
         /// <returns>An array of all objects in the set.</returns>
         public NSObject[] AllObjects()
         {
-            lock (set)
-            {
-                return set.ToArray();
-            }
+            lock(set) return set.ToArray();
         }
 
         /// <summary>
-        /// Returns one of the objects in the set, or <c>null</c>
-        /// if the set contains no objects.
+        ///     Returns one of the objects in the set, or <c>null</c>
+        ///     if the set contains no objects.
         /// </summary>
         /// <returns>The first object in the set, or <c>null</c> if the set is empty.</returns>
         public NSObject AnyObject()
         {
-            lock (set)
-            {
-                return set.Count == 0 ? null : set[0];
-            }
+            lock(set) return set.Count == 0 ? null : set[0];
         }
 
         /// <summary>
-        /// Finds out whether a given object is contained in the set.
+        ///     Finds out whether a given object is contained in the set.
         /// </summary>
         /// <returns><c>true</c>, when the object was found, <c>false</c> otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
@@ -150,76 +165,59 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Determines whether the set contains an object equal to a given object
-        /// and returns that object if it is present.
+        ///     Determines whether the set contains an object equal to a given object
+        ///     and returns that object if it is present.
         /// </summary>
         /// <param name="obj">The object to look for.</param>
         /// <returns>The object if it is present, <c>null</c> otherwise.</returns>
         public NSObject Member(NSObject obj)
         {
-            lock (set)
+            lock(set)
             {
-                foreach (NSObject o in set)
-                {
-                    if (o.Equals(obj))
+                foreach(NSObject o in set)
+                    if(o.Equals(obj))
                         return o;
-                }
+
                 return null;
             }
         }
 
         /// <summary>
-        /// Finds out whether at least one object is present in both sets.
+        ///     Finds out whether at least one object is present in both sets.
         /// </summary>
         /// <returns><c>true</c> if the intersection of both sets is empty, <c>false</c> otherwise.</returns>
         /// <param name="otherSet">The other set.</param>
         public bool IntersectsSet(NSSet otherSet)
         {
-            lock (set)
+            lock(set)
             {
-                foreach (NSObject o in set)
-                {
-                    if (otherSet.ContainsObject(o))
+                foreach(NSObject o in set)
+                    if(otherSet.ContainsObject(o))
                         return true;
-                }
+
                 return false;
             }
         }
 
         /// <summary>
-        /// Finds out if this set is a subset of the given set.
+        ///     Finds out if this set is a subset of the given set.
         /// </summary>
         /// <returns><c>true</c> if all elements in this set are also present in the other set, <c>false</c>otherwise.</returns>
         /// <param name="otherSet">The other set.</param>
         public bool IsSubsetOfSet(NSSet otherSet)
         {
-            lock (set)
+            lock(set)
             {
-                foreach (NSObject o in set)
-                {
-                    if (!otherSet.ContainsObject(o))
+                foreach(NSObject o in set)
+                    if(!otherSet.ContainsObject(o))
                         return false;
-                }
+
                 return true;
             }
         }
 
         /// <summary>
-        /// Returns an enumerator object that lets you iterate over all elements of the set.
-        /// This is the equivalent to <c>objectEnumerator</c> in the Cocoa implementation
-        /// of NSSet.
-        /// </summary>
-        /// <returns>The iterator for the set.</returns>
-        public IEnumerator GetEnumerator()
-        {
-            lock (set)
-            {
-                return set.GetEnumerator();
-            }
-        }
-
-        /// <summary>
-        /// Gets the underlying data structure in which this NSSets stores its content.
+        ///     Gets the underlying data structure in which this NSSets stores its content.
         /// </summary>
         /// <returns>A Set object.</returns>
         internal List<NSObject> GetSet()
@@ -228,10 +226,12 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Serves as a hash function for a <see cref="Claunia.PropertyList.NSSet"/> object.
+        ///     Serves as a hash function for a <see cref="Claunia.PropertyList.NSSet" /> object.
         /// </summary>
-        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
-        /// hash table.</returns>
+        /// <returns>
+        ///     A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        ///     hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             int hash = 7;
@@ -240,44 +240,31 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="Claunia.PropertyList.NSSet"/>.
+        ///     Determines whether the specified <see cref="System.Object" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSSet" />.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="Claunia.PropertyList.NSSet"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
-        /// <see cref="Claunia.PropertyList.NSSet"/>; otherwise, <c>false</c>.</returns>
-        public override bool Equals(Object obj)
+        /// <param name="obj">
+        ///     The <see cref="System.Object" /> to compare with the current
+        ///     <see cref="Claunia.PropertyList.NSSet" />.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSSet" />; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
-                return false;
-            }
-            if (GetType() != obj.GetType())
-            {
-                return false;
-            }
+            if(obj == null) return false;
+
+            if(GetType() != obj.GetType()) return false;
+
             NSSet other = (NSSet)obj;
             return !(set != other.set && (set == null || !set.Equals(other.set)));
         }
 
         /// <summary>
-        /// Gets the number of elements in the set.
-        /// </summary>
-        /// <value>The number of elements in the set.</value>
-        public int Count
-        {
-            get
-            {
-                lock (set)
-                {
-                    return set.Count;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns the XML representantion for this set.
-        /// There is no official XML representation specified for sets.
-        /// In this implementation it is represented by an array.
+        ///     Returns the XML representantion for this set.
+        ///     There is no official XML representation specified for sets.
+        ///     In this implementation it is represented by an array.
         /// </summary>
         /// <param name="xml">The XML StringBuilder</param>
         /// <param name="level">The indentation level</param>
@@ -285,14 +272,14 @@ namespace Claunia.PropertyList
         {
             Indent(xml, level);
             xml.Append("<array>");
-            xml.Append(NSObject.NEWLINE);
-            if (ordered)
-                set.Sort();
-            foreach (NSObject o in set)
+            xml.Append(NEWLINE);
+            if(ordered) set.Sort();
+            foreach(NSObject o in set)
             {
                 o.ToXml(xml, level + 1);
-                xml.Append(NSObject.NEWLINE);
+                xml.Append(NEWLINE);
             }
+
             Indent(xml, level);
             xml.Append("</array>");
         }
@@ -300,49 +287,40 @@ namespace Claunia.PropertyList
         internal override void AssignIDs(BinaryPropertyListWriter outPlist)
         {
             base.AssignIDs(outPlist);
-            foreach (NSObject obj in set)
-            {
-                obj.AssignIDs(outPlist);
-            }
+            foreach(NSObject obj in set) obj.AssignIDs(outPlist);
         }
 
         internal override void ToBinary(BinaryPropertyListWriter outPlist)
         {
-            if (ordered)
+            if(ordered)
             {
                 set.Sort();
                 outPlist.WriteIntHeader(0xB, set.Count);
             }
-            else
-            {
-                outPlist.WriteIntHeader(0xC, set.Count);
-            }
-            foreach (NSObject obj in set)
-            {
-                outPlist.WriteID(outPlist.GetID(obj));
-            }
+            else outPlist.WriteIntHeader(0xC, set.Count);
+
+            foreach(NSObject obj in set) outPlist.WriteID(outPlist.GetID(obj));
         }
 
         /// <summary>
-        /// Returns the ASCII representation of this set.
-        /// There is no official ASCII representation for sets.
-        /// In this implementation sets are represented as arrays.
+        ///     Returns the ASCII representation of this set.
+        ///     There is no official ASCII representation for sets.
+        ///     In this implementation sets are represented as arrays.
         /// </summary>
         /// <param name="ascii">The ASCII file string builder</param>
         /// <param name="level">The indentation level</param>
         internal override void ToASCII(StringBuilder ascii, int level)
         {
             Indent(ascii, level);
-            if (ordered)
-                set.Sort();
+            if(ordered) set.Sort();
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
             int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE, StringComparison.Ordinal);
-            for (int i = 0; i < array.Length; i++)
+            for(int i = 0; i < array.Length; i++)
             {
                 Type objClass = array[i].GetType();
-                if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
-                    && indexOfLastNewLine != ascii.Length)
+                if((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) ||
+                    objClass.Equals(typeof(NSData))) && indexOfLastNewLine != ascii.Length)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
@@ -350,43 +328,41 @@ namespace Claunia.PropertyList
                 }
                 else
                 {
-                    if (i != 0)
-                        ascii.Append(" ");
+                    if(i != 0) ascii.Append(" ");
                     array[i].ToASCII(ascii, 0);
                 }
 
-                if (i != array.Length - 1)
-                    ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
+                if(i != array.Length - 1) ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
 
-                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
+                if(ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
                 }
             }
+
             ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
         }
 
         /// <summary>
-        /// Returns the ASCII representation of this set according to the GnuStep format.
-        /// There is no official ASCII representation for sets.
-        /// In this implementation sets are represented as arrays.
+        ///     Returns the ASCII representation of this set according to the GnuStep format.
+        ///     There is no official ASCII representation for sets.
+        ///     In this implementation sets are represented as arrays.
         /// </summary>
         /// <param name="ascii">The ASCII file string builder</param>
         /// <param name="level">The indentation level</param>
         internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
         {
             Indent(ascii, level);
-            if (ordered)
-                set.Sort();
+            if(ordered) set.Sort();
             NSObject[] array = AllObjects();
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
             int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE, StringComparison.Ordinal);
-            for (int i = 0; i < array.Length; i++)
+            for(int i = 0; i < array.Length; i++)
             {
                 Type objClass = array[i].GetType();
-                if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
-                    && indexOfLastNewLine != ascii.Length)
+                if((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) ||
+                    objClass.Equals(typeof(NSData))) && indexOfLastNewLine != ascii.Length)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
@@ -394,43 +370,45 @@ namespace Claunia.PropertyList
                 }
                 else
                 {
-                    if (i != 0)
-                        ascii.Append(" ");
+                    if(i != 0) ascii.Append(" ");
                     array[i].ToASCIIGnuStep(ascii, 0);
                 }
 
-                if (i != array.Length - 1)
-                    ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
+                if(i != array.Length - 1) ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
 
-                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
+                if(ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
                 }
             }
+
             ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.NSSet"/>.
+        ///     Determines whether the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSSet" />.
         /// </summary>
-        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSSet"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
-        /// <see cref="Claunia.PropertyList.NSSet"/>; otherwise, <c>false</c>.</returns>
+        /// <param name="obj">
+        ///     The <see cref="Claunia.PropertyList.NSObject" /> to compare with the current
+        ///     <see cref="Claunia.PropertyList.NSSet" />.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSSet" />; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(NSObject obj)
         {
-            if (!(obj is NSSet))
-                return false;
+            if(!(obj is NSSet)) return false;
 
-            if (set.Count != ((NSSet)obj).Count)
-                return false;
+            if(set.Count != ((NSSet)obj).Count) return false;
 
-            foreach (NSObject objS in (NSSet)obj)
-                if (!set.Contains(objS))
+            foreach(NSObject objS in (NSSet)obj)
+                if(!set.Contains(objS))
                     return false;
 
             return true;
         }
     }
 }
-

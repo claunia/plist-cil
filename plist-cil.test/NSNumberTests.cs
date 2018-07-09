@@ -1,12 +1,5 @@
 ﻿using Claunia.PropertyList;
 using Xunit;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace plistcil.test
 {
@@ -15,15 +8,15 @@ namespace plistcil.test
         [Fact]
         public static void NSNumberConstructorTest()
         {
-            var number = new NSNumber("10032936613", NSNumber.INTEGER);
+            NSNumber number = new NSNumber("10032936613", NSNumber.INTEGER);
             Assert.Equal(NSNumber.INTEGER, number.GetNSNumberType());
-            Assert.Equal(10032936613, number.ToObject());
+            Assert.Equal(10032936613,      number.ToObject());
         }
 
         [Fact]
         public static void NSNumberWithDecimalTest()
         {
-            var number = new NSNumber("1360155352.748765", NSNumber.REAL);
+            NSNumber number = new NSNumber("1360155352.748765", NSNumber.REAL);
             Assert.Equal("1360155352.748765", number.ToString());
         }
 
@@ -33,12 +26,12 @@ namespace plistcil.test
         // <key>TimeZoneOffsetFromUTC</key>
         // <real>7200.000000</real>
 
-#if !NETCORE
+        #if !NETCORE
         [Fact]
         [UseCulture("en-US")]
         public static void ParseNumberEnTest()
         {
-            var number = new NSNumber("7200.000001");
+            NSNumber number = new NSNumber("7200.000001");
             Assert.True(number.isReal());
             Assert.Equal(7200.000001d, number.ToDouble());
         }
@@ -50,7 +43,7 @@ namespace plistcil.test
             // As seen in a real property list:
             // <key>TimeZoneOffsetFromUTC</key>
             // <real>7200.000000</real>
-            var number = new NSNumber("7200.000001");
+            NSNumber number = new NSNumber("7200.000001");
             Assert.True(number.isReal());
             Assert.Equal(7200.000001d, number.ToDouble());
         }
@@ -62,7 +55,7 @@ namespace plistcil.test
             // As seen in a real property list:
             // <key>TimeZoneOffsetFromUTC</key>
             // <real>7200.000000</real>
-            var number = new NSNumber("7200.000000", NSNumber.REAL);
+            NSNumber number = new NSNumber("7200.000000", NSNumber.REAL);
             Assert.True(number.isReal());
             Assert.Equal(7200d, number.ToDouble());
         }
@@ -74,10 +67,10 @@ namespace plistcil.test
             // As seen in a real property list:
             // <key>TimeZoneOffsetFromUTC</key>
             // <real>7200.000000</real>
-            var number = new NSNumber("7200.000000", NSNumber.REAL);
+            NSNumber number = new NSNumber("7200.000000", NSNumber.REAL);
             Assert.True(number.isReal());
             Assert.Equal(7200d, number.ToDouble());
         }
-#endif
+        #endif
     }
 }

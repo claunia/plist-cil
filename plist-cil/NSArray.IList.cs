@@ -18,121 +18,108 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using System;
+
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Claunia.PropertyList
 {
     partial class NSArray : IList<NSObject>
     {
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public NSObject this[int index]
         {
-            get
-            {
-                return this.array[index];
-            }
+            get => array[index];
 
-            set
-            {
-                this.array[index] = value;
-            }
+            set => array[index] = value;
         }
 
-        /// <inheritdoc/>
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        /// <inheritdoc />
+        public bool IsReadOnly => false;
 
-        public void Add(object item)
-        {
-            this.Add(NSObject.Wrap(item));
-        }
-
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Add(NSObject item)
         {
-            this.array.Add(item);
+            array.Add(item);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Clear()
         {
-            this.array.Clear();
+            array.Clear();
         }
 
-        public bool Contains(object item)
-        {
-            return this.Contains(NSObject.Wrap(item));
-        }
-
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool Contains(NSObject item)
         {
-            return this.array.Contains(item);
+            return array.Contains(item);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void CopyTo(NSObject[] array, int arrayIndex)
         {
             this.array.CopyTo(array, arrayIndex);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IEnumerator<NSObject> GetEnumerator()
         {
-            return this.array.GetEnumerator();
+            return array.GetEnumerator();
+        }
+
+        /// <inheritdoc />
+        public int IndexOf(NSObject item)
+        {
+            return array.IndexOf(item);
+        }
+
+        /// <inheritdoc />
+        public void Insert(int index, NSObject item)
+        {
+            array.Insert(index, item);
+        }
+
+        /// <inheritdoc />
+        public bool Remove(NSObject item)
+        {
+            return array.Remove(item);
+        }
+
+        /// <inheritdoc />
+        public void RemoveAt(int index)
+        {
+            array.RemoveAt(index);
+        }
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return array.GetEnumerator();
+        }
+
+        public void Add(object item)
+        {
+            Add(Wrap(item));
+        }
+
+        public bool Contains(object item)
+        {
+            return Contains(Wrap(item));
         }
 
         public int IndexOf(object item)
         {
-            return this.array.IndexOf(NSObject.Wrap(item));
-        }
-
-        /// <inheritdoc/>
-        public int IndexOf(NSObject item)
-        {
-            return this.array.IndexOf(item);
+            return array.IndexOf(Wrap(item));
         }
 
         public void Insert(int index, object item)
         {
-            this.Insert(index, NSObject.Wrap(item));
-        }
-
-        /// <inheritdoc/>
-        public void Insert(int index, NSObject item)
-        {
-            this.array.Insert(index, item);
+            Insert(index, Wrap(item));
         }
 
         public bool Remove(object item)
         {
-            return this.Remove(NSObject.Wrap(item));
-        }
-
-        /// <inheritdoc/>
-        public bool Remove(NSObject item)
-        {
-            return this.array.Remove(item);
-        }
-
-        /// <inheritdoc/>
-        public void RemoveAt(int index)
-        {
-            this.array.RemoveAt(index);
-        }
-
-        /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.array.GetEnumerator();
+            return Remove(Wrap(item));
         }
     }
 }

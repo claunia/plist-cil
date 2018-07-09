@@ -3,10 +3,8 @@
 // </copyright>
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -14,113 +12,101 @@ using Xunit;
 namespace plistcil.test
 {
     /// <summary>
-    /// A <see cref="Stream"/> which writes its output to a <see cref="Stream"/> and validates that the data which
-    /// is being written to the output stream matches the data in a reference stream.
+    ///     A <see cref="Stream" /> which writes its output to a <see cref="Stream" /> and validates that the data which
+    ///     is being written to the output stream matches the data in a reference stream.
     /// </summary>
-    internal class ValidatingStream : Stream
+    class ValidatingStream : Stream
     {
-        private Stream output;
-        private Stream expectedOutput;
+        Stream expectedOutput;
+        Stream output;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ValidatingCompositeStream"/> class.
+        ///     Initializes a new instance of the <see cref="ValidatingCompositeStream" /> class.
         /// </summary>
         /// <param name="output">
-        /// The <see cref="Stream"/> to which to write data.
+        ///     The <see cref="Stream" /> to which to write data.
         /// </param>
         /// <param name="expectedOutput">
-        /// The reference stream for <paramref name="output"/>.
+        ///     The reference stream for <paramref name="output" />.
         /// </param>
         public ValidatingStream(Stream output, Stream expectedOutput)
         {
-            this.output = output ?? throw new ArgumentNullException(nameof(output));
+            this.output         = output         ?? throw new ArgumentNullException(nameof(output));
             this.expectedOutput = expectedOutput ?? throw new ArgumentNullException(nameof(expectedOutput));
         }
 
-        /// <inheritdoc/>
-        public override bool CanRead
-        {
-            get { return false; }
-        }
+        /// <inheritdoc />
+        public override bool CanRead => false;
 
-        /// <inheritdoc/>
-        public override bool CanSeek
-        {
-            get { return false; }
-        }
+        /// <inheritdoc />
+        public override bool CanSeek => false;
 
-        /// <inheritdoc/>
-        public override bool CanWrite
-        {
-            get { return true; }
-        }
+        /// <inheritdoc />
+        public override bool CanWrite => true;
 
-        /// <inheritdoc/>
-        public override long Length
-        {
-            get { return this.output.Length; }
-        }
+        /// <inheritdoc />
+        public override long Length => output.Length;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override long Position
         {
-            get { return this.output.Position; }
-            set { throw new NotImplementedException(); }
+            get => output.Position;
+            set => throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void Flush()
         {
-            this.output.Flush();
+            output.Flush();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override int Read(byte[] buffer, int offset, int count)
         {
             throw new NotSupportedException();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             throw new NotSupportedException();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void SetLength(long value)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void Write(byte[] buffer, int offset, int count)
         {
             byte[] expected = new byte[buffer.Length];
-            this.expectedOutput.Read(expected, offset, count);
+            expectedOutput.Read(expected, offset, count);
 
-            byte[] bufferChunk = buffer.Skip(offset).Take(count).ToArray();
+            byte[] bufferChunk   = buffer.Skip(offset).Take(count).ToArray();
             byte[] expectedChunk = expected.Skip(offset).Take(count).ToArray();
 
             // Make sure the data being writen matches the data which was written to the expected stream.
             // This will detect any errors as the invalid data is being written out - as opposed to post-
             // test binary validation.
             Assert.Equal(expectedChunk, bufferChunk);
-            this.output.Write(buffer, offset, count);
+            output.Write(buffer, offset, count);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             byte[] expected = new byte[buffer.Length];
-            await this.expectedOutput.ReadAsync(expected, offset, count, cancellationToken).ConfigureAwait(false);
+            await expectedOutput.ReadAsync(expected, offset, count, cancellationToken).ConfigureAwait(false);
 
-            byte[] bufferChunk = buffer.Skip(offset).Take(count).ToArray();
+            byte[] bufferChunk   = buffer.Skip(offset).Take(count).ToArray();
             byte[] expectedChunk = expected.Skip(offset).Take(count).ToArray();
 
             // Make sure the data being writen matches the data which was written to the expected stream.
@@ -128,7 +114,7 @@ namespace plistcil.test
             // test binary validation.
             Assert.Equal(expectedChunk, bufferChunk);
 
-            await this.output.WriteAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
+            await output.WriteAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
         }
     }
 }

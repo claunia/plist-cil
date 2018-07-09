@@ -22,22 +22,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using System.Xml;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 
 namespace Claunia.PropertyList
 {
     /// <summary>
-    /// Parses XML property lists.
+    ///     Parses XML property lists.
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
     public static class XmlPropertyListParser
     {
         /// <summary>
-        /// Parses a XML property list file.
+        ///     Parses a XML property list file.
         /// </summary>
         /// <param name="f">The XML property list file.</param>
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
@@ -45,19 +46,17 @@ namespace Claunia.PropertyList
         {
             XmlDocument doc = new XmlDocument();
 
-            var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore };
+            XmlReaderSettings settings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Ignore};
 
-            using (Stream stream = f.OpenRead())
-            using (XmlReader reader = XmlReader.Create(stream, settings))
-            {
-                doc.Load(reader);
-            }
+            using(Stream stream = f.OpenRead())
+                using(XmlReader reader = XmlReader.Create(stream, settings))
+                    doc.Load(reader);
 
             return ParseDocument(doc);
         }
 
         /// <summary>
-        /// Parses a XML property list from a byte array.
+        ///     Parses a XML property list from a byte array.
         /// </summary>
         /// <param name="bytes">The byte array containing the property list's data.</param>
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
@@ -68,7 +67,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Parses a XML property list from an input stream.
+        ///     Parses a XML property list from an input stream.
         /// </summary>
         /// <param name="str">The input stream pointing to the property list's data.</param>
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
@@ -79,16 +78,13 @@ namespace Claunia.PropertyList
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.DtdProcessing = DtdProcessing.Ignore;
 
-            using (XmlReader reader = XmlReader.Create(str, settings))
-            {
-                doc.Load(reader);
-            }
+            using(XmlReader reader = XmlReader.Create(str, settings)) doc.Load(reader);
 
             return ParseDocument(doc);
         }
 
         /// <summary>
-        /// Parses a XML property list from a string.
+        ///     Parses a XML property list from a string.
         /// </summary>
         /// <param name="value">The string pointing to the property list's data.</param>
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
@@ -105,40 +101,35 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Parses the XML document by generating the appropriate NSObjects for each XML node.
+        ///     Parses the XML document by generating the appropriate NSObjects for each XML node.
         /// </summary>
         /// <returns>The root NSObject of the property list contained in the XML document.</returns>
         /// <param name="doc">The XML document.</param>
         static NSObject ParseDocument(XmlDocument doc)
         {
-            var docType = doc.ChildNodes
-                .OfType<XmlNode>()
-                .SingleOrDefault(n => n.NodeType == XmlNodeType.DocumentType);
+            XmlNode docType = doc.ChildNodes.OfType<XmlNode>()
+                                 .SingleOrDefault(n => n.NodeType == XmlNodeType.DocumentType);
 
-            if (docType == null)
+            if(docType == null)
             {
-                if (!doc.DocumentElement.Name.Equals("plist"))
-                {
+                if(!doc.DocumentElement.Name.Equals("plist"))
                     throw new XmlException("The given XML document is not a property list.");
-                }
             }
-            else if (!docType.Name.Equals("plist"))
-            {
+            else if(!docType.Name.Equals("plist"))
                 throw new XmlException("The given XML document is not a property list.");
-            }
 
             XmlNode rootNode;
 
-            if (doc.DocumentElement.Name.Equals("plist"))
+            if(doc.DocumentElement.Name.Equals("plist"))
             {
                 //Root element wrapped in plist tag
                 List<XmlNode> rootNodes = FilterElementNodes(doc.DocumentElement.ChildNodes);
-                if (rootNodes.Count == 0)
+                if(rootNodes.Count == 0)
                     throw new PropertyListFormatException("The given XML property list has no root element!");
-                if (rootNodes.Count == 1)
-                    rootNode = rootNodes[0];
+                if(rootNodes.Count == 1) rootNode = rootNodes[0];
                 else
-                    throw new PropertyListFormatException("The given XML property list has more than one root element!");
+                    throw
+                        new PropertyListFormatException("The given XML property list has more than one root element!");
             }
             else
                 //Root NSObject not wrapped in plist-tag
@@ -148,17 +139,17 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Parses a node in the XML structure and returns the corresponding NSObject
+        ///     Parses a node in the XML structure and returns the corresponding NSObject
         /// </summary>
         /// <returns>The corresponding NSObject.</returns>
         /// <param name="n">The XML node.</param>
         static NSObject ParseObject(XmlNode n)
         {
-            if (n.Name.Equals("dict"))
+            if(n.Name.Equals("dict"))
             {
-                NSDictionary dict = new NSDictionary();
+                NSDictionary  dict     = new NSDictionary();
                 List<XmlNode> children = FilterElementNodes(n.ChildNodes);
-                for (int i = 0; i < children.Count; i += 2)
+                for(int i = 0; i < children.Count; i += 2)
                 {
                     XmlNode key = children[i];
                     XmlNode val = children[i + 1];
@@ -167,78 +158,73 @@ namespace Claunia.PropertyList
 
                     dict.Add(keyString, ParseObject(val));
                 }
+
                 return dict;
             }
-            if (n.Name.Equals("array"))
+
+            if(n.Name.Equals("array"))
             {
                 List<XmlNode> children = FilterElementNodes(n.ChildNodes);
-                NSArray array = new NSArray(children.Count);
-                for (int i = 0; i < children.Count; i++)
-                {
-                    array.Add(ParseObject(children[i]));
-                }
+                NSArray       array    = new NSArray(children.Count);
+                for(int i = 0; i < children.Count; i++) array.Add(ParseObject(children[i]));
                 return array;
             }
-            if (n.Name.Equals("true"))
-                return new NSNumber(true);
-            if (n.Name.Equals("false"))
-                return new NSNumber(false);
-            if (n.Name.Equals("integer"))
-                return new NSNumber(GetNodeTextContents(n), NSNumber.INTEGER);
-            if (n.Name.Equals("real"))
-                return new NSNumber(GetNodeTextContents(n), NSNumber.REAL);
-            if (n.Name.Equals("string"))
-                return new NSString(GetNodeTextContents(n));
-            if (n.Name.Equals("data"))
-                return new NSData(GetNodeTextContents(n));
+
+            if(n.Name.Equals("true")) return new NSNumber(true);
+            if(n.Name.Equals("false")) return new NSNumber(false);
+            if(n.Name.Equals("integer")) return new NSNumber(GetNodeTextContents(n), NSNumber.INTEGER);
+            if(n.Name.Equals("real")) return new NSNumber(GetNodeTextContents(n),    NSNumber.REAL);
+            if(n.Name.Equals("string")) return new NSString(GetNodeTextContents(n));
+            if(n.Name.Equals("data")) return new NSData(GetNodeTextContents(n));
+
             return n.Name.Equals("date") ? new NSDate(GetNodeTextContents(n)) : null;
         }
 
         /// <summary>
-        /// Returns all element nodes that are contained in a list of nodes.
+        ///     Returns all element nodes that are contained in a list of nodes.
         /// </summary>
         /// <returns>The sublist containing only nodes representing actual elements.</returns>
         /// <param name="list">The list of nodes to search.</param>
         static List<XmlNode> FilterElementNodes(XmlNodeList list)
         {
             List<XmlNode> result = new List<XmlNode>();
-            foreach (XmlNode child in list)
-                if (child.NodeType == XmlNodeType.Element)
+            foreach(XmlNode child in list)
+                if(child.NodeType == XmlNodeType.Element)
                     result.Add(child);
             return result;
         }
 
         /// <summary>
-        /// Returns a node's text content.
-        /// This method will return the text value represented by the node's direct children.
-        /// If the given node is a TEXT or CDATA node, then its value is returned.
+        ///     Returns a node's text content.
+        ///     This method will return the text value represented by the node's direct children.
+        ///     If the given node is a TEXT or CDATA node, then its value is returned.
         /// </summary>
         /// <returns>The node's text content.</returns>
         /// <param name="n">The node.</param>
         static string GetNodeTextContents(XmlNode n)
         {
-            if (n.NodeType == XmlNodeType.Text || n.NodeType == XmlNodeType.CDATA)
+            if(n.NodeType == XmlNodeType.Text || n.NodeType == XmlNodeType.CDATA)
             {
                 string content = n.Value; //This concatenates any adjacent text/cdata/entity nodes
                 return content ?? "";
             }
-            if (n.HasChildNodes)
+
+            if(n.HasChildNodes)
             {
                 XmlNodeList children = n.ChildNodes;
 
-                foreach (XmlNode child in children)
-                {
+                foreach(XmlNode child in children)
                     //Skip any non-text nodes, like comments or entities
-                    if (child.NodeType == XmlNodeType.Text || child.NodeType == XmlNodeType.CDATA)
+                    if(child.NodeType == XmlNodeType.Text || child.NodeType == XmlNodeType.CDATA)
                     {
                         string content = child.Value; //This concatenates any adjacent text/cdata/entity nodes
                         return content ?? "";
                     }
-                }
+
                 return "";
             }
+
             return "";
         }
     }
 }
-

@@ -22,15 +22,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Claunia.PropertyList
 {
     /// <summary>
-    /// Represents an Array.
+    ///     Represents an Array.
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
@@ -39,7 +39,7 @@ namespace Claunia.PropertyList
         List<NSObject> array;
 
         /// <summary>
-        /// Creates an empty array of the given length.
+        ///     Creates an empty array of the given length.
         /// </summary>
         /// <param name="length">The number of elements this array will be able to hold.</param>
         public NSArray(int length)
@@ -48,7 +48,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Creates a array from an existing one
+        ///     Creates a array from an existing one
         /// </summary>
         /// <param name="a">The array which should be wrapped by the NSArray.</param>
         public NSArray(params NSObject[] a)
@@ -57,7 +57,13 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Returns the object stored at the given index.
+        ///     Returns the size of the array.
+        /// </summary>
+        /// <value>The number of elements that this array can store.</value>
+        public int Count => array.Count;
+
+        /// <summary>
+        ///     Returns the object stored at the given index.
         /// </summary>
         /// <returns>The object at the given index.</returns>
         /// <param name="i">The index of the object.</param>
@@ -68,33 +74,33 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Remove the i-th element from the array.
-        /// The array will be resized.
+        ///     Remove the i-th element from the array.
+        ///     The array will be resized.
         /// </summary>
         /// <param name="i">The index of the object</param>
         [Obsolete]
         public void Remove(int i)
         {
-            this.array.RemoveAt(i);
+            array.RemoveAt(i);
         }
 
         /// <summary>
-        /// Stores an object at the specified index.
-        /// If there was another object stored at that index it will be replaced.
+        ///     Stores an object at the specified index.
+        ///     If there was another object stored at that index it will be replaced.
         /// </summary>
         /// <param name="key">The index where to store the object.</param>
         /// <param name="value">The object.</param>
         [Obsolete]
-        public void SetValue(int key, Object value)
+        public void SetValue(int key, object value)
         {
-            if (value == null)
-                throw new ArgumentNullException("value", "Cannot add null values to an NSArray!");
-            array[key] = NSObject.Wrap(value);
+            if(value == null) throw new ArgumentNullException("value", "Cannot add null values to an NSArray!");
+
+            array[key] = Wrap(value);
         }
 
         /// <summary>
-        /// Returns the array of NSObjects represented by this NSArray.
-        /// Any changes to the values of this array will also affect the NSArray.
+        ///     Returns the array of NSObjects represented by this NSArray.
+        ///     Any changes to the values of this array will also affect the NSArray.
         /// </summary>
         /// <returns>The actual array represented by this NSArray.</returns>
         [Obsolete]
@@ -104,82 +110,61 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Returns the size of the array.
-        /// </summary>
-        /// <value>The number of elements that this array can store.</value>
-        public int Count
-        {
-            get
-            {
-                return array.Count;
-            }
-        }
-
-        /// <summary>
-        /// Checks whether an object is present in the array or whether it is equal
-        /// to any of the objects in the array.
+        ///     Checks whether an object is present in the array or whether it is equal
+        ///     to any of the objects in the array.
         /// </summary>
         /// <returns><c>true</c>, when the object could be found. <c>false</c> otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
         [Obsolete]
-        public bool ContainsObject(Object obj)
+        public bool ContainsObject(object obj)
         {
-            NSObject nso = NSObject.Wrap(obj);
-            foreach (NSObject elem in array)
-            {
-                if (elem.Equals(nso))
-                {
+            NSObject nso = Wrap(obj);
+            foreach(NSObject elem in array)
+                if(elem.Equals(nso))
                     return true;
-                }
-            }
+
             return false;
         }
 
         /// <summary>
-        /// Searches for an object in the array. If it is found its index will be
-        /// returned. This method also returns an index if the object is not the same
-        /// as the one stored in the array but has equal contents.
+        ///     Searches for an object in the array. If it is found its index will be
+        ///     returned. This method also returns an index if the object is not the same
+        ///     as the one stored in the array but has equal contents.
         /// </summary>
         /// <returns>The index of the object, if it was found. -1 otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
         [Obsolete]
-        public int IndexOfObject(Object obj)
+        public int IndexOfObject(object obj)
         {
-            NSObject nso = NSObject.Wrap(obj);
-            for (int i = 0; i < array.Count; i++)
-            {
-                if (array[i].Equals(nso))
-                {
+            NSObject nso = Wrap(obj);
+            for(int i = 0; i < array.Count; i++)
+                if(array[i].Equals(nso))
                     return i;
-                }
-            }
+
             return -1;
         }
 
         /// <summary>
-        /// Searches for an object in the array. If it is found its index will be
-        /// returned. This method only returns the index of an object that is
-        /// <b>identical</b> to the given one. Thus objects that might contain the
-        /// same value as the given one will not be considered.
+        ///     Searches for an object in the array. If it is found its index will be
+        ///     returned. This method only returns the index of an object that is
+        ///     <b>identical</b> to the given one. Thus objects that might contain the
+        ///     same value as the given one will not be considered.
         /// </summary>
         /// <returns>The index of the object, if it was found. -1 otherwise.</returns>
         /// <param name="obj">The object to look for.</param>
         [Obsolete]
-        public int IndexOfIdenticalObject(Object obj)
+        public int IndexOfIdenticalObject(object obj)
         {
-            NSObject nso = NSObject.Wrap(obj);
-            for (int i = 0; i < array.Count; i++)
-            {
-                if (array[i] == nso)
-                {
+            NSObject nso = Wrap(obj);
+            for(int i = 0; i < array.Count; i++)
+                if(array[i] == nso)
                     return i;
-                }
-            }
+
             return -1;
         }
 
         /// <summary>
-        /// Returns the last object contained in this array.
+        ///     Returns the last object contained in this array.
         /// </summary>
         /// <returns>The value of the highest index in the array.</returns>
         public NSObject LastObject()
@@ -188,8 +173,8 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// Returns a new array containing only the values stored at the given
-        /// indices. The values are sorted by their index.
+        ///     Returns a new array containing only the values stored at the given
+        ///     indices. The values are sorted by their index.
         /// </summary>
         /// <returns>The new array containing the objects stored at the given indices.</returns>
         /// <param name="indexes">The indices of the objects.</param>
@@ -197,39 +182,39 @@ namespace Claunia.PropertyList
         {
             NSObject[] result = new NSObject[indexes.Length];
             Array.Sort(indexes);
-            for (int i = 0; i < indexes.Length; i++)
-                result[i] = array[indexes[i]];
+            for(int i = 0; i < indexes.Length; i++) result[i] = array[indexes[i]];
             return result;
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="Claunia.PropertyList.NSArray"/>.
+        ///     Determines whether the specified <see cref="System.Object" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSArray" />.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="Claunia.PropertyList.NSArray"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
-        /// <see cref="Claunia.PropertyList.NSArray"/>; otherwise, <c>false</c>.</returns>
-        public override bool Equals(Object obj)
+        /// <param name="obj">
+        ///     The <see cref="System.Object" /> to compare with the current
+        ///     <see cref="Claunia.PropertyList.NSArray" />.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSArray" />; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
         {
-            if (obj.GetType().Equals(typeof(NSArray)))
-            {
-                return ArrayEquals(((NSArray)obj), this);
-            }
-            else
-            {
-                NSObject nso = NSObject.Wrap(obj);
-                if (nso.GetType().Equals(typeof(NSArray)))
-                {
-                    return ArrayEquals(((NSArray)nso), this);
-                }
-            }
+            if(obj.GetType().Equals(typeof(NSArray))) return ArrayEquals((NSArray)obj, this);
+
+            NSObject nso = Wrap(obj);
+            if(nso.GetType().Equals(typeof(NSArray))) return ArrayEquals((NSArray)nso, this);
+
             return false;
         }
 
         /// <summary>
-        /// Serves as a hash function for a <see cref="Claunia.PropertyList.NSArray"/> object.
+        ///     Serves as a hash function for a <see cref="Claunia.PropertyList.NSArray" /> object.
         /// </summary>
-        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
-        /// hash table.</returns>
+        /// <returns>
+        ///     A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        ///     hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             int hash = 7;
@@ -241,12 +226,13 @@ namespace Claunia.PropertyList
         {
             Indent(xml, level);
             xml.Append("<array>");
-            xml.Append(NSObject.NEWLINE);
-            foreach (NSObject o in array)
+            xml.Append(NEWLINE);
+            foreach(NSObject o in array)
             {
                 o.ToXml(xml, level + 1);
-                xml.Append(NSObject.NEWLINE);
+                xml.Append(NEWLINE);
             }
+
             Indent(xml, level);
             xml.Append("</array>");
         }
@@ -254,30 +240,26 @@ namespace Claunia.PropertyList
         internal override void AssignIDs(BinaryPropertyListWriter outPlist)
         {
             base.AssignIDs(outPlist);
-            foreach (NSObject obj in array)
-            {
-                obj.AssignIDs(outPlist);
-            }
+            foreach(NSObject obj in array) obj.AssignIDs(outPlist);
         }
 
         internal override void ToBinary(BinaryPropertyListWriter outPlist)
         {
             outPlist.WriteIntHeader(0xA, array.Count);
-            foreach (NSObject obj in array)
-            {
-                outPlist.WriteID(outPlist.GetID(obj));
-            }
+            foreach(NSObject obj in array) outPlist.WriteID(outPlist.GetID(obj));
         }
 
         /// <summary>
-        /// <para>
-        /// Generates a valid ASCII property list which has this NSArray as its
-        /// root object.
-        /// </para><para>
-        /// The generated property list complies with the format as
-        /// described in https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html
-        /// Property List Programming Guide - Old-Style ASCII Property Lists.
-        /// </para>
+        ///     <para>
+        ///         Generates a valid ASCII property list which has this NSArray as its
+        ///         root object.
+        ///     </para>
+        ///     <para>
+        ///         The generated property list complies with the format as
+        ///         described in
+        ///         https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html
+        ///         Property List Programming Guide - Old-Style ASCII Property Lists.
+        ///     </para>
         /// </summary>
         /// <returns>ASCII representation of this object.</returns>
         public string ToASCIIPropertyList()
@@ -289,14 +271,16 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        /// <para>
-        /// Generates a valid ASCII property list in GnuStep format which has this
-        /// NSArray as its root object.
-        /// </para><para>
-        /// The generated property list complies with
-        /// the format as described in http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html
-        /// GnuStep - NSPropertyListSerialization class documentation.
-        /// </para>
+        ///     <para>
+        ///         Generates a valid ASCII property list in GnuStep format which has this
+        ///         NSArray as its root object.
+        ///     </para>
+        ///     <para>
+        ///         The generated property list complies with
+        ///         the format as described in
+        ///         http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html
+        ///         GnuStep - NSPropertyListSerialization class documentation.
+        ///     </para>
         /// </summary>
         /// <returns>GnuStep ASCII representation of this object.</returns>
         public string ToGnuStepASCIIPropertyList()
@@ -312,11 +296,11 @@ namespace Claunia.PropertyList
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
             int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE, StringComparison.Ordinal);
-            for (int i = 0; i < array.Count; i++)
+            for(int i = 0; i < array.Count; i++)
             {
                 Type objClass = array[i].GetType();
-                if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
-                    && indexOfLastNewLine != ascii.Length)
+                if((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) ||
+                    objClass.Equals(typeof(NSData))) && indexOfLastNewLine != ascii.Length)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
@@ -324,20 +308,19 @@ namespace Claunia.PropertyList
                 }
                 else
                 {
-                    if (i != 0)
-                        ascii.Append(" ");
+                    if(i != 0) ascii.Append(" ");
                     array[i].ToASCII(ascii, 0);
                 }
 
-                if (i != array.Count - 1)
-                    ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
+                if(i != array.Count - 1) ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
 
-                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
+                if(ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
                 }
             }
+
             ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
         }
 
@@ -346,11 +329,11 @@ namespace Claunia.PropertyList
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.ARRAY_BEGIN_TOKEN);
             int indexOfLastNewLine = ascii.ToString().LastIndexOf(NEWLINE, StringComparison.Ordinal);
-            for (int i = 0; i < array.Count; i++)
+            for(int i = 0; i < array.Count; i++)
             {
                 Type objClass = array[i].GetType();
-                if ((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) || objClass.Equals(typeof(NSData)))
-                    && indexOfLastNewLine != ascii.Length)
+                if((objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) ||
+                    objClass.Equals(typeof(NSData))) && indexOfLastNewLine != ascii.Length)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
@@ -358,43 +341,45 @@ namespace Claunia.PropertyList
                 }
                 else
                 {
-                    if (i != 0)
-                        ascii.Append(" ");
+                    if(i != 0) ascii.Append(" ");
                     array[i].ToASCIIGnuStep(ascii, 0);
                 }
 
-                if (i != array.Count - 1)
-                    ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
+                if(i != array.Count - 1) ascii.Append(ASCIIPropertyListParser.ARRAY_ITEM_DELIMITER_TOKEN);
 
-                if (ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
+                if(ascii.Length - indexOfLastNewLine > ASCII_LINE_LENGTH)
                 {
                     ascii.Append(NEWLINE);
                     indexOfLastNewLine = ascii.Length;
                 }
             }
+
             ascii.Append(ASCIIPropertyListParser.ARRAY_END_TOKEN);
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current <see cref="Claunia.PropertyList.NSArray"/>.
+        ///     Determines whether the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSArray" />.
         /// </summary>
-        /// <param name="obj">The <see cref="Claunia.PropertyList.NSObject"/> to compare with the current <see cref="Claunia.PropertyList.NSArray"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject"/> is equal to the current
-        /// <see cref="Claunia.PropertyList.NSArray"/>; otherwise, <c>false</c>.</returns>
+        /// <param name="obj">
+        ///     The <see cref="Claunia.PropertyList.NSObject" /> to compare with the current
+        ///     <see cref="Claunia.PropertyList.NSArray" />.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
+        ///     <see cref="Claunia.PropertyList.NSArray" />; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(NSObject obj)
         {
-            if (!(obj is NSArray))
-                return false;
+            if(!(obj is NSArray)) return false;
 
-            if (array.Count != ((NSArray)obj).array.Count)
-                return false;
+            if(array.Count != ((NSArray)obj).array.Count) return false;
 
-            for (int i = 0; i < array.Count; i++)
-                if (!array[i].Equals(((NSArray)obj)[i]))
+            for(int i = 0; i < array.Count; i++)
+                if(!array[i].Equals(((NSArray)obj)[i]))
                     return false;
 
             return true;
         }
     }
 }
-

@@ -1,5 +1,5 @@
-﻿using BenchmarkDotNet.Running;
-using System;
+﻿using BenchmarkDotNet.Reports;
+using BenchmarkDotNet.Running;
 
 namespace Claunia.PropertyList.Benchmark
 {
@@ -7,7 +7,7 @@ namespace Claunia.PropertyList.Benchmark
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<BinaryPropertyListParserBenchmarks>();
+            Summary summary = BenchmarkRunner.Run<BinaryPropertyListParserBenchmarks>();
             summary = BenchmarkRunner.Run<BinaryPropertyListWriterBenchmarks>();
         }
     }
