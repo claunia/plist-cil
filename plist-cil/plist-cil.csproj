@@ -2,23 +2,28 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;netstandard1.3;netstandard1.4;netstandard1.6;netcoreapp2.0;netstandard2.0;netcoreapp2.1</TargetFrameworks>
-    <Version>1.16</Version>
+    <Version>1.50</Version>
     <Authors>Natalia Portillo</Authors>
     <Company>Claunia.com</Company>
     <Description>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats, based on Java's dd-plist.</Description>
-    <Copyright>© 2015-2017 Natalia Portillo</Copyright>
+    <Copyright>© 2015-2018 Natalia Portillo</Copyright>
     <PackageLicenseUrl>https://raw.githubusercontent.com/claunia/plist-cil/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>http://www.github.com/claunia/plist-cil</PackageProjectUrl>
     <RepositoryUrl>http://www.github.com/claunia/plist-cil</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>apple propertylist property list gnustep plist</PackageTags>
     <PackageReleaseNotes>
-      Added support for .NETStandard1.4.
-      Enhanced binary compatibility with Apple.
-      Correct opening of plists with unescaped UTF8 strings.
-      Added support for parsing hex numbers.
-      Added explicit casts for NSNumber, NSData, NSDate and NSString.
-      Added examples to README.
+      Added support for .NETStandard2.0 and .NET Core 2.0.
+      Added ParseString overloads.
+      Fix roundtrip/serialization of real with > 5 digits.
+      Correctly roundtrip long binary values.
+      Fix XML serialization of binary values.
+      Add support for Span&lt;byte&gt;.
+      Fix serialization of UIDs.
+      Fix roundtripping binary data
+      Several performance improvements.
+      Reduced allocations.
+      Updated list of serialization primitives.
     </PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <SignAssembly>True</SignAssembly>
