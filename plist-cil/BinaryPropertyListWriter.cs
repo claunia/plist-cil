@@ -62,13 +62,13 @@ namespace Claunia.PropertyList
         public const int VERSION_20 = 20;
 
         // map from object to its ID
-        readonly Dictionary<NSObject, int> idDict  = new Dictionary<NSObject, int>(new AddObjectEqualityComparer());
-        readonly Dictionary<NSObject, int> idDict2 = new Dictionary<NSObject, int>(new GetObjectEqualityComparer());
+        protected readonly Dictionary<NSObject, int> idDict  = new Dictionary<NSObject, int>(new AddObjectEqualityComparer());
+        protected readonly Dictionary<NSObject, int> idDict2 = new Dictionary<NSObject, int>(new GetObjectEqualityComparer());
 
         // # of bytes written so far
-        long count;
-        int  currentId;
-        int  idSizeInBytes;
+        private long   count;
+        protected int  currentId;
+        private int    idSizeInBytes;
 
         // raw output stream to result file
         Stream outStream;
@@ -89,6 +89,14 @@ namespace Claunia.PropertyList
         {
             this.version = version;
             outStream    = outStr;
+        }
+
+        public BinaryPropertyListWriter(Stream outStr, int version, IEqualityComparer<NSObject> addObjectEqualityComparer, IEqualityComparer<NSObject> getObjectEqualityComparer)
+        {
+            this.version = version;
+            outStream    = outStr;
+            idDict       = new Dictionary<NSObject, int>(addObjectEqualityComparer);
+            idDict2      = new Dictionary<NSObject, int>(getObjectEqualityComparer);
         }
 
         /// <summary>
@@ -273,7 +281,7 @@ namespace Claunia.PropertyList
             outStream.Flush();
         }
 
-        internal void AssignID(NSObject obj)
+        protected internal virtual void AssignID(NSObject obj)
         {
             if(ReuseObjectIds)
             {
