@@ -2,20 +2,19 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;netstandard1.3;netstandard1.4;netstandard1.6;netcoreapp2.0;netstandard2.0;netcoreapp2.1</TargetFrameworks>
-    <Version>1.50</Version>
+    <VersionPrefix>1.50</VersionPrefix>
     <Authors>Natalia Portillo</Authors>
     <Company>Claunia.com</Company>
     <Description>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats, based on Java's dd-plist.</Description>
     <Copyright>© 2015-2018 Natalia Portillo</Copyright>
     <PackageLicenseUrl>https://raw.githubusercontent.com/claunia/plist-cil/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>http://www.github.com/claunia/plist-cil</PackageProjectUrl>
-    <RepositoryUrl>http://www.github.com/claunia/plist-cil</RepositoryUrl>
+    <PackageProjectUrl>https://www.github.com/claunia/plist-cil</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>apple propertylist property list gnustep plist</PackageTags>
     <PackageReleaseNotes>
       Added support for .NETStandard2.0 and .NET Core 2.0.
       Added ParseString overloads.
-      Fix roundtrip/serialization of real with > 5 digits.
+      Fix roundtrip/serialization of real with &gt; 5 digits.
       Correctly roundtrip long binary values.
       Fix XML serialization of binary values.
       Add support for Span&lt;byte&gt;.
@@ -31,6 +30,10 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <LangVersion>latest</LangVersion>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
@@ -52,6 +55,10 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
     <DefineConstants>$(DefineConstants);NATIVE_SPAN</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
+  </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System" />
