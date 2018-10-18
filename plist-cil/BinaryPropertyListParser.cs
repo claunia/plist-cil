@@ -118,7 +118,7 @@ namespace Claunia.PropertyList
         /// <returns>The root object of the property list. This is usually a NSDictionary but can also be a NSArray.</returns>
         /// <param name="bytes">The binary property list's data.</param>
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
-        NSObject DoParse(ReadOnlySpan<byte> bytes)
+        protected NSObject DoParse(ReadOnlySpan<byte> bytes)
         {
             if(bytes.Length < 8    || bytes[0] != 'b' || bytes[1] != 'p' || bytes[2] != 'l' || bytes[3] != 'i' ||
                bytes[4]     != 's' || bytes[5] != 't')
@@ -194,6 +194,11 @@ namespace Claunia.PropertyList
             return Parse(f.OpenRead());
         }
 
+        protected int GetOffset(int obj)
+        {
+            return this.offsetTable[obj];
+        }
+
         /// <summary>
         ///     Parses an object inside the currently parsed binary property list.
         ///     For the format specification check
@@ -205,7 +210,7 @@ namespace Claunia.PropertyList
         /// <returns>The parsed object.</returns>
         /// <param name="obj">The object ID.</param>
         /// <exception cref="PropertyListFormatException">When the property list's format could not be parsed.</exception>
-        NSObject ParseObject(ReadOnlySpan<byte> bytes, int obj)
+        protected virtual NSObject ParseObject(ReadOnlySpan<byte> bytes, int obj)
         {
             int  offset  = offsetTable[obj];
             byte type    = bytes[offset];
