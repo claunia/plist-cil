@@ -25,6 +25,9 @@
 // SOFTWARE.
 
 using System;
+#if NET45
+using System.Runtime.Serialization;
+#endif
 
 namespace Claunia.PropertyList
 {
@@ -64,6 +67,6 @@ namespace Claunia.PropertyList
             : base(info, context)
         {
         }
-#endif
+        #endif
     }
 }
