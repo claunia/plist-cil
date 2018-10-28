@@ -14,7 +14,7 @@ They originate from the NeXTSTEP programming environment and are now a basic par
  * Read / write property lists from / to files, streams or byte arrays
  * Convert between property lists formats
  * Property list contents are provided as objects from the NeXTSTEP environment (NSDictionary, NSArray, NSString, etc.)
- * Serialie native .NET data structures to property list objects
+ * Serialize native .NET data structures to property list objects
  * Deserialize from property list objects to native .NET data structures
 
 ## Supported formats
