@@ -2,28 +2,16 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;netstandard1.3;netstandard1.4;netstandard1.6;netcoreapp2.0;netstandard2.0;netcoreapp2.1</TargetFrameworks>
-    <VersionPrefix>1.50</VersionPrefix>
+    <VersionPrefix>1.60</VersionPrefix>
     <Authors>Natalia Portillo</Authors>
     <Company>Claunia.com</Company>
     <Description>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats, based on Java's dd-plist.</Description>
-    <Copyright>© 2015-2018 Natalia Portillo</Copyright>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/claunia/plist-cil/master/LICENSE</PackageLicenseUrl>
+    <Copyright>© 2015-2019 Natalia Portillo</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.github.com/claunia/plist-cil</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>apple propertylist property list gnustep plist</PackageTags>
-    <PackageReleaseNotes>
-      Added support for .NETStandard2.0 and .NET Core 2.0.
-      Added ParseString overloads.
-      Fix roundtrip/serialization of real with &gt; 5 digits.
-      Correctly roundtrip long binary values.
-      Fix XML serialization of binary values.
-      Add support for Span&lt;byte&gt;.
-      Fix serialization of UIDs.
-      Fix roundtripping binary data
-      Several performance improvements.
-      Reduced allocations.
-      Updated list of serialization primitives.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>Add extensibility points for BinaryPropertyListParser/Writer.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>plist-cil.snk</AssemblyOriginatorKeyFile>
@@ -34,6 +22,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <PackageVersion>1.60</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
@@ -57,7 +46,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
