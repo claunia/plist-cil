@@ -16,7 +16,6 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>plist-cil.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <LangVersion>latest</LangVersion>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
