@@ -515,6 +515,16 @@ namespace Claunia.PropertyList
         /// <param name="bytes">The bytes representing the long integer.</param>
         public static long ParseLong(ReadOnlySpan<byte> bytes)
         {
+            if(bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
+            if(bytes.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(bytes));
+            }
+
             // https://opensource.apple.com/source/CF/CF-1153.18/CFBinaryPList.c,
             // __CFBinaryPlistCreateObjectFiltered, case kCFBinaryPlistMarkerInt:
             // 
@@ -564,6 +574,11 @@ namespace Claunia.PropertyList
         /// <param name="bytes">The bytes representing the double.</param>
         public static double ParseDouble(ReadOnlySpan<byte> bytes)
         {
+            if(bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
             if(bytes.Length == 8) return BitConverter.Int64BitsToDouble(ParseLong(bytes));
             if(bytes.Length == 4) return BitConverter.ToSingle(BitConverter.GetBytes(ParseLong(bytes)), 0);
 
