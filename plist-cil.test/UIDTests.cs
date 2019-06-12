@@ -53,20 +53,6 @@ namespace plistcil.test
         }
 
         [Fact]
-        public void SByteUidTest()
-        {
-            UID uid = new UID("test", (sbyte)0x0F);
-            Assert.Equal(new byte[] {0x0F}, uid.Bytes);
-        }
-
-        [Fact]
-        public void ShortUidTest()
-        {
-            UID uid = new UID("test", (short)0x0F0F);
-            Assert.Equal(new byte[] {0x0F, 0x0F}, uid.Bytes);
-        }
-
-        [Fact]
         public void UIntUidTest()
         {
             UID uid = new UID(0xABCDEF00u);
