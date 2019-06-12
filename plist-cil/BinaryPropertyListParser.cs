@@ -487,7 +487,7 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        ///     Parses an unsigned integers from a span.
+        ///     Parses an unsigned integer from a span.
         /// </summary>
         /// <returns>The byte array containing the unsigned integer.</returns>
         /// <param name="bytes">The unsigned integer represented by the given bytes.</param>
@@ -515,22 +515,56 @@ namespace Claunia.PropertyList
         /// <param name="bytes">The bytes representing the long integer.</param>
         public static long ParseLong(ReadOnlySpan<byte> bytes)
         {
+            if(bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
+            if(bytes.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(bytes));
+            }
+
+            // https://opensource.apple.com/source/CF/CF-1153.18/CFBinaryPList.c,
+            // __CFBinaryPlistCreateObjectFiltered, case kCFBinaryPlistMarkerInt:
+            // 
+            // in format version '00', 1, 2, and 4-byte integers have to be interpreted as unsigned,
+            // whereas 8-byte integers are signed (and 16-byte when available)
+            // negative 1, 2, 4-byte integers are always emitted as 8 bytes in format '00'
+            // integers are not required to be in the most compact possible representation,
+            // but only the last 64 bits are significant currently
             switch(bytes.Length)
             {
                 case 1: return bytes[0];
 
                 case 2: return BinaryPrimitives.ReadUInt16BigEndian(bytes);
 
-                case 3: throw new NotSupportedException();
-
                 case 4: return BinaryPrimitives.ReadUInt32BigEndian(bytes);
 
-                case 8: return (long)BinaryPrimitives.ReadUInt64BigEndian(bytes);
+                // Transition from unsigned to signed
+                case 8: return BinaryPrimitives.ReadInt64BigEndian(bytes);
 
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(bytes),
-                                                          $"Cannot read a byte span of length {bytes.Length}");
+                // Only the last 64 bits are significant currently
+                case 16: return BinaryPrimitives.ReadInt64BigEndian(bytes.Slice(8));
             }
+
+            if (bytes.Length < 8)
+            {
+                // Compatability with existing archives, including anything with a non-power-of-2 
+                // size and 16-byte values, and architectures that don't support unaligned access
+                long value = 0;
+                for(int i = 0; i < bytes.Length; i++)
+                {
+                    value = (value << 8) + bytes[i];
+                }
+                return value;
+            }
+
+            // Theoretically we could handle non-power-of-2 byte arrays larger than 8, with the code
+            // above, and it appears the reference implementation does exactly that. But it seems to
+            // be an extreme edge case.
+            throw new ArgumentOutOfRangeException(nameof(bytes),
+                                                    $"Cannot read a byte span of length {bytes.Length}");
         }
 
         /// <summary>
@@ -540,6 +574,11 @@ namespace Claunia.PropertyList
         /// <param name="bytes">The bytes representing the double.</param>
         public static double ParseDouble(ReadOnlySpan<byte> bytes)
         {
+            if(bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
             if(bytes.Length == 8) return BitConverter.Int64BitsToDouble(ParseLong(bytes));
             if(bytes.Length == 4) return BitConverter.ToSingle(BitConverter.GetBytes(ParseLong(bytes)), 0);
 

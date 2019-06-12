@@ -83,7 +83,7 @@ namespace Claunia.PropertyList
                     longValue   = (long)Math.Round(doubleValue);
                     break;
 
-                default: throw new ArgumentException("Type argument is not valid.");
+                default: throw new ArgumentException("Type argument is not valid.", nameof(type));
             }
 
             this.type = type;
@@ -124,13 +124,12 @@ namespace Claunia.PropertyList
             long   l;
             double d;
 
-            if(text.StartsWith("0x") && long.TryParse("", NumberStyles.HexNumber, CultureInfo.InvariantCulture, out l))
+            if(text.StartsWith("0x") && long.TryParse(text.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out l))
             {
                 doubleValue = longValue = l;
                 type        = INTEGER;
             }
-
-            if(long.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out l))
+            else if(long.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out l))
             {
                 doubleValue = longValue = l;
                 type        = INTEGER;
@@ -151,6 +150,7 @@ namespace Claunia.PropertyList
                 if(isTrue || isFalse)
                 {
                     type        = BOOLEAN;
+                    boolValue   = isTrue;
                     doubleValue = longValue = boolValue ? 1 : 0;
                 }
                 else
