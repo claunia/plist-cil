@@ -36,6 +36,7 @@ namespace plistcil.test
         {
             UID uid = new UID(0xAB);
             Assert.Equal(new byte[] {0xAB}, uid.Bytes);
+            Assert.Equal(0xABu, uid.ToUInt64());
         }
 
         [Fact]
@@ -43,6 +44,7 @@ namespace plistcil.test
         {
             UID uid = new UID(0xABCDEF00);
             Assert.Equal(new byte[] {0xAB, 0xCD, 0xEF, 0x00}, uid.Bytes);
+            Assert.Equal(0xABCDEF00, uid.ToUInt64());
         }
 
         [Fact]
@@ -50,6 +52,7 @@ namespace plistcil.test
         {
             UID uid = new UID(0xABCDEF0000EFCDAB);
             Assert.Equal(new byte[] {0xAB, 0xCD, 0xEF, 0x00, 0x00, 0xEF, 0xCD, 0xAB}, uid.Bytes);
+            Assert.Equal(0xABCDEF0000EFCDAB, uid.ToUInt64());
         }
 
         [Fact]
@@ -57,6 +60,7 @@ namespace plistcil.test
         {
             UID uid = new UID(0xABCDEF00u);
             Assert.Equal(new byte[] {0xAB, 0xCD, 0xEF, 0x00}, uid.Bytes);
+            Assert.Equal(0xABCDEF00u, uid.ToUInt64());
         }
 
         [Fact]
@@ -64,6 +68,7 @@ namespace plistcil.test
         {
             UID uid = new UID(0xABCDEF0000EFCDABu);
             Assert.Equal(new byte[] {0xAB, 0xCD, 0xEF, 0x00, 0x00, 0xEF, 0xCD, 0xAB}, uid.Bytes);
+            Assert.Equal(0xABCDEF0000EFCDABu, uid.ToUInt64());
         }
 
         [Fact]
@@ -71,6 +76,7 @@ namespace plistcil.test
         {
             UID uid = new UID(0xABCDu);
             Assert.Equal(new byte[] {0xAB, 0xCD}, uid.Bytes);
+            Assert.Equal(0xABCDu, uid.ToUInt64());
         }
 
         [Fact]
