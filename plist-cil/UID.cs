@@ -41,20 +41,6 @@ namespace Claunia.PropertyList
         /// <summary>
         ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class.
         /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="bytes">Bytes.</param>
-        [Obsolete("UIDs have not meaningful names")]
-        public UID(string name, ReadOnlySpan<byte> bytes)
-        {
-            if(bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
-                throw new ArgumentException("Type argument is not valid.");
-
-            value = (ulong)BinaryPropertyListParser.ParseLong(bytes);
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class.
-        /// </summary>
         /// <param name="bytes">Bytes.</param>
         public UID(ReadOnlySpan<byte> bytes)
         {
@@ -67,41 +53,8 @@ namespace Claunia.PropertyList
         /// <summary>
         ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 8-bit number.
         /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="number">Unsigned 8-bit number.</param>
-        [Obsolete("UIDs have no meaningful names")]
-        public UID(string name, byte number)
-        {
-            value = number;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 8-bit number.
-        /// </summary>
         /// <param name="number">Unsigned 8-bit number.</param>
         public UID(byte number)
-        {
-            value = number;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using a signed 8-bit number.
-        /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="number">Unsigned 8-bit number.</param>
-        [Obsolete("UIDs must be unsigned values")]
-        public UID(string name, sbyte number)
-        {
-            value = (ulong)number;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 16-bit number.
-        /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="number">Unsigned 16-bit number.</param>
-        [Obsolete("UIDs have no meaningful names")]
-        public UID(string name, ushort number)
         {
             value = number;
         }
@@ -117,54 +70,10 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using a signed 16-bit number.
-        /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="number">Signed 16-bit number.</param>
-        [Obsolete("UIDs must be unsigned values")]
-        public UID(string name, short number)
-        {
-            value = (ulong)number;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 32-bit number.
-        /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="number">Unsigned 32-bit number.</param>
-        [Obsolete("UIDs have no meaningful names")]
-        public UID(string name, uint number)
-        {
-            value = number;
-        }
-
-        /// <summary>
         ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 32-bit number.
         /// </summary>
         /// <param name="number">Unsigned 32-bit number.</param>
         public UID(uint number)
-        {
-            value = number;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using a signed 32-bit number.
-        /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="number">Signed 32-bit number.</param>
-        [Obsolete("UIDs must be unsigned values")]
-        public UID(string name, int number)
-        {
-            value = (ulong)number;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 64-bit number.
-        /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="number">Unsigned 64-bit number.</param>
-        [Obsolete("UIDs have no meaningful names")]
-        public UID(string name, ulong number)
         {
             value = number;
         }
@@ -176,17 +85,6 @@ namespace Claunia.PropertyList
         public UID(ulong number)
         {
             value = number;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using a signed 64-bit number.
-        /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="number">Signed 64-bit number.</param>
-        [Obsolete("UIDs must be unsigned values")]
-        public UID(string name, long number)
-        {
-            value = (ulong)number;
         }
 
         /// <summary>
@@ -218,13 +116,6 @@ namespace Claunia.PropertyList
                 return 8;
             }
         }
-
-        /// <summary>
-        ///     Gets the name.
-        /// </summary>
-        /// <value>The name.</value>
-        [Obsolete("UIDs have no meaningful names")]
-        public string Name => value.ToString();
 
         /// <summary>
         ///     Writes the bytes required to represent this <see cref="UID" /> to a byte span.
