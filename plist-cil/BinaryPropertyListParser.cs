@@ -268,13 +268,13 @@ namespace Claunia.PropertyList
                 case 0x1:
                 {
                     //integer
-                    int length = (int)Math.Pow(2, objInfo);
+                    int length = 1 << objInfo;
                     return new NSNumber(bytes.Slice(offset + 1, length), NSNumber.INTEGER);
                 }
                 case 0x2:
                 {
                     //real
-                    int length = (int)Math.Pow(2, objInfo);
+                    int length = 1 << objInfo;
                     return new NSNumber(bytes.Slice(offset + 1, length), NSNumber.REAL);
                 }
                 case 0x3:
@@ -427,7 +427,7 @@ namespace Claunia.PropertyList
                     Debug.WriteLine("BinaryPropertyListParser: Length integer has an unexpected type" + intType +
                                     ". Attempting to parse anyway...");
                 int intInfo   = int_type & 0x0F;
-                int intLength = (int)Math.Pow(2, intInfo);
+                int intLength = 1 << intInfo;
                 offsetValue = 2 + intLength;
                 if(intLength < 3) lengthValue = (int)ParseUnsignedInt(bytes.Slice(offset + 2, intLength));
                 else
