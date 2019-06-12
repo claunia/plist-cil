@@ -333,5 +333,16 @@ namespace Claunia.PropertyList
         {
             return $"{value} (UID)";
         }
+
+        /// <summary>
+        /// Gets a <see cref="ulong"/> which represents this <see cref="UID"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ulong"/> which represents this <see cref="UID"/>.
+        /// </returns>
+        public ulong ToUInt64()
+        {
+            return this.value;
+        }
     }
 }
