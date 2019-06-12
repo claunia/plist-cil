@@ -343,9 +343,7 @@ namespace Claunia.PropertyList
 
         internal void Write(int b)
         {
-            byte[] bBytes = new byte[1];
-            bBytes[0] = (byte)b;
-            outStream.Write(bBytes, 0, 1);
+            outStream.WriteByte((byte)b);
             count++;
         }
 
