@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;netstandard1.3;netstandard1.4;netstandard1.6;netcoreapp2.0;netstandard2.0;netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
-    <VersionPrefix>1.60</VersionPrefix>
+    <VersionPrefix>2.00</VersionPrefix>
     <Authors>Natalia Portillo</Authors>
     <Company>Claunia.com</Company>
     <Description>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats, based on Java's dd-plist.</Description>
@@ -11,7 +11,9 @@
     <PackageProjectUrl>https://www.github.com/claunia/plist-cil</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>apple propertylist property list gnustep plist</PackageTags>
-    <PackageReleaseNotes>Add extensibility points for BinaryPropertyListParser/Writer.</PackageReleaseNotes>
+    <PackageReleaseNotes>Support reading 16-byte (128-bit) NSNumber values, as well as non-power of 2 sized values.
+UID: Remove deprecated members.
+Add UID.ToUInt64().</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>plist-cil.snk</AssemblyOriginatorKeyFile>
@@ -21,7 +23,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <PackageVersion>1.60</PackageVersion>
+    <PackageVersion>2.00</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
