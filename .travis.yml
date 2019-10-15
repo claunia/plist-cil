@@ -3,7 +3,7 @@ solution: plist-cil.sln
 mono:
  - none
 dotnet: 2.2
-dist: trusty
+dist: bionic
 script:
  - dotnet build -c Release
  - dotnet test plist-cil.test/plist-cil.test.csproj
