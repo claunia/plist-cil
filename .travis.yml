@@ -4,6 +4,8 @@ mono:
  - none
 dotnet: 2.2
 dist: bionic
+git:
+  depth: false
 script:
  - dotnet build -c Release
  - dotnet test plist-cil.test/plist-cil.test.csproj
