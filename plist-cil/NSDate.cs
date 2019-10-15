@@ -101,7 +101,7 @@ namespace Claunia.PropertyList
         /// <returns>The string representation of the date.</returns>
         public static string MakeDateString(DateTime date)
         {
-            return date.ToUniversalTime().ToString(sdfDefault);
+            return date.ToUniversalTime().ToString(sdfDefault, provider);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Claunia.PropertyList
         /// <returns>The string representation of the date.</returns>
         static string MakeDateStringGnuStep(DateTime date)
         {
-            return date.ToString(sdfGnuStep);
+            return date.ToString(sdfGnuStep, provider);
         }
 
         /// <summary>
