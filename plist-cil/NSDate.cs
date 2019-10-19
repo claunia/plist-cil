@@ -42,6 +42,7 @@ namespace Claunia.PropertyList
         // understands the 'Z' character as a timezone, specify the 'K' format string.
         static readonly string sdfDefault = "yyyy-MM-dd'T'HH:mm:ssK";
         static readonly string sdfGnuStep = "yyyy-MM-dd HH:mm:ss zzz";
+        static readonly string[] sdfAll = { sdfDefault, sdfGnuStep };
 
         static readonly CultureInfo provider = CultureInfo.InvariantCulture;
 
@@ -89,8 +90,7 @@ namespace Claunia.PropertyList
         /// <exception cref="FormatException">Given string cannot be parsed</exception>
         static DateTime ParseDateString(string textRepresentation)
         {
-            try { return DateTime.ParseExact(textRepresentation, sdfDefault, provider); }
-            catch(FormatException) { return DateTime.ParseExact(textRepresentation, sdfGnuStep, provider); }
+            return DateTime.ParseExact(textRepresentation, sdfAll, provider, DateTimeStyles.None);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Claunia.PropertyList
         /// <returns>The string representation of the date.</returns>
         public static string MakeDateString(DateTime date)
         {
-            return date.ToUniversalTime().ToString(sdfDefault);
+            return date.ToUniversalTime().ToString(sdfDefault, provider);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Claunia.PropertyList
         /// <returns>The string representation of the date.</returns>
         static string MakeDateStringGnuStep(DateTime date)
         {
-            return date.ToString(sdfGnuStep);
+            return date.ToString(sdfGnuStep, provider);
         }
 
         /// <summary>
