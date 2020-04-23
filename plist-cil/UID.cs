@@ -148,19 +148,28 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        ///     There is no XML representation specified for UIDs.
-        ///     In this implementation UIDs are represented as strings in the XML output.
+        ///     UIDs are represented as dictionaries in XML property lists,
+        ///     where the key is always <c>CF$UID</c> and the value is the integer
+        ///     representation of the UID.
         /// </summary>
         /// <param name="xml">The xml StringBuilder</param>
         /// <param name="level">The indentation level</param>
         internal override void ToXml(StringBuilder xml, int level)
         {
             Indent(xml, level);
-            xml.Append("<string>");
-            Span<byte> bytes = stackalloc byte[ByteCount];
-            GetBytes(bytes);
-            foreach(byte b in bytes) xml.Append(string.Format("{0:x2}", b));
-            xml.Append("</string>");
+            xml.Append("<dict>");
+            xml.AppendLine();
+
+            Indent(xml, level + 1);
+            xml.Append("<key>CF$UID</key>");
+            xml.AppendLine();
+
+            Indent(xml, level + 1);
+            xml.Append($"<integer>{this.value}</integer>");
+            xml.AppendLine();
+
+            Indent(xml, level);
+            xml.Append("</dict>");
         }
 
         internal override void ToBinary(BinaryPropertyListWriter outPlist)
