@@ -147,19 +147,31 @@ namespace Claunia.PropertyList
         {
             if(n.Name.Equals("dict"))
             {
-                NSDictionary  dict     = new NSDictionary();
-                List<XmlNode> children = FilterElementNodes(n.ChildNodes);
-                for(int i = 0; i < children.Count; i += 2)
+                // Special case for UID values
+                if(n.ChildNodes.Count == 2
+                    && n.ChildNodes[0].Name == "key"
+                    && n.ChildNodes[0].InnerText == "CF$UID"
+                    && n.ChildNodes[1].Name == "integer"
+                    && uint.TryParse(n.ChildNodes[1].InnerText, out uint uidValue))
                 {
-                    XmlNode key = children[i];
-                    XmlNode val = children[i + 1];
-
-                    string keyString = GetNodeTextContents(key);
-
-                    dict.Add(keyString, ParseObject(val));
+                    return new UID(uidValue);
                 }
+                else
+                {
+                    NSDictionary  dict     = new NSDictionary();
+                    List<XmlNode> children = FilterElementNodes(n.ChildNodes);
+                    for(int i = 0; i < children.Count; i += 2)
+                    {
+                        XmlNode key = children[i];
+                        XmlNode val = children[i + 1];
 
-                return dict;
+                        string keyString = GetNodeTextContents(key);
+
+                        dict.Add(keyString, ParseObject(val));
+                    }
+
+                    return dict;
+                }
             }
 
             if(n.Name.Equals("array"))

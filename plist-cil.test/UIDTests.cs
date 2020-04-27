@@ -88,9 +88,8 @@ namespace plistcil.test
 
             // UIDs don't exist in XML property lists, but they are represented as dictionaries
             // for compability purposes
-            var roundtrip = XmlPropertyListParser.ParseString(plist) as NSDictionary;
-            Assert.Single(roundtrip.Keys, "CF$UID");
-            Assert.Single(roundtrip.Values, new NSNumber(0xabcd));
+            var roundtrip = XmlPropertyListParser.ParseString(plist) as UID;
+            Assert.Equal(0xabcdUL, roundtrip.ToUInt64());
         }
     }
 }
