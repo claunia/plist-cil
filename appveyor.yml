@@ -12,4 +12,4 @@ on_success:
 
 artifacts:
   - path: "plist-cil\\bin\\Release\\plist-cil.*.nupkg"
-  - path: "plist-cil.benchmark\\BenchmarkDotNet.Artifacts\\results\\*.*"
+  - path: "BenchmarkDotNet.Artifacts\\results\\*.*"
