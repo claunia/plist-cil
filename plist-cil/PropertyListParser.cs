@@ -247,16 +247,8 @@ namespace Claunia.PropertyList
         /// <exception cref="IOException">When an error occurs during the writing process.</exception>
         public static void SaveAsXml(NSObject root, Stream outStream)
         {
-            #if NET40
-            // The StreamWriter constructor which takes a "leaveOpen" parameter is
-            // not available on .NET 4.0
-            StreamWriter w = new StreamWriter(outStream, Encoding.UTF8);
-            w.Write(root.ToXmlPropertyList());
-            w.Close();
-#else
             using(StreamWriter w = new StreamWriter(outStream, Encoding.UTF8, 1024, true))
                 w.Write(root.ToXmlPropertyList());
-            #endif
         }
 
         /// <summary>

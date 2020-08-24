@@ -25,9 +25,7 @@
 // SOFTWARE.
 
 using System;
-#if NET45
 using System.Runtime.Serialization;
-#endif
 
 namespace Claunia.PropertyList
 {
@@ -62,11 +60,9 @@ namespace Claunia.PropertyList
         /// </param>
         public PropertyListException(string message, Exception inner) : base(message, inner) { }
 
-        #if !NETCORE
         protected PropertyListException(SerializationInfo info, StreamingContext context) 
             : base(info, context)
         {
         }
-        #endif
     }
 }
