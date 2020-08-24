@@ -71,78 +71,82 @@ For converting a file into another format there exist convenience methods in the
 
 ### Reading
 
-	try
+```csharp
+try
+{
+	FileInfo file = new FileInfo("Info.plist");
+	NSDictionary rootDict = (NSDictionary)PropertyListParser.Parse(file);
+	string name = rootDict.ObjectForKey("Name").ToString();
+	NSObject[] parameters = ((NSArray)rootDict.ObjectForKey("Parameters")).GetArray();
+	foreach(NSObject param in parameters)
 	{
-		FileInfo file = new FileInfo("Info.plist");
-		NSDictionary rootDict = (NSDictionary)PropertyListParser.Parse(file);
-		string name = rootDict.ObjectForKey("Name").ToString();
-		NSObject[] parameters = ((NSArray)rootDict.ObjectForKey("Parameters")).GetArray();
-		foreach(NSObject param in parameters)
+		if(param.GetType().Equals(typeof(NSNumber)))
 		{
-			if(param.GetType().Equals(typeof(NSNumber)))
+			NSNumber num = (NSNumber)param;
+			switch(num.GetNSNumberType())
 			{
-				NSNumber num = (NSNumber)param;
-				switch(num.GetNSNumberType())
+				case NSNumber.BOOLEAN:
 				{
-					case NSNumber.BOOLEAN:
-					{
-						boolean bool = num.ToBool();
-						// ...
-						break;
-					}
-					case NSNumber.INTEGER:
-					{
-						long l = num.ToLong();
-						// or int i = num.ToInt();
-						// ...
-						break;
-					}
-					case NSNumber.REAL:
-					{
-						double d = num.ToDouble();
-						// ...
-						break;
-					}
+					boolean bool = num.ToBool();
+					// ...
+					break;
+				}
+				case NSNumber.INTEGER:
+				{
+					long l = num.ToLong();
+					// or int i = num.ToInt();
+					// ...
+					break;
+				}
+				case NSNumber.REAL:
+				{
+					double d = num.ToDouble();
+					// ...
+					break;
 				}
 			}
-			// else...
 		}
+		// else...
 	}
-	catch(Exception ex)
-	{
-		Console.WriteLine(ex.StackTrace);
-	}
+}
+catch(Exception ex)
+{
+	Console.WriteLine(ex.StackTrace);
+}
+```
 
 ### Writing
 
-	// Creating the root object
-	NSDictionary root = new NSDictionary();
+```csharp
+// Creating the root object
+NSDictionary root = new NSDictionary();
 
-	// Creation of an array of length 2
-	NSArray people = new NSArray(2);
+// Creation of an array of length 2
+NSArray people = new NSArray(2);
 
-	// Creation of the first object to be stored in the array
-	NSDictionary person1 = new NSDictionary();
-	// The NSDictionary will automatically wrap strings, numbers and dates in the respective NSObject subclasses
-	person1.Add("Name", "Peter"); // This will become a NSString
-	// Use the DateTime class
-	person1.Add("RegistrationDate", new DateTime(2011, 1, 13, 9, 28, 0)); // This will become a NSDate
-	person1.Add("Age", 23); // This will become a NSNumber
-	person1.Add("Photo", new NSData(new FileInfo("peter.jpg")));
+// Creation of the first object to be stored in the array
+NSDictionary person1 = new NSDictionary();
+// The NSDictionary will automatically wrap strings, numbers and dates in the respective NSObject subclasses
+person1.Add("Name", "Peter"); // This will become a NSString
+// Use the DateTime class
+person1.Add("RegistrationDate", new DateTime(2011, 1, 13, 9, 28, 0)); // This will become a NSDate
+person1.Add("Age", 23); // This will become a NSNumber
+person1.Add("Photo", new NSData(new FileInfo("peter.jpg")));
 
-	// Creation of the second object to be stored in the array
-	NSDictionary person2 = new NSDictionary();
-	person2.Add("Name", "Lisa");
-	person2.Add("Age", 42);
-	person2.Add("RegistrationDate", new NSDate("2010-09-23T12:32:42Z"));
-	person2.Add("Photo", new NSData(new FileInfo("lisa.jpg")));
+// Creation of the second object to be stored in the array
+NSDictionary person2 = new NSDictionary();
+person2.Add("Name", "Lisa");
+person2.Add("Age", 42);
+person2.Add("RegistrationDate", new NSDate("2010-09-23T12:32:42Z"));
+person2.Add("Photo", new NSData(new FileInfo("lisa.jpg")));
 
-	// Put the objects into the array
-	people.SetValue(0, person1);
-	people.SetValue(1, person2);
+// Put the objects into the array
+people.SetValue(0, person1);
+people.SetValue(1, person2);
 
-	// Put the array into the property list
-	root.Add("People", people);
+// Put the array into the property list
+root.Add("People", people);
 
-	// Save the property list
-	PropertyListParser.SaveAsXml(root, new FileInfo("people.plist"));
+// Save the property list
+PropertyListParser.SaveAsXml(root, new FileInfo("people.plist"));
+```
