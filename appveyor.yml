@@ -1,3 +1,5 @@
+image: Visual Studio 2019
+
 build_script:
   - cmd: dotnet build -c Release --version-suffix r%APPVEYOR_BUILD_NUMBER%
   - cmd: dotnet test plist-cil.test\plist-cil.test.csproj
