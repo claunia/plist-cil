@@ -1,10 +1,10 @@
-﻿using System.IO;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Jobs;
+using System.IO;
 
 namespace Claunia.PropertyList.Benchmark
 {
-    [CoreJob]
+    [SimpleJob(RuntimeMoniker.NetCoreApp50)]
     [MemoryDiagnoser]
     public class BinaryPropertyListParserBenchmarks
     {
