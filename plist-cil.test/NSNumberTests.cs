@@ -110,8 +110,6 @@ namespace plistcil.test
         // The value being used comes seen in a real property list:
         // <key>TimeZoneOffsetFromUTC</key>
         // <real>7200.000000</real>
-
-        #if !NETCORE
         [Fact]
         [UseCulture("en-US")]
         public static void ParseNumberEnTest()
@@ -156,7 +154,6 @@ namespace plistcil.test
             Assert.True(number.isReal());
             Assert.Equal(7200d, number.ToDouble());
         }
-#endif
 
         public static IEnumerable<object[]> StringConstructorTestData()
         {
