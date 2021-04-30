@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
-    <VersionPrefix>2.1</VersionPrefix>
+    <VersionPrefix>2.2</VersionPrefix>
     <Authors>Natalia Portillo</Authors>
     <Company>Claunia.com</Company>
     <Description>MIT licensed C#/.NET parser and writer for Apple and GnuStep Property Lists, supporting ASCII, Binary and Xml formats, based on Java's dd-plist.</Description>
@@ -11,8 +11,8 @@
     <PackageProjectUrl>https://www.github.com/claunia/plist-cil</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>apple propertylist property list gnustep plist</PackageTags>
-    <PackageReleaseNotes>Update to .NET Core 3.0 and 3.1
-Use invariant culture to format NSDate.</PackageReleaseNotes>
+    <PackageReleaseNotes>Update XML representation of UIDs.
+Add .NET 5.0 support.</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>plist-cil.snk</AssemblyOriginatorKeyFile>
@@ -22,7 +22,12 @@ Use invariant culture to format NSDate.</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <PackageVersion>2.1</PackageVersion>
+    <PackageVersion>2.2</PackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
