@@ -15,20 +15,14 @@ namespace plistcil.test
     ///     A <see cref="Stream" /> which writes its output to a <see cref="Stream" /> and validates that the data which
     ///     is being written to the output stream matches the data in a reference stream.
     /// </summary>
-    class ValidatingStream : Stream
+    internal class ValidatingStream : Stream
     {
-        Stream expectedOutput;
-        Stream output;
+        readonly Stream expectedOutput;
+        readonly Stream output;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ValidatingCompositeStream" /> class.
-        /// </summary>
-        /// <param name="output">
-        ///     The <see cref="Stream" /> to which to write data.
-        /// </param>
-        /// <param name="expectedOutput">
-        ///     The reference stream for <paramref name="output" />.
-        /// </param>
+        /// <summary>Initializes a new instance of the <see cref="ValidatingCompositeStream" /> class.</summary>
+        /// <param name="output">The <see cref="Stream" /> to which to write data.</param>
+        /// <param name="expectedOutput">The reference stream for <paramref name="output" />.</param>
         public ValidatingStream(Stream output, Stream expectedOutput)
         {
             this.output         = output         ?? throw new ArgumentNullException(nameof(output));
@@ -55,34 +49,21 @@ namespace plistcil.test
         }
 
         /// <inheritdoc />
-        public override void Flush()
-        {
-            output.Flush();
-        }
+        public override void Flush() => output.Flush();
 
         /// <inheritdoc />
-        public override int Read(byte[] buffer, int offset, int count)
-        {
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+        /// <inheritdoc />
+        public override Task<int>
+            ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
-        }
 
         /// <inheritdoc />
-        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            throw new NotSupportedException();
-        }
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public override void SetLength(long value)
-        {
-            throw new NotImplementedException();
-        }
+        public override void SetLength(long value) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public override void Write(byte[] buffer, int offset, int count)

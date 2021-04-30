@@ -3,22 +3,15 @@ using BenchmarkDotNet.Jobs;
 
 namespace Claunia.PropertyList.Benchmark
 {
-    [SimpleJob(RuntimeMoniker.NetCoreApp50)]
-    [MemoryDiagnoser]
+    [SimpleJob(RuntimeMoniker.NetCoreApp50), MemoryDiagnoser]
     public class BinaryPropertyListWriterBenchmarks
     {
         NSObject data;
 
         [GlobalSetup]
-        public void Setup()
-        {
-            data = PropertyListParser.Parse("plist.bin");
-        }
+        public void Setup() => data = PropertyListParser.Parse("plist.bin");
 
         [Benchmark]
-        public byte[] WriteLargePropertylistTest()
-        {
-            return BinaryPropertyListWriter.WriteToArray(data);
-        }
+        public byte[] WriteLargePropertylistTest() => BinaryPropertyListWriter.WriteToArray(data);
     }
 }

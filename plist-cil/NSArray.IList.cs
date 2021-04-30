@@ -38,88 +38,43 @@ namespace Claunia.PropertyList
         public bool IsReadOnly => false;
 
         /// <inheritdoc />
-        public void Add(NSObject item)
-        {
-            array.Add(item);
-        }
+        public void Add(NSObject item) => array.Add(item);
 
         /// <inheritdoc />
-        public void Clear()
-        {
-            array.Clear();
-        }
+        public void Clear() => array.Clear();
 
         /// <inheritdoc />
-        public bool Contains(NSObject item)
-        {
-            return array.Contains(item);
-        }
+        public bool Contains(NSObject item) => array.Contains(item);
 
         /// <inheritdoc />
-        public void CopyTo(NSObject[] array, int arrayIndex)
-        {
-            this.array.CopyTo(array, arrayIndex);
-        }
+        public void CopyTo(NSObject[] array, int arrayIndex) => this.array.CopyTo(array, arrayIndex);
 
         /// <inheritdoc />
-        public IEnumerator<NSObject> GetEnumerator()
-        {
-            return array.GetEnumerator();
-        }
+        public IEnumerator<NSObject> GetEnumerator() => array.GetEnumerator();
 
         /// <inheritdoc />
-        public int IndexOf(NSObject item)
-        {
-            return array.IndexOf(item);
-        }
+        public int IndexOf(NSObject item) => array.IndexOf(item);
 
         /// <inheritdoc />
-        public void Insert(int index, NSObject item)
-        {
-            array.Insert(index, item);
-        }
+        public void Insert(int index, NSObject item) => array.Insert(index, item);
 
         /// <inheritdoc />
-        public bool Remove(NSObject item)
-        {
-            return array.Remove(item);
-        }
+        public bool Remove(NSObject item) => array.Remove(item);
 
         /// <inheritdoc />
-        public void RemoveAt(int index)
-        {
-            array.RemoveAt(index);
-        }
+        public void RemoveAt(int index) => array.RemoveAt(index);
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return array.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => array.GetEnumerator();
 
-        public void Add(object item)
-        {
-            Add(Wrap(item));
-        }
+        public void Add(object item) => Add(Wrap(item));
 
-        public bool Contains(object item)
-        {
-            return Contains(Wrap(item));
-        }
+        public bool Contains(object item) => Contains(Wrap(item));
 
-        public int IndexOf(object item)
-        {
-            return array.IndexOf(Wrap(item));
-        }
+        public int IndexOf(object item) => array.IndexOf(Wrap(item));
 
-        public void Insert(int index, object item)
-        {
-            Insert(index, Wrap(item));
-        }
+        public void Insert(int index, object item) => Insert(index, Wrap(item));
 
-        public bool Remove(object item)
-        {
-            return Remove(Wrap(item));
-        }
+        public bool Remove(object item) => Remove(Wrap(item));
     }
 }

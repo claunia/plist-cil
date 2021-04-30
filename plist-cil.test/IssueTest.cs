@@ -32,8 +32,8 @@ namespace plistcil.test
     public static class IssueTest
     {
         /// <summary>
-        ///     Makes sure that binary data is line-wrapped correctly when being serialized, in a scenario
-        ///     where the binary data is not indented (no leading whitespace).
+        ///     Makes sure that binary data is line-wrapped correctly when being serialized, in a scenario where the binary
+        ///     data is not indented (no leading whitespace).
         /// </summary>
         [Fact]
         public static void RoundtripDataTest()
@@ -46,16 +46,15 @@ namespace plistcil.test
         }
 
         /// <summary>
-        ///     Makes sure that binary data is line-wrapped correctly when being serialized, in a scenario
-        ///     where the binary data is indented.
+        ///     Makes sure that binary data is line-wrapped correctly when being serialized, in a scenario where the binary
+        ///     data is indented.
         /// </summary>
         [Fact]
         public static void RoundtripDataTest2()
         {
-            string expected = File.ReadAllText(@"test-files/RoundtripBinaryIndentation.plist");
-            NSObject value =
-                XmlPropertyListParser.Parse(new FileInfo(@"test-files/RoundtripBinaryIndentation.plist"));
-            string actual = value.ToXmlPropertyList();
+            string   expected = File.ReadAllText(@"test-files/RoundtripBinaryIndentation.plist");
+            NSObject value = XmlPropertyListParser.Parse(new FileInfo(@"test-files/RoundtripBinaryIndentation.plist"));
+            string   actual = value.ToXmlPropertyList();
 
             Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
@@ -90,7 +89,7 @@ namespace plistcil.test
         [Fact]
         public static void TestIssue18()
         {
-            NSNumber x = new NSNumber(-999);
+            var x = new NSNumber(-999);
             PropertyListParser.SaveAsBinary(x, new FileInfo("test-files/out-testIssue18.plist"));
             NSObject y = PropertyListParser.Parse(new FileInfo("test-files/out-testIssue18.plist"));
             Assert.True(x.Equals(y));
@@ -106,14 +105,12 @@ namespace plistcil.test
         [Fact]
         public static void TestIssue22()
         {
-            NSDictionary x1 = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue22-emoji.plist"));
-            NSDictionary x2 =
-                (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue22-emoji-xml.plist"));
+            var x1 = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue22-emoji.plist"));
+            var x2 = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue22-emoji-xml.plist"));
             PropertyListParser.SaveAsBinary(x1, new FileInfo("test-files/out-testIssue22.plist"));
-            NSDictionary y1 = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/out-testIssue22.plist"));
+            var y1 = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/out-testIssue22.plist"));
             PropertyListParser.SaveAsXml(x2, new FileInfo("test-files/out-testIssue22-xml.plist"));
-            NSDictionary y2 =
-                (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/out-testIssue22-xml.plist"));
+            var y2 = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/out-testIssue22-xml.plist"));
             Assert.True(x1.Equals(x2));
             Assert.True(x1.Equals(y1));
             Assert.True(x1.Equals(y2));
@@ -132,7 +129,7 @@ namespace plistcil.test
         public static void TestIssue30()
         {
             #pragma warning disable 219
-            NSArray arr = (NSArray)PropertyListParser.Parse(new FileInfo("test-files/issue30.plist"));
+            var arr = (NSArray)PropertyListParser.Parse(new FileInfo("test-files/issue30.plist"));
             #pragma warning restore 219
         }
 
@@ -140,30 +137,32 @@ namespace plistcil.test
         public static void TestIssue33()
         {
             #pragma warning disable 219
-            NSDictionary dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue33.pbxproj"));
+            var dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue33.pbxproj"));
             #pragma warning restore 219
         }
 
         [Fact]
         public static void TestIssue38()
         {
-            NSDictionary dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue33.pbxproj"));
+            var dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue33.pbxproj"));
+
             NSObject fileRef =
                 ((NSDictionary)((NSDictionary)dict.Get("objects")).Get("65541A9C16D13B8C00A968D5")).Get("fileRef");
+
             Assert.True(fileRef.Equals(new NSString("65541A9B16D13B8C00A968D5")));
         }
 
         [Fact]
         public static void TestIssue4()
         {
-            NSDictionary d = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue4.plist"));
+            var d = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue4.plist"));
             Assert.Equal("Kid\u2019s iPhone", ((NSString)d.ObjectForKey("Device Name")).ToString());
         }
 
         [Fact]
         public static void TestIssue49()
         {
-            NSDictionary dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue49.plist"));
+            var dict = (NSDictionary)PropertyListParser.Parse(new FileInfo("test-files/issue49.plist"));
             Assert.Empty(dict);
         }
 
@@ -181,8 +180,7 @@ namespace plistcil.test
         [Fact]
         public static void TestRealInResourceRule()
         {
-            NSDictionary dict =
-                (NSDictionary)XmlPropertyListParser.Parse(new FileInfo("test-files/ResourceRules.plist"));
+            var dict = (NSDictionary)XmlPropertyListParser.Parse(new FileInfo("test-files/ResourceRules.plist"));
             Assert.Single(dict);
             Assert.True(dict.ContainsKey("weight"));
 

@@ -28,101 +28,65 @@ using System.Text;
 
 namespace Claunia.PropertyList
 {
-    /// <summary>
-    ///     A NSString contains a string.
-    /// </summary>
+    /// <summary>A NSString contains a string.</summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
     public class NSString : NSObject, IComparable
     {
         static Encoding asciiEncoder, utf16beEncoder, utf8Encoder;
 
-        /// <summary>
-        ///     Creates a NSString from its binary representation.
-        /// </summary>
+        /// <summary>Creates a NSString from its binary representation.</summary>
         /// <param name="bytes">The binary representation.</param>
         /// <param name="encoding">The encoding of the binary representation, the name of a supported charset.</param>
         /// <exception cref="ArgumentException">The encoding charset is invalid or not supported by the underlying platform.</exception>
-        public NSString(ReadOnlySpan<byte> bytes, string encoding) : this(bytes, Encoding.GetEncoding(encoding)) { }
+        public NSString(ReadOnlySpan<byte> bytes, string encoding) : this(bytes, Encoding.GetEncoding(encoding)) {}
 
-        /// <summary>
-        ///     Creates a NSString from its binary representation.
-        /// </summary>
+        /// <summary>Creates a NSString from its binary representation.</summary>
         /// <param name="bytes">The binary representation.</param>
         /// <param name="encoding">The encoding of the binary representation.</param>
         /// <exception cref="ArgumentException">The encoding charset is invalid or not supported by the underlying platform.</exception>
         public NSString(ReadOnlySpan<byte> bytes, Encoding encoding)
         {
-            #if NATIVE_SPAN
+        #if NATIVE_SPAN
             Content = encoding.GetString(bytes);
-            #else
+        #else
             Content = encoding.GetString(bytes.ToArray());
-            #endif
+        #endif
         }
 
-        /// <summary>
-        ///     Creates a NSString from a string.
-        /// </summary>
+        /// <summary>Creates a NSString from a string.</summary>
         /// <param name="text">The string that will be contained in the NSString.</param>
-        public NSString(string text)
-        {
-            Content = text;
-        }
+        public NSString(string text) => Content = text;
 
-        /// <summary>
-        ///     Gets this strings content.
-        /// </summary>
+        /// <summary>Gets this strings content.</summary>
         /// <returns>This NSString as .NET string object.</returns>
         public string Content { get; set; }
 
-        /// <summary>
-        ///     Compares the current <see cref="Claunia.PropertyList.NSString" /> to the specified object.
-        /// </summary>
+        /// <summary>Compares the current <see cref="Claunia.PropertyList.NSString" /> to the specified object.</summary>
         /// <returns>A 32-bit signed integer that indicates the lexical relationship between the two comparands.</returns>
         /// <param name="o">Object to compare to the current <see cref="Claunia.PropertyList.NSString" />.</param>
-        public int CompareTo(object o)
+        public int CompareTo(object o) => o switch
         {
-            if(o is NSString) return string.Compare(Content, ((NSString)o).Content, StringComparison.Ordinal);
-            if(o is string) return string.Compare(Content,   (string)o,             StringComparison.Ordinal);
+            NSString nsString => string.Compare(Content, nsString.Content, StringComparison.Ordinal),
+            string s          => string.Compare(Content, s, StringComparison.Ordinal),
+            _                 => -1
+        };
 
-            return -1;
-        }
-
-        /// <summary>
-        ///     Appends a string to this string.
-        /// </summary>
+        /// <summary>Appends a string to this string.</summary>
         /// <param name="s">The string to append.</param>
-        public void Append(NSString s)
-        {
-            Append(s.Content);
-        }
+        public void Append(NSString s) => Append(s.Content);
 
-        /// <summary>
-        ///     Appends a string to this string.
-        /// </summary>
+        /// <summary>Appends a string to this string.</summary>
         /// <param name="s">The string to append.</param>
-        public void Append(string s)
-        {
-            Content += s;
-        }
+        public void Append(string s) => Content += s;
 
-        /// <summary>
-        ///     Prepends a string to this string.
-        /// </summary>
+        /// <summary>Prepends a string to this string.</summary>
         /// <param name="s">The string to prepend.</param>
-        public void Prepend(string s)
-        {
-            Content = s + Content;
-        }
+        public void Prepend(string s) => Content = s + Content;
 
-        /// <summary>
-        ///     Prepends a string to this string.
-        /// </summary>
+        /// <summary>Prepends a string to this string.</summary>
         /// <param name="s">The string to prepend.</param>
-        public void Prepend(NSString s)
-        {
-            Prepend(s.Content);
-        }
+        public void Prepend(NSString s) => Prepend(s.Content);
 
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" /> is equal to the current
@@ -136,33 +100,18 @@ namespace Claunia.PropertyList
         ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to the current
         ///     <see cref="Claunia.PropertyList.NSString" />; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
-        {
-            if(!(obj is NSString)) return false;
+        public override bool Equals(object obj) => obj is NSString nsString && Content.Equals(nsString.Content);
 
-            return Content.Equals(((NSString)obj).Content);
-        }
-
-        /// <summary>
-        ///     Serves as a hash function for a <see cref="Claunia.PropertyList.NSString" /> object.
-        /// </summary>
+        /// <summary>Serves as a hash function for a <see cref="Claunia.PropertyList.NSString" /> object.</summary>
         /// <returns>
         ///     A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
         ///     hash table.
         /// </returns>
-        public override int GetHashCode()
-        {
-            return Content.GetHashCode();
-        }
+        public override int GetHashCode() => Content.GetHashCode();
 
-        /// <summary>
-        ///     The textual representation of this NSString.
-        /// </summary>
+        /// <summary>The textual representation of this NSString.</summary>
         /// <returns>The NSString's contents.</returns>
-        public override string ToString()
-        {
-            return Content;
-        }
+        public override string ToString() => Content;
 
         internal override void ToXml(StringBuilder xml, int level)
         {
@@ -172,7 +121,7 @@ namespace Claunia.PropertyList
             //Make sure that the string is encoded in UTF-8 for the XML output
             lock(typeof(NSString))
             {
-                if(utf8Encoder == null) utf8Encoder = Encoding.GetEncoding("UTF-8");
+                utf8Encoder ??= Encoding.GetEncoding("UTF-8");
 
                 try
                 {
@@ -187,13 +136,16 @@ namespace Claunia.PropertyList
 
             //According to http://www.w3.org/TR/REC-xml/#syntax node values must not
             //contain the characters < or &. Also the > character should be escaped.
-            if(Content.Contains("&") || Content.Contains("<") || Content.Contains(">"))
+            if(Content.Contains("&") ||
+               Content.Contains("<") ||
+               Content.Contains(">"))
             {
                 xml.Append("<![CDATA[");
                 xml.Append(Content.Replace("]]>", "]]]]><![CDATA[>"));
                 xml.Append("]]>");
             }
-            else xml.Append(Content);
+            else
+                xml.Append(Content);
 
             xml.Append("</string>");
         }
@@ -202,12 +154,12 @@ namespace Claunia.PropertyList
         {
             int    kind;
             byte[] byteBuf;
+
             lock(typeof(NSString))
             {
-                if(asciiEncoder == null)
-                    // Not much use, because some characters do not fallback to exception, even if not ASCII
-                    asciiEncoder = Encoding.GetEncoding("ascii", EncoderFallback.ExceptionFallback,
-                                                        DecoderFallback.ExceptionFallback);
+                // Not much use, because some characters do not fallback to exception, even if not ASCII
+                asciiEncoder ??= Encoding.GetEncoding("ascii", EncoderFallback.ExceptionFallback,
+                                                      DecoderFallback.ExceptionFallback);
 
                 if(IsASCIIEncodable(Content))
                 {
@@ -216,7 +168,7 @@ namespace Claunia.PropertyList
                 }
                 else
                 {
-                    if(utf16beEncoder == null) utf16beEncoder = Encoding.BigEndianUnicode;
+                    utf16beEncoder ??= Encoding.BigEndianUnicode;
 
                     kind    = 0x6; // UTF-16-BE
                     byteBuf = utf16beEncoder.GetBytes(Content);
@@ -231,6 +183,7 @@ namespace Claunia.PropertyList
         {
             Indent(ascii, level);
             ascii.Append("\"");
+
             //According to https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html
             //non-ASCII characters are not escaped but simply written into the
             //file, thus actually violating the ASCII plain text format.
@@ -247,31 +200,37 @@ namespace Claunia.PropertyList
             ascii.Append("\"");
         }
 
-        /// <summary>
-        ///     Escapes a string for use in ASCII property lists.
-        /// </summary>
+        /// <summary>Escapes a string for use in ASCII property lists.</summary>
         /// <returns>The unescaped string.</returns>
         /// <param name="s">S.</param>
         internal static string EscapeStringForASCII(string s)
         {
             string outString = "";
             char[] cArray    = s.ToCharArray();
+
             foreach(char c in cArray)
                 if(c > 127)
                 {
                     //non-ASCII Unicode
                     outString += "\\U";
-                    string hex                = string.Format("{0:x}", c);
-                    while(hex.Length < 4) hex = "0" + hex;
+                    string hex = $"{c:x}";
+
+                    while(hex.Length < 4)
+                        hex = "0" + hex;
+
                     outString += hex;
                 }
-                else if(c == '\\') outString += "\\\\";
-                else if(c == '\"') outString += "\\\"";
-                else if(c == '\b') outString += "\\b";
-                else if(c == '\n') outString += "\\n";
-                else if(c == '\r') outString += "\\r";
-                else if(c == '\t') outString += "\\t";
-                else outString               += c;
+                else
+                    outString += c switch
+                    {
+                        '\\' => "\\\\",
+                        '\"' => "\\\"",
+                        '\b' => "\\b",
+                        '\n' => "\\n",
+                        '\r' => "\\r",
+                        '\t' => "\\t",
+                        _    => c
+                    };
 
             return outString;
         }
@@ -290,9 +249,10 @@ namespace Claunia.PropertyList
         /// </returns>
         public override bool Equals(NSObject obj)
         {
-            if(!(obj is NSString)) return false;
+            if(obj is not NSString nsString)
+                return false;
 
-            return Content == ((NSString)obj).Content;
+            return Content == nsString.Content;
         }
 
         internal static bool IsASCIIEncodable(string text)
@@ -304,14 +264,8 @@ namespace Claunia.PropertyList
             return true;
         }
 
-        public static explicit operator string(NSString value)
-        {
-            return value.Content;
-        }
+        public static explicit operator string(NSString value) => value.Content;
 
-        public static explicit operator NSString(string value)
-        {
-            return new NSString(value);
-        }
+        public static explicit operator NSString(string value) => new(value);
     }
 }

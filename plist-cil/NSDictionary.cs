@@ -32,16 +32,11 @@ namespace Claunia.PropertyList
 {
     /// <summary>
     ///     <para>
-    ///         A NSDictionary is a collection of keys and values, essentially a Dictionary.
-    ///         The keys are simple Strings whereas the values can be any kind of NSObject.
+    ///         A NSDictionary is a collection of keys and values, essentially a Dictionary. The keys are simple Strings
+    ///         whereas the values can be any kind of NSObject.
     ///     </para>
-    ///     <para>
-    ///         You can access the keys through the function <see cref="Keys" />.
-    ///     </para>
-    ///     <para>
-    ///         Access to the objects stored for each key is given through the function
-    ///         <see cref="ObjectForKey" />.
-    ///     </para>
+    ///     <para>You can access the keys through the function <see cref="Keys" />.</para>
+    ///     <para>Access to the objects stored for each key is given through the function <see cref="ObjectForKey" />.</para>
     /// </summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
@@ -50,120 +45,88 @@ namespace Claunia.PropertyList
         readonly Dictionary<string, NSObject> dict;
 
         // Maps the keys in this dictionary to their NSString equivalent. Makes sure the NSString
-        // object remains constant accross calls to AssignIDs and ToBinary
+        // object remains constant across calls to AssignIDs and ToBinary
         readonly Dictionary<string, NSString> keys;
 
-        /// <summary>
-        ///     Creates a new empty NSDictionary with a specific capacity.
-        /// </summary>
-        /// <param name="capacity">
-        ///     The capacity of the dictionary.
-        /// </param>
+        /// <summary>Creates a new empty NSDictionary with a specific capacity.</summary>
+        /// <param name="capacity">The capacity of the dictionary.</param>
         public NSDictionary(int capacity)
         {
             dict = new Dictionary<string, NSObject>(capacity);
             keys = new Dictionary<string, NSString>(capacity);
         }
 
-        /// <summary>
-        ///     Creates a new empty NSDictionary.
-        /// </summary>
-        public NSDictionary() : this(0) { }
+        /// <summary>Creates a new empty NSDictionary.</summary>
+        public NSDictionary() : this(0) {}
 
-        /// <summary>
-        ///     Gets a value indicating whether this instance is empty.
-        /// </summary>
+        /// <summary>Gets a value indicating whether this instance is empty.</summary>
         /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
         public bool IsEmpty => dict.Count == 0;
 
         #region IEnumerable implementation
-        /// <summary>
-        ///     Gets the enumerator.
-        /// </summary>
+        /// <summary>Gets the enumerator.</summary>
         /// <returns>The enumerator.</returns>
-        public IEnumerator<KeyValuePair<string, NSObject>> GetEnumerator()
-        {
-            return dict.GetEnumerator();
-        }
+        public IEnumerator<KeyValuePair<string, NSObject>> GetEnumerator() => dict.GetEnumerator();
         #endregion
 
         #region IEnumerable implementation
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return dict.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => dict.GetEnumerator();
         #endregion
 
         /// <summary>
-        ///     Gets the hashmap which stores the keys and values of this dictionary.
-        ///     Changes to the hashmap's contents are directly reflected in this
-        ///     dictionary.
+        ///     Gets the hashmap which stores the keys and values of this dictionary. Changes to the hashmap's contents are
+        ///     directly reflected in this dictionary.
         /// </summary>
         /// <returns>The hashmap which is used by this dictionary to store its contents.</returns>
-        public Dictionary<string, NSObject> GetDictionary()
-        {
-            return dict;
-        }
+        public Dictionary<string, NSObject> GetDictionary() => dict;
 
-        /// <summary>
-        ///     Gets the NSObject stored for the given key.
-        /// </summary>
+        /// <summary>Gets the NSObject stored for the given key.</summary>
         /// <returns>The object.</returns>
         /// <param name="key">The key.</param>
         public NSObject ObjectForKey(string key)
         {
             NSObject nso;
+
             return dict.TryGetValue(key, out nso) ? nso : null;
         }
 
-        /// <summary>
-        ///     Checks if the specified object key is contained in the current instance.
-        /// </summary>
+        /// <summary>Checks if the specified object key is contained in the current instance.</summary>
         /// <returns><c>true</c>, if key is contained, <c>false</c> otherwise.</returns>
         /// <param name="key">Key.</param>
-        public bool ContainsKey(object key)
-        {
-            return key is string && dict.ContainsKey((string)key);
-        }
+        public bool ContainsKey(object key) => key is string s && dict.ContainsKey(s);
 
-        /// <summary>
-        ///     Removes the item corresponding to the specified key from the current instance, if found.
-        /// </summary>
+        /// <summary>Removes the item corresponding to the specified key from the current instance, if found.</summary>
         /// <param name="key">Key.</param>
         /// <returns><c>true</c>, if  removed, <c>false</c> otherwise.</returns>
-        public bool Remove(object key)
-        {
-            return key is string && dict.Remove((string)key);
-        }
+        public bool Remove(object key) => key is string s && dict.Remove(s);
 
-        /// <summary>
-        ///     Gets the <see cref="NSObject" /> corresponding to the specified key from the current instance.
-        /// </summary>
+        /// <summary>Gets the <see cref="NSObject" /> corresponding to the specified key from the current instance.</summary>
         /// <param name="key">Key.</param>
         /// <returns>The object corresponding to the specified key, null if not found in the current instance.</returns>
         public NSObject Get(object key)
         {
-            if(key is string) return ObjectForKey((string)key);
+            if(key is string s)
+                return ObjectForKey(s);
 
             return null;
         }
 
-        /// <summary>
-        ///     Checks if the current instance contains the object corresponding to the specified key.
-        /// </summary>
+        /// <summary>Checks if the current instance contains the object corresponding to the specified key.</summary>
         /// <returns><c>true</c>, if value is contained, <c>false</c> otherwise.</returns>
         /// <param name="value">Object to search up in the current instance.</param>
         public bool ContainsValue(object value)
         {
-            if(value == null) return false;
+            if(value == null)
+                return false;
 
             NSObject wrap = Wrap(value);
+
             return dict.ContainsValue(wrap);
         }
 
         /// <summary>
-        ///     Puts a new key-value pair into this dictionary.
-        ///     If the value is null, no operation will be performed on the dictionary.
+        ///     Puts a new key-value pair into this dictionary. If the value is null, no operation will be performed on the
+        ///     dictionary.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="obj">
@@ -172,139 +135,104 @@ namespace Claunia.PropertyList
         /// </param>
         public void Add(string key, object obj)
         {
-            if(obj == null) return;
+            if(obj == null)
+                return;
 
             Add(key, Wrap(obj));
         }
 
-        /// <summary>
-        ///     Puts a new key-value pair into this dictionary.
-        /// </summary>
+        /// <summary>Puts a new key-value pair into this dictionary.</summary>
         /// <param name="key">The key.</param>
         /// <param name="obj">The value.</param>
-        public void Add(string key, long obj)
-        {
-            Add(key, new NSNumber(obj));
-        }
+        public void Add(string key, long obj) => Add(key, new NSNumber(obj));
 
-        /// <summary>
-        ///     Puts a new key-value pair into this dictionary.
-        /// </summary>
+        /// <summary>Puts a new key-value pair into this dictionary.</summary>
         /// <param name="key">The key.</param>
         /// <param name="obj">The value.</param>
-        public void Add(string key, double obj)
-        {
-            Add(key, new NSNumber(obj));
-        }
+        public void Add(string key, double obj) => Add(key, new NSNumber(obj));
 
-        /// <summary>
-        ///     Puts a new key-value pair into this dictionary.
-        /// </summary>
+        /// <summary>Puts a new key-value pair into this dictionary.</summary>
         /// <param name="key">The key.</param>
         /// <param name="obj">The value.</param>
-        public void Add(string key, bool obj)
-        {
-            Add(key, new NSNumber(obj));
-        }
+        public void Add(string key, bool obj) => Add(key, new NSNumber(obj));
 
-        /// <summary>
-        ///     Checks whether a given value is contained in this dictionary.
-        /// </summary>
+        /// <summary>Checks whether a given value is contained in this dictionary.</summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
         public bool ContainsValue(string val)
         {
             foreach(NSObject o in dict.Values)
-                if(o.GetType().Equals(typeof(NSString)))
-                {
-                    NSString str = (NSString)o;
-                    if(str.Content.Equals(val)) return true;
-                }
+                if(o is NSString str &&
+                   str.Content.Equals(val))
+                    return true;
 
             return false;
         }
 
-        /// <summary>
-        ///     Checks whether a given value is contained in this dictionary.
-        /// </summary>
+        /// <summary>Checks whether a given value is contained in this dictionary.</summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
         public bool ContainsValue(long val)
         {
             foreach(NSObject o in dict.Values)
-                if(o.GetType().Equals(typeof(NSNumber)))
-                {
-                    NSNumber num = (NSNumber)o;
-                    if(num.isInteger() && num.ToInt() == val) return true;
-                }
+                if(o is NSNumber num &&
+                   num.isInteger()   &&
+                   num.ToInt() == val)
+                    return true;
 
             return false;
         }
 
-        /// <summary>
-        ///     Checks whether a given value is contained in this dictionary.
-        /// </summary>
+        /// <summary>Checks whether a given value is contained in this dictionary.</summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
         public bool ContainsValue(double val)
         {
             foreach(NSObject o in dict.Values)
-                if(o.GetType().Equals(typeof(NSNumber)))
-                {
-                    NSNumber num = (NSNumber)o;
-                    if(num.isReal() && num.ToDouble() == val) return true;
-                }
+                if(o is NSNumber num &&
+                   num.isReal()      &&
+                   num.ToDouble() == val)
+                    return true;
 
             return false;
         }
 
-        /// <summary>
-        ///     Checks whether a given value is contained in this dictionary.
-        /// </summary>
+        /// <summary>Checks whether a given value is contained in this dictionary.</summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
         public bool ContainsValue(bool val)
         {
             foreach(NSObject o in dict.Values)
-                if(o.GetType().Equals(typeof(NSNumber)))
-                {
-                    NSNumber num = (NSNumber)o;
-                    if(num.isBoolean() && num.ToBool() == val) return true;
-                }
+                if(o is NSNumber num &&
+                   num.isBoolean()   &&
+                   num.ToBool() == val)
+                    return true;
 
             return false;
         }
 
-        /// <summary>
-        ///     Checks whether a given value is contained in this dictionary.
-        /// </summary>
+        /// <summary>Checks whether a given value is contained in this dictionary.</summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
         public bool ContainsValue(DateTime val)
         {
             foreach(NSObject o in dict.Values)
-                if(o.GetType().Equals(typeof(NSDate)))
-                {
-                    NSDate dat = (NSDate)o;
-                    if(dat.Date.Equals(val)) return true;
-                }
+                if(o is NSDate dat &&
+                   dat.Date.Equals(val))
+                    return true;
 
             return false;
         }
 
-        /// <summary>
-        ///     Checks whether a given value is contained in this dictionary.
-        /// </summary>
+        /// <summary>Checks whether a given value is contained in this dictionary.</summary>
         /// <param name="val">The value that will be searched for.</param>
         /// <returns>Whether the key is contained in this dictionary.</returns>
         public bool ContainsValue(byte[] val)
         {
             foreach(NSObject o in dict.Values)
-                if(o.GetType().Equals(typeof(NSData)))
-                {
-                    NSData dat = (NSData)o;
-                    if(ArrayEquals(dat.Bytes, val)) return true;
-                }
+                if(o is NSData dat &&
+                   ArrayEquals(dat.Bytes, val))
+                    return true;
 
             return false;
         }
@@ -323,26 +251,27 @@ namespace Claunia.PropertyList
         /// </returns>
         public override bool Equals(NSObject obj)
         {
-            if(!(obj is NSDictionary)) return false;
+            if(obj is not NSDictionary dictionary)
+                return false;
 
-            if(((NSDictionary)obj).dict.Count != dict.Count) return false;
-
-            bool found;
+            if(dictionary.dict.Count != dict.Count)
+                return false;
 
             foreach(KeyValuePair<string, NSObject> kvp in dict)
             {
-                NSObject nsoB;
-                found = ((NSDictionary)obj).dict.TryGetValue(kvp.Key, out nsoB);
-                if(!found) return false;
-                if(!kvp.Value.Equals(nsoB)) return false;
+                bool found = dictionary.dict.TryGetValue(kvp.Key, out NSObject nsoB);
+
+                if(!found)
+                    return false;
+
+                if(!kvp.Value.Equals(nsoB))
+                    return false;
             }
 
             return true;
         }
 
-        /// <summary>
-        ///     Serves as a hash function for a <see cref="Claunia.PropertyList.NSDictionary" /> object.
-        /// </summary>
+        /// <summary>Serves as a hash function for a <see cref="Claunia.PropertyList.NSDictionary" /> object.</summary>
         /// <returns>
         ///     A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
         ///     hash table.
@@ -350,7 +279,8 @@ namespace Claunia.PropertyList
         public override int GetHashCode()
         {
             int hash = 7;
-            hash = 83 * hash + (dict != null ? dict.GetHashCode() : 0);
+            hash = (83 * hash) + (dict != null ? dict.GetHashCode() : 0);
+
             return hash;
         }
 
@@ -359,19 +289,24 @@ namespace Claunia.PropertyList
             Indent(xml, level);
             xml.Append("<dict>");
             xml.Append(NEWLINE);
+
             foreach(KeyValuePair<string, NSObject> kvp in dict)
             {
                 Indent(xml, level + 1);
                 xml.Append("<key>");
+
                 //According to http://www.w3.org/TR/REC-xml/#syntax node values must not
                 //contain the characters < or &. Also the > character should be escaped.
-                if(kvp.Key.Contains("&") || kvp.Key.Contains("<") || kvp.Key.Contains(">"))
+                if(kvp.Key.Contains("&") ||
+                   kvp.Key.Contains("<") ||
+                   kvp.Key.Contains(">"))
                 {
                     xml.Append("<![CDATA[");
                     xml.Append(kvp.Key.Replace("]]>", "]]]]><![CDATA[>"));
                     xml.Append("]]>");
                 }
-                else xml.Append(kvp.Key);
+                else
+                    xml.Append(kvp.Key);
 
                 xml.Append("</key>");
                 xml.Append(NEWLINE);
@@ -387,47 +322,53 @@ namespace Claunia.PropertyList
         {
             base.AssignIDs(outPlist);
 
-            foreach(KeyValuePair<string, NSObject> entry in dict) keys[entry.Key].AssignIDs(outPlist);
+            foreach(KeyValuePair<string, NSObject> entry in dict)
+                keys[entry.Key].AssignIDs(outPlist);
 
-            foreach(KeyValuePair<string, NSObject> entry in dict) entry.Value.AssignIDs(outPlist);
+            foreach(KeyValuePair<string, NSObject> entry in dict)
+                entry.Value.AssignIDs(outPlist);
         }
 
         internal override void ToBinary(BinaryPropertyListWriter outPlist)
         {
             outPlist.WriteIntHeader(0xD, dict.Count);
-            foreach(KeyValuePair<string, NSObject> entry in dict) outPlist.WriteID(outPlist.GetID(keys[entry.Key]));
-            foreach(KeyValuePair<string, NSObject> entry in dict) outPlist.WriteID(outPlist.GetID(entry.Value));
+
+            foreach(KeyValuePair<string, NSObject> entry in dict)
+                outPlist.WriteID(outPlist.GetID(keys[entry.Key]));
+
+            foreach(KeyValuePair<string, NSObject> entry in dict)
+                outPlist.WriteID(outPlist.GetID(entry.Value));
         }
 
         /// <summary>
-        ///     Generates a valid ASCII property list which has this NSDictionary as its
-        ///     root object. The generated property list complies with the format as
-        ///     described in
+        ///     Generates a valid ASCII property list which has this NSDictionary as its root object. The generated property
+        ///     list complies with the format as described in
         ///     https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html
         ///     Property List Programming Guide - Old-Style ASCII Property Lists.
         /// </summary>
         /// <returns>ASCII representation of this object.</returns>
         public string ToASCIIPropertyList()
         {
-            StringBuilder ascii = new StringBuilder();
+            var ascii = new StringBuilder();
             ToASCII(ascii, 0);
             ascii.Append(NEWLINE);
+
             return ascii.ToString();
         }
 
         /// <summary>
-        ///     Generates a valid ASCII property list in GnuStep format which has this
-        ///     NSDictionary as its root object. The generated property list complies with
-        ///     the format as described in
-        ///     http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html
-        ///     GnuStep - NSPropertyListSerialization class documentation.
+        ///     Generates a valid ASCII property list in GnuStep format which has this NSDictionary as its root object. The
+        ///     generated property list complies with the format as described in
+        ///     http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html GnuStep -
+        ///     NSPropertyListSerialization class documentation.
         /// </summary>
         /// <returns>GnuStep ASCII representation of this object.</returns>
         public string ToGnuStepASCIIPropertyList()
         {
-            StringBuilder ascii = new StringBuilder();
+            var ascii = new StringBuilder();
             ToASCIIGnuStep(ascii, 0);
             ascii.Append(NEWLINE);
+
             return ascii.ToString();
         }
 
@@ -436,6 +377,7 @@ namespace Claunia.PropertyList
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.DICTIONARY_BEGIN_TOKEN);
             ascii.Append(NEWLINE);
+
             foreach(string key in Keys)
             {
                 NSObject val = ObjectForKey(key);
@@ -443,9 +385,8 @@ namespace Claunia.PropertyList
                 ascii.Append("\"");
                 ascii.Append(NSString.EscapeStringForASCII(key));
                 ascii.Append("\" =");
-                Type objClass = val.GetType();
-                if(objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) ||
-                   objClass.Equals(typeof(NSData)))
+
+                if(val is NSDictionary or NSArray or NSData)
                 {
                     ascii.Append(NEWLINE);
                     val.ToASCII(ascii, level + 2);
@@ -469,6 +410,7 @@ namespace Claunia.PropertyList
             Indent(ascii, level);
             ascii.Append(ASCIIPropertyListParser.DICTIONARY_BEGIN_TOKEN);
             ascii.Append(NEWLINE);
+
             foreach(string key in Keys)
             {
                 NSObject val = ObjectForKey(key);
@@ -476,9 +418,8 @@ namespace Claunia.PropertyList
                 ascii.Append("\"");
                 ascii.Append(NSString.EscapeStringForASCII(key));
                 ascii.Append("\" =");
-                Type objClass = val.GetType();
-                if(objClass.Equals(typeof(NSDictionary)) || objClass.Equals(typeof(NSArray)) ||
-                   objClass.Equals(typeof(NSData)))
+
+                if(val is NSDictionary or NSArray or NSData)
                 {
                     ascii.Append(NEWLINE);
                     val.ToASCIIGnuStep(ascii, level + 2);
@@ -498,9 +439,7 @@ namespace Claunia.PropertyList
         }
 
         #region IDictionary implementation
-        /// <summary>
-        ///     Add the specified key and value.
-        /// </summary>
+        /// <summary>Add the specified key and value.</summary>
         /// <param name="key">Key.</param>
         /// <param name="value">Value.</param>
         public void Add(string key, NSObject value)
@@ -509,79 +448,56 @@ namespace Claunia.PropertyList
             keys.Add(key, new NSString(key));
         }
 
-        /// <summary>
-        ///     Checks if there is any item contained in the current instance corresponding with the specified key.
-        /// </summary>
+        /// <summary>Checks if there is any item contained in the current instance corresponding with the specified key.</summary>
         /// <returns><c>true</c>, if key was contained, <c>false</c> otherwise.</returns>
         /// <param name="key">Key.</param>
-        public bool ContainsKey(string key)
-        {
-            return dict.ContainsKey(key);
-        }
+        public bool ContainsKey(string key) => dict.ContainsKey(key);
 
-        /// <summary>
-        ///     Checks if there is any item contained in the current instance corresponding with the specified value.
-        /// </summary>
+        /// <summary>Checks if there is any item contained in the current instance corresponding with the specified value.</summary>
         /// <returns><c>true</c>, if value is contained, <c>false</c> otherwise.</returns>
         /// <param name="value">Key.</param>
-        public bool ContainsValue(NSObject value)
-        {
-            return dict.ContainsValue(value);
-        }
+        public bool ContainsValue(NSObject value) => dict.ContainsValue(value);
 
-        /// <summary>
-        ///     Removes the item belonging to the specified key.
-        /// </summary>
+        /// <summary>Removes the item belonging to the specified key.</summary>
         /// <param name="key">Key.</param>
         public bool Remove(string key)
         {
             keys.Remove(key);
+
             return dict.Remove(key);
         }
 
-        /// <summary>
-        ///     Tries to get the item corresponding to the specified key
-        /// </summary>
+        /// <summary>Tries to get the item corresponding to the specified key</summary>
         /// <returns><c>true</c>, if get value was successfully found and retrieved, <c>false</c> otherwise.</returns>
         /// <param name="key">Key.</param>
         /// <param name="value">Where to store the value.</param>
-        public bool TryGetValue(string key, out NSObject value)
-        {
-            return dict.TryGetValue(key, out value);
-        }
+        public bool TryGetValue(string key, out NSObject value) => dict.TryGetValue(key, out value);
 
-        /// <summary>
-        ///     Gets or sets the <see cref="Claunia.PropertyList.NSObject" /> at the specified index.
-        /// </summary>
+        /// <summary>Gets or sets the <see cref="Claunia.PropertyList.NSObject" /> at the specified index.</summary>
         /// <param name="index">Index.</param>
         public NSObject this[string index]
         {
             get => dict[index];
             set
             {
-                if(!keys.ContainsKey(index)) keys.Add(index, new NSString(index));
+                if(!keys.ContainsKey(index))
+                    keys.Add(index, new NSString(index));
 
                 dict[index] = value;
             }
         }
 
-        /// <summary>
-        ///     Gets an array with all the keys contained in the current instance.
-        /// </summary>
+        /// <summary>Gets an array with all the keys contained in the current instance.</summary>
         /// <value>The keys.</value>
         public ICollection<string> Keys => dict.Keys;
 
-        /// <summary>
-        ///     Gets an array with all the objects contained in the current instance.
-        /// </summary>
+        /// <summary>Gets an array with all the objects contained in the current instance.</summary>
         /// <value>The objects.</value>
         public ICollection<NSObject> Values => dict.Values;
         #endregion
 
         #region ICollection implementation
-        /// <summary>
-        ///     Adds the specified item.
-        /// </summary>
+        /// <summary>Adds the specified item.</summary>
         /// <param name="item">Item.</param>
         public void Add(KeyValuePair<string, NSObject> item)
         {
@@ -589,24 +505,17 @@ namespace Claunia.PropertyList
             dict.Add(item.Key, item.Value);
         }
 
-        /// <summary>
-        ///     Clears this instance.
-        /// </summary>
+        /// <summary>Clears this instance.</summary>
         public void Clear()
         {
             keys.Clear();
             dict.Clear();
         }
 
-        /// <summary>
-        ///     Checks if the current instance contains the specified item.
-        /// </summary>
+        /// <summary>Checks if the current instance contains the specified item.</summary>
         /// <param name="item">Item.</param>
         /// <returns><c>true</c> if it is found, <c>false</c> otherwise.</returns>
-        public bool Contains(KeyValuePair<string, NSObject> item)
-        {
-            return dict.ContainsKey(item.Key);
-        }
+        public bool Contains(KeyValuePair<string, NSObject> item) => dict.ContainsKey(item.Key);
 
         /// <summary>
         ///     Copies the <see cref="Dictionary{TKey, TValue}.ValueCollection" /> elements to an existing one-dimensional
@@ -623,26 +532,21 @@ namespace Claunia.PropertyList
             coll.CopyTo(array, arrayIndex);
         }
 
-        /// <summary>
-        ///     Removes the specified item.
-        /// </summary>
+        /// <summary>Removes the specified item.</summary>
         /// <param name="item">Item to remove.</param>
         /// <returns><c>true</c> if successfully removed, <c>false</c> if not, or if item is not in current instance.</returns>
         public bool Remove(KeyValuePair<string, NSObject> item)
         {
             keys.Remove(item.Key);
+
             return dict.Remove(item.Key);
         }
 
-        /// <summary>
-        ///     Gets the count of items in the current instance.
-        /// </summary>
+        /// <summary>Gets the count of items in the current instance.</summary>
         /// <value>How many items are contained in the current instance.</value>
         public int Count => dict.Count;
 
-        /// <summary>
-        ///     Gets a value indicating whether this instance is read only.
-        /// </summary>
+        /// <summary>Gets a value indicating whether this instance is read only.</summary>
         /// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
         public bool IsReadOnly => false;
         #endregion

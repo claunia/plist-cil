@@ -8,13 +8,13 @@ namespace plistcil.test
     {
         static void ParseEmptyStreamTestDelegate()
         {
-            using(MemoryStream stream = new MemoryStream()) PropertyListParser.Parse(stream);
+            using var stream = new MemoryStream();
+
+            PropertyListParser.Parse(stream);
         }
 
         [Fact]
-        public static void ParseEmptyStreamTest()
-        {
-            Assert.Throws<PropertyListFormatException>(() => ParseEmptyStreamTestDelegate());
-        }
+        public static void ParseEmptyStreamTest() =>
+            Assert.Throws<PropertyListFormatException>(ParseEmptyStreamTestDelegate);
     }
 }

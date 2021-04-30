@@ -12,14 +12,18 @@ namespace plistcil.test
             byte[]   data = File.ReadAllBytes("test-files/plist2.bin");
             NSObject root = PropertyListParser.Parse(data);
 
-            using(MemoryStream actualOutput = new MemoryStream())
-                using(Stream expectedOutput = File.OpenRead("test-files/plist2.bin"))
-                    using(ValidatingStream validatingStream = new ValidatingStream(actualOutput, expectedOutput))
-                    {
-                        BinaryPropertyListWriter writer = new BinaryPropertyListWriter(validatingStream);
-                        writer.ReuseObjectIds = false;
-                        writer.Write(root);
-                    }
+            using var actualOutput = new MemoryStream();
+
+            using Stream expectedOutput = File.OpenRead("test-files/plist2.bin");
+
+            using var validatingStream = new ValidatingStream(actualOutput, expectedOutput);
+
+            var writer = new BinaryPropertyListWriter(validatingStream)
+            {
+                ReuseObjectIds = false
+            };
+
+            writer.Write(root);
         }
 
         [Fact]
@@ -28,14 +32,15 @@ namespace plistcil.test
             byte[]   data = File.ReadAllBytes("test-files/plist3.bin");
             NSObject root = PropertyListParser.Parse(data);
 
-            using(MemoryStream actualOutput = new MemoryStream())
-                using(Stream expectedOutput = File.OpenRead("test-files/plist3.bin"))
-                    using(ValidatingStream validatingStream = new ValidatingStream(actualOutput, expectedOutput))
-                    {
-                        BinaryPropertyListWriter writer = new BinaryPropertyListWriter(validatingStream);
-                        writer.ReuseObjectIds = false;
-                        writer.Write(root);
-                    }
+            using var actualOutput = new MemoryStream();
+
+            using Stream expectedOutput = File.OpenRead("test-files/plist3.bin");
+
+            using var validatingStream = new ValidatingStream(actualOutput, expectedOutput);
+
+            var writer = new BinaryPropertyListWriter(validatingStream);
+            writer.ReuseObjectIds = false;
+            writer.Write(root);
         }
 
         [Fact]
@@ -44,14 +49,18 @@ namespace plistcil.test
             byte[]   data = File.ReadAllBytes("test-files/plist4.bin");
             NSObject root = PropertyListParser.Parse(data);
 
-            using(MemoryStream actualOutput = new MemoryStream())
-                using(Stream expectedOutput = File.OpenRead("test-files/plist4.bin"))
-                    using(ValidatingStream validatingStream = new ValidatingStream(actualOutput, expectedOutput))
-                    {
-                        BinaryPropertyListWriter writer = new BinaryPropertyListWriter(validatingStream);
-                        writer.ReuseObjectIds = false;
-                        writer.Write(root);
-                    }
+            using var actualOutput = new MemoryStream();
+
+            using Stream expectedOutput = File.OpenRead("test-files/plist4.bin");
+
+            using var validatingStream = new ValidatingStream(actualOutput, expectedOutput);
+
+            var writer = new BinaryPropertyListWriter(validatingStream)
+            {
+                ReuseObjectIds = false
+            };
+
+            writer.Write(root);
         }
 
         [Fact]
@@ -60,14 +69,18 @@ namespace plistcil.test
             byte[]   data = File.ReadAllBytes("test-files/plist.bin");
             NSObject root = PropertyListParser.Parse(data);
 
-            using(MemoryStream actualOutput = new MemoryStream())
-                using(Stream expectedOutput = File.OpenRead("test-files/plist.bin"))
-                    using(ValidatingStream validatingStream = new ValidatingStream(actualOutput, expectedOutput))
-                    {
-                        BinaryPropertyListWriter writer = new BinaryPropertyListWriter(validatingStream);
-                        writer.ReuseObjectIds = false;
-                        writer.Write(root);
-                    }
+            using var actualOutput = new MemoryStream();
+
+            using Stream expectedOutput = File.OpenRead("test-files/plist.bin");
+
+            using var validatingStream = new ValidatingStream(actualOutput, expectedOutput);
+
+            var writer = new BinaryPropertyListWriter(validatingStream)
+            {
+                ReuseObjectIds = false
+            };
+
+            writer.Write(root);
         }
     }
 }

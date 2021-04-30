@@ -29,67 +29,56 @@ using System.Text;
 
 namespace Claunia.PropertyList
 {
-    /// <summary>
-    ///     An UID. Only found in binary property lists that are keyed archives.
-    /// </summary>
+    /// <summary>An UID. Only found in binary property lists that are keyed archives.</summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
     public class UID : NSObject
     {
         readonly ulong value;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class.</summary>
         /// <param name="bytes">Bytes.</param>
         public UID(ReadOnlySpan<byte> bytes)
         {
-            if(bytes.Length != 1 && bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 8)
+            if(bytes.Length != 1 &&
+               bytes.Length != 2 &&
+               bytes.Length != 4 &&
+               bytes.Length != 8)
                 throw new ArgumentException("Type argument is not valid.");
 
             value = (ulong)BinaryPropertyListParser.ParseLong(bytes);
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 8-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 8-bit
+        ///     number.
         /// </summary>
         /// <param name="number">Unsigned 8-bit number.</param>
-        public UID(byte number)
-        {
-            value = number;
-        }
+        public UID(byte number) => value = number;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 16-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 16-bit
+        ///     number.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="number">Unsigned 16-bit number.</param>
-        public UID(ushort number)
-        {
-            value = number;
-        }
+        public UID(ushort number) => value = number;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 32-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 32-bit
+        ///     number.
         /// </summary>
         /// <param name="number">Unsigned 32-bit number.</param>
-        public UID(uint number)
-        {
-            value = number;
-        }
+        public UID(uint number) => value = number;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 64-bit number.
+        ///     Initializes a new instance of the <see cref="Claunia.PropertyList.UID" /> class using an unsigned 64-bit
+        ///     number.
         /// </summary>
         /// <param name="number">Unsigned 64-bit number.</param>
-        public UID(ulong number)
-        {
-            value = number;
-        }
+        public UID(ulong number) => value = number;
 
-        /// <summary>
-        ///     Gets the bytes.
-        /// </summary>
+        /// <summary>Gets the bytes.</summary>
         /// <value>The bytes.</value>
         public byte[] Bytes
         {
@@ -97,50 +86,44 @@ namespace Claunia.PropertyList
             {
                 byte[] bytes = new byte[ByteCount];
                 GetBytes(bytes);
+
                 return bytes;
             }
         }
 
-        /// <summary>
-        ///     Gets the number of bytes required to represent this <see cref="UID" />.
-        /// </summary>
-        public int ByteCount
+        /// <summary>Gets the number of bytes required to represent this <see cref="UID" />.</summary>
+        public int ByteCount => value switch
         {
-            get
-            {
-                if(value <= byte.MaxValue) return 1;
+            <= byte.MaxValue   => 1,
+            <= ushort.MaxValue => 2,
+            <= uint.MaxValue   => 4,
+            _                  => 8
+        };
 
-                if(value <= ushort.MaxValue) return 2;
-                if(value <= uint.MaxValue) return 4;
-
-                return 8;
-            }
-        }
-
-        /// <summary>
-        ///     Writes the bytes required to represent this <see cref="UID" /> to a byte span.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The byte span to which to write the byte representation of this UID.
-        /// </param>
+        /// <summary>Writes the bytes required to represent this <see cref="UID" /> to a byte span.</summary>
+        /// <param name="bytes">The byte span to which to write the byte representation of this UID.</param>
         public void GetBytes(Span<byte> bytes)
         {
             switch(ByteCount)
             {
                 case 1:
                     bytes[0] = (byte)value;
+
                     break;
 
                 case 2:
                     BinaryPrimitives.WriteUInt16BigEndian(bytes, (ushort)value);
+
                     break;
 
                 case 4:
                     BinaryPrimitives.WriteUInt32BigEndian(bytes, (uint)value);
+
                     break;
 
                 case 8:
                     BinaryPrimitives.WriteUInt64BigEndian(bytes, value);
+
                     break;
 
                 default: throw new InvalidOperationException();
@@ -148,9 +131,8 @@ namespace Claunia.PropertyList
         }
 
         /// <summary>
-        ///     UIDs are represented as dictionaries in XML property lists,
-        ///     where the key is always <c>CF$UID</c> and the value is the integer
-        ///     representation of the UID.
+        ///     UIDs are represented as dictionaries in XML property lists, where the key is always <c>CF$UID</c> and the
+        ///     value is the integer representation of the UID.
         /// </summary>
         /// <param name="xml">The xml StringBuilder</param>
         /// <param name="level">The indentation level</param>
@@ -165,7 +147,7 @@ namespace Claunia.PropertyList
             xml.AppendLine();
 
             Indent(xml, level + 1);
-            xml.Append($"<integer>{this.value}</integer>");
+            xml.Append($"<integer>{value}</integer>");
             xml.AppendLine();
 
             Indent(xml, level);
@@ -186,14 +168,14 @@ namespace Claunia.PropertyList
             ascii.Append("\"");
             Span<byte> bytes = stackalloc byte[ByteCount];
             GetBytes(bytes);
-            foreach(byte b in bytes) ascii.Append(string.Format("{0:x2}", b));
+
+            foreach(byte b in bytes)
+                ascii.Append($"{b:x2}");
+
             ascii.Append("\"");
         }
 
-        internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
-        {
-            ToASCII(ascii, level);
-        }
+        internal override void ToASCIIGnuStep(StringBuilder ascii, int level) => ToASCII(ascii, level);
 
         /// <summary>
         ///     Determines whether the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
@@ -207,42 +189,25 @@ namespace Claunia.PropertyList
         ///     <c>true</c> if the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
         ///     <see cref="Claunia.PropertyList.UID" />; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(NSObject obj)
-        {
-            return Equals((object)obj);
-        }
+        public override bool Equals(NSObject obj) => Equals((object)obj);
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            UID uid = obj as UID;
-
-            if(uid == null) return false;
+            if(obj is not UID uid)
+                return false;
 
             return uid.value == value;
         }
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return value.GetHashCode();
-        }
+        public override int GetHashCode() => value.GetHashCode();
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return $"{value} (UID)";
-        }
+        public override string ToString() => $"{value} (UID)";
 
-        /// <summary>
-        /// Gets a <see cref="ulong"/> which represents this <see cref="UID"/>.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="ulong"/> which represents this <see cref="UID"/>.
-        /// </returns>
-        public ulong ToUInt64()
-        {
-            return this.value;
-        }
+        /// <summary>Gets a <see cref="ulong" /> which represents this <see cref="UID" />.</summary>
+        /// <returns>A <see cref="ulong" /> which represents this <see cref="UID" />.</returns>
+        public ulong ToUInt64() => value;
     }
 }

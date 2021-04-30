@@ -1,14 +1,13 @@
-﻿using BenchmarkDotNet.Reports;
-using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Running;
 
 namespace Claunia.PropertyList.Benchmark
 {
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
-            Summary summary = BenchmarkRunner.Run<BinaryPropertyListParserBenchmarks>();
-            summary = BenchmarkRunner.Run<BinaryPropertyListWriterBenchmarks>();
+            BenchmarkRunner.Run<BinaryPropertyListParserBenchmarks>();
+            BenchmarkRunner.Run<BinaryPropertyListWriterBenchmarks>();
         }
     }
 }

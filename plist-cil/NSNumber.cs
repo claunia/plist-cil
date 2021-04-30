@@ -29,30 +29,24 @@ using System.Text;
 
 namespace Claunia.PropertyList
 {
-    /// <summary>
-    ///     A number whose value is either an integer, a real number or bool.
-    /// </summary>
+    /// <summary>A number whose value is either an integer, a real number or bool.</summary>
     /// @author Daniel Dreibrodt
     /// @author Natalia Portillo
     public class NSNumber : NSObject, IComparable
     {
         /// <summary>
-        ///     Indicates that the number's value is an integer.
-        ///     The number is stored as a .NET <see cref="long" />.
-        ///     Its original value could have been char, short, int, long or even long long.
+        ///     Indicates that the number's value is an integer. The number is stored as a .NET <see cref="long" />. Its
+        ///     original value could have been char, short, int, long or even long long.
         /// </summary>
         public const int INTEGER = 0;
 
         /// <summary>
-        ///     Indicates that the number's value is a real number.
-        ///     The number is stored as a .NET <see cref="double" />.
-        ///     Its original value could have been float or double.
+        ///     Indicates that the number's value is a real number. The number is stored as a .NET <see cref="double" />. Its
+        ///     original value could have been float or double.
         /// </summary>
         public const int REAL = 1;
 
-        /// <summary>
-        ///     Indicates that the number's value is bool.
-        /// </summary>
+        /// <summary>Indicates that the number's value is bool.</summary>
         public const int BOOLEAN = 2;
         readonly bool   boolValue;
         readonly double doubleValue;
@@ -76,11 +70,13 @@ namespace Claunia.PropertyList
             {
                 case INTEGER:
                     doubleValue = longValue = BinaryPropertyListParser.ParseLong(bytes);
+
                     break;
 
                 case REAL:
                     doubleValue = BinaryPropertyListParser.ParseDouble(bytes);
                     longValue   = (long)Math.Round(doubleValue);
+
                     break;
 
                 default: throw new ArgumentException("Type argument is not valid.", nameof(type));
@@ -96,35 +92,38 @@ namespace Claunia.PropertyList
                 case INTEGER:
                 {
                     doubleValue = longValue = long.Parse(text, CultureInfo.InvariantCulture);
+
                     break;
                 }
                 case REAL:
                 {
                     doubleValue = double.Parse(text, CultureInfo.InvariantCulture);
                     longValue   = (long)Math.Round(doubleValue);
+
                     break;
                 }
-                default: { throw new ArgumentException("Type argument is not valid."); }
+                default:
+                {
+                    throw new ArgumentException("Type argument is not valid.");
+                }
             }
 
             this.type = type;
         }
 
-        /// <summary>
-        ///     Creates a number from its textual representation.
-        /// </summary>
+        /// <summary>Creates a number from its textual representation.</summary>
         /// <param name="text">The textual representation of the number.</param>
         /// <seealso cref="bool.Parse(string)" />
         /// <seealso cref="long.Parse(string)" />
         /// <seealso cref="double.Parse(string, IFormatProvider)" />
         public NSNumber(string text)
         {
-            if(text == null) throw new ArgumentException("The given string is null and cannot be parsed as number.");
+            if(text == null)
+                throw new ArgumentException("The given string is null and cannot be parsed as number.");
 
-            long   l;
-            double d;
-
-            if(text.StartsWith("0x") && long.TryParse(text.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out l))
+            if(text.StartsWith("0x") &&
+               long.TryParse(text.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture,
+                             out long l))
             {
                 doubleValue = longValue = l;
                 type        = INTEGER;
@@ -134,7 +133,7 @@ namespace Claunia.PropertyList
                 doubleValue = longValue = l;
                 type        = INTEGER;
             }
-            else if(double.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out d))
+            else if(double.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out double d))
             {
                 doubleValue = d;
                 longValue   = (long)Math.Round(doubleValue);
@@ -143,9 +142,10 @@ namespace Claunia.PropertyList
             else
             {
                 bool isTrue = string.Equals(text, "true", StringComparison.CurrentCultureIgnoreCase) ||
-                              string.Equals(text, "yes",  StringComparison.CurrentCultureIgnoreCase);
+                              string.Equals(text, "yes", StringComparison.CurrentCultureIgnoreCase);
+
                 bool isFalse = string.Equals(text, "false", StringComparison.CurrentCultureIgnoreCase) ||
-                               string.Equals(text, "no",    StringComparison.CurrentCultureIgnoreCase);
+                               string.Equals(text, "no", StringComparison.CurrentCultureIgnoreCase);
 
                 if(isTrue || isFalse)
                 {
@@ -159,9 +159,7 @@ namespace Claunia.PropertyList
             }
         }
 
-        /// <summary>
-        ///     Creates an integer number.
-        /// </summary>
+        /// <summary>Creates an integer number.</summary>
         /// <param name="i">The integer value.</param>
         public NSNumber(int i)
         {
@@ -169,9 +167,7 @@ namespace Claunia.PropertyList
             type        = INTEGER;
         }
 
-        /// <summary>
-        ///     Creates an integer number.
-        /// </summary>
+        /// <summary>Creates an integer number.</summary>
         /// <param name="l">The long integer value.</param>
         public NSNumber(long l)
         {
@@ -179,9 +175,7 @@ namespace Claunia.PropertyList
             type        = INTEGER;
         }
 
-        /// <summary>
-        ///     Creates a real number.
-        /// </summary>
+        /// <summary>Creates a real number.</summary>
         /// <param name="d">The real value.</param>
         public NSNumber(double d)
         {
@@ -189,9 +183,7 @@ namespace Claunia.PropertyList
             type      = REAL;
         }
 
-        /// <summary>
-        ///     Creates a bool number.
-        /// </summary>
+        /// <summary>Creates a bool number.</summary>
         /// <param name="b">The bool value.</param>
         public NSNumber(bool b)
         {
@@ -200,143 +192,104 @@ namespace Claunia.PropertyList
             type        = BOOLEAN;
         }
 
-        /// <summary>
-        ///     Compares the current <see cref="Claunia.PropertyList.NSNumber" /> to the specified object.
-        /// </summary>
+        /// <summary>Compares the current <see cref="Claunia.PropertyList.NSNumber" /> to the specified object.</summary>
         /// <returns>
-        ///     0 if the numbers are equal, 1 if the current <see cref="Claunia.PropertyList.NSNumber" /> is greater
-        ///     than the argument and -1 if it is less, or the argument is not a number.
+        ///     0 if the numbers are equal, 1 if the current <see cref="Claunia.PropertyList.NSNumber" /> is greater than the
+        ///     argument and -1 if it is less, or the argument is not a number.
         /// </returns>
         /// <param name="o">Object to compare to the current <see cref="Claunia.PropertyList.NSNumber" />.</param>
         public int CompareTo(object o)
         {
             double x = ToDouble();
             double y;
-            if(o is NSNumber)
+
+            if(o is NSNumber num)
             {
-                NSNumber num = (NSNumber)o;
                 y = num.ToDouble();
-                return x < y ? -1 : (x == y ? 0 : 1);
+
+                return x < y
+                           ? -1
+                           : x == y
+                               ? 0
+                               : 1;
             }
 
-            if(IsNumber(o))
-            {
-                y = GetDoubleFromObject(o);
-                return x < y ? -1 : (x == y ? 0 : 1);
-            }
+            if(!IsNumber(o))
+                return -1;
 
-            return -1;
+            y = GetDoubleFromObject(o);
+
+            return x < y
+                       ? -1
+                       : x == y
+                           ? 0
+                           : 1;
         }
 
-        /// <summary>
-        ///     Gets the type of this number's value.
-        /// </summary>
+        /// <summary>Gets the type of this number's value.</summary>
         /// <returns>The type flag.</returns>
         /// <seealso cref="BOOLEAN" />
         /// <seealso cref="INTEGER" />
         /// <seealso cref="REAL" />
-        public int GetNSNumberType()
-        {
-            return type;
-        }
+        public int GetNSNumberType() => type;
 
-        /// <summary>
-        ///     Checks whether the value of this NSNumber is a bool.
-        /// </summary>
+        /// <summary>Checks whether the value of this NSNumber is a bool.</summary>
         /// <returns>Whether the number's value is a bool.</returns>
-        public bool isBoolean()
-        {
-            return type == BOOLEAN;
-        }
+        public bool isBoolean() => type == BOOLEAN;
 
-        /// <summary>
-        ///     Checks whether the value of this NSNumber is an integer.
-        /// </summary>
+        /// <summary>Checks whether the value of this NSNumber is an integer.</summary>
         /// <returns>Whether the number's value is an integer.</returns>
-        public bool isInteger()
-        {
-            return type == INTEGER;
-        }
+        public bool isInteger() => type == INTEGER;
 
-        /// <summary>
-        ///     Checks whether the value of this NSNumber is a real number.
-        /// </summary>
+        /// <summary>Checks whether the value of this NSNumber is a real number.</summary>
         /// <returns>Whether the number's value is a real number.</returns>
-        public bool isReal()
-        {
-            return type == REAL;
-        }
+        public bool isReal() => type == REAL;
 
-        /// <summary>
-        ///     The number's bool value.
-        /// </summary>
+        /// <summary>The number's bool value.</summary>
         /// <returns><c>true</c> if the value is true or non-zero, <c>false</c> otherwise.</returns>
         public bool ToBool()
         {
-            if(type == BOOLEAN) return boolValue;
+            if(type == BOOLEAN)
+                return boolValue;
 
             return longValue != 0;
         }
 
-        /// <summary>
-        ///     The number's long value.
-        /// </summary>
+        /// <summary>The number's long value.</summary>
         /// <returns>The value of the number as long</returns>
-        public long ToLong()
-        {
-            return longValue;
-        }
+        public long ToLong() => longValue;
 
         /// <summary>
         ///     The number's int value.
         ///     <i>
-        ///         Note: Even though the number's type might be INTEGER it can be larger than a Java int.
-        ///         Use intValue() only if you are certain that it contains a number from the int range.
-        ///         Otherwise the value might be innaccurate.
+        ///         Note: Even though the number's type might be INTEGER it can be larger than a Java int. Use intValue() only if
+        ///         you are certain that it contains a number from the int range. Otherwise the value might be inaccurate.
         ///     </i>
         /// </summary>
         /// <returns>The value of the number as int.</returns>
-        public int ToInt()
-        {
-            return (int)longValue;
-        }
+        public int ToInt() => (int)longValue;
 
-        /// <summary>
-        ///     The number's double value.
-        /// </summary>
+        /// <summary>The number's double value.</summary>
         /// <returns>The value of the number as double.</returns>
-        public double ToDouble()
-        {
-            return doubleValue;
-        }
+        public double ToDouble() => doubleValue;
 
-        /// <summary>
-        ///     The number's float value.
-        ///     WARNING: Possible loss of precision if the value is outside the float range.
-        /// </summary>
+        /// <summary>The number's float value. WARNING: Possible loss of precision if the value is outside the float range.</summary>
         /// <returns>The value of the number as float.</returns>
-        public float floatValue()
-        {
-            return (float)doubleValue;
-        }
+        public float floatValue() => (float)doubleValue;
 
-        /// <summary>
-        ///     Checks whether the other object is a NSNumber of the same value.
-        /// </summary>
+        /// <summary>Checks whether the other object is a NSNumber of the same value.</summary>
         /// <param name="obj">The object to compare to.</param>
         /// <returns>Whether the objects are equal in terms of numeric value and type.</returns>
         public override bool Equals(object obj)
         {
-            if(!(obj is NSNumber)) return false;
+            if(obj is not NSNumber number)
+                return false;
 
-            NSNumber n = (NSNumber)obj;
-            return type      == n.type && longValue == n.longValue && doubleValue == n.doubleValue &&
-                   boolValue == n.boolValue;
+            return type      == number.type && longValue == number.longValue && doubleValue == number.doubleValue &&
+                   boolValue == number.boolValue;
         }
 
-        /// <summary>
-        ///     Serves as a hash function for a <see cref="Claunia.PropertyList.NSNumber" /> object.
-        /// </summary>
+        /// <summary>Serves as a hash function for a <see cref="Claunia.PropertyList.NSNumber" /> object.</summary>
         /// <returns>
         ///     A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
         ///     hash table.
@@ -344,31 +297,33 @@ namespace Claunia.PropertyList
         public override int GetHashCode()
         {
             int hash = type;
-            hash = 37 * hash + (int)(longValue ^ ((uint)longValue >> 32));
-            hash = 37 * hash + (int)(BitConverter.DoubleToInt64Bits(doubleValue) ^
-                                     (uint)(BitConverter.DoubleToInt64Bits(doubleValue) >> 32));
-            hash = 37 * hash + (ToBool() ? 1 : 0);
+            hash = (37 * hash) + (int)(longValue ^ ((uint)longValue >> 32));
+
+            hash = (37 * hash) + (int)(BitConverter.DoubleToInt64Bits(doubleValue) ^
+                                       (uint)(BitConverter.DoubleToInt64Bits(doubleValue) >> 32));
+
+            hash = (37 * hash) + (ToBool() ? 1 : 0);
+
             return hash;
         }
 
         /// <summary>
-        ///     Returns a <see cref="System.String" /> that represents the current <see cref="Claunia.PropertyList.NSNumber" />.
+        ///     Returns a <see cref="System.String" /> that represents the current
+        ///     <see cref="Claunia.PropertyList.NSNumber" />.
         /// </summary>
         /// <returns>A <see cref="System.String" /> that represents the current <see cref="Claunia.PropertyList.NSNumber" />.</returns>
-        public override string ToString()
+        public override string ToString() => type switch
         {
-            switch(type)
-            {
-                case INTEGER: { return ToLong().ToString(); }
-                case REAL:    { return ToDouble().ToString("R", CultureInfo.InvariantCulture); }
-                case BOOLEAN: { return ToBool().ToString(); }
-                default:      { return base.ToString(); }
-            }
-        }
+            INTEGER => ToLong().ToString(),
+            REAL    => ToDouble().ToString("R", CultureInfo.InvariantCulture),
+            BOOLEAN => ToBool().ToString(),
+            _       => base.ToString()
+        };
 
         internal override void ToXml(StringBuilder xml, int level)
         {
             Indent(xml, level);
+
             switch(type)
             {
                 case INTEGER:
@@ -376,22 +331,26 @@ namespace Claunia.PropertyList
                     xml.Append("<integer>");
                     xml.Append(ToLong());
                     xml.Append("</integer>");
+
                     break;
                 }
                 case REAL:
                 {
                     xml.Append("<real>");
 
-                    if(doubleValue == 0) xml.Append("0.0");
-                    else xml.Append(ToDouble().ToString("R", CultureInfo.InvariantCulture));
+                    if(doubleValue == 0)
+                        xml.Append("0.0");
+                    else
+                        xml.Append(ToDouble().ToString("R", CultureInfo.InvariantCulture));
 
                     xml.Append("</real>");
+
                     break;
                 }
                 case BOOLEAN:
                 {
-                    if(ToBool()) xml.Append("<true/>");
-                    else xml.Append("<false/>");
+                    xml.Append(ToBool() ? "<true/>" : "<false/>");
+
                     break;
                 }
             }
@@ -435,11 +394,13 @@ namespace Claunia.PropertyList
                 {
                     outPlist.Write(0x23);
                     outPlist.WriteDouble(ToDouble());
+
                     break;
                 }
                 case BOOLEAN:
                 {
                     outPlist.Write(ToBool() ? 0x09 : 0x08);
+
                     break;
                 }
             }
@@ -448,13 +409,17 @@ namespace Claunia.PropertyList
         internal override void ToASCII(StringBuilder ascii, int level)
         {
             Indent(ascii, level);
-            if(type == BOOLEAN) ascii.Append(boolValue ? "YES" : "NO");
-            else ascii.Append(ToString());
+
+            if(type == BOOLEAN)
+                ascii.Append(boolValue ? "YES" : "NO");
+            else
+                ascii.Append(ToString());
         }
 
         internal override void ToASCIIGnuStep(StringBuilder ascii, int level)
         {
             Indent(ascii, level);
+
             switch(type)
             {
                 case INTEGER:
@@ -462,6 +427,7 @@ namespace Claunia.PropertyList
                     ascii.Append("<*I");
                     ascii.Append(ToString());
                     ascii.Append(">");
+
                     break;
                 }
                 case REAL:
@@ -469,45 +435,39 @@ namespace Claunia.PropertyList
                     ascii.Append("<*R");
                     ascii.Append(ToString());
                     ascii.Append(">");
+
                     break;
                 }
                 case BOOLEAN:
                 {
-                    if(boolValue) ascii.Append("<*BY>");
-                    else ascii.Append("<*BN>");
+                    ascii.Append(boolValue ? "<*BY>" : "<*BN>");
+
                     break;
                 }
             }
         }
 
-        /// <summary>
-        ///     Determines if an object is a number.
-        ///     Substitutes .NET's Number class comparison
-        /// </summary>
+        /// <summary>Determines if an object is a number. Substitutes .NET's Number class comparison</summary>
         /// <returns><c>true</c> if it is a number.</returns>
         /// <param name="o">Object.</param>
-        static bool IsNumber(object o)
-        {
-            return o is sbyte || o is byte  || o is short  || o is ushort || o is int || o is uint || o is long ||
-                   o is ulong || o is float || o is double || o is decimal;
-        }
+        static bool IsNumber(object o) =>
+            o is sbyte or byte or short or ushort or int or uint or long or ulong or float or double or decimal;
 
-        static double GetDoubleFromObject(object o)
+        static double GetDoubleFromObject(object o) => o switch
         {
-            if(o is sbyte) return (sbyte)o;
-            if(o is byte) return (byte)o;
-            if(o is short) return (short)o;
-            if(o is ushort) return (ushort)o;
-            if(o is int) return (int)o;
-            if(o is uint) return (uint)o;
-            if(o is long) return (long)o;
-            if(o is ulong) return (ulong)o;
-            if(o is float) return (float)o;
-            if(o is double) return (double)o;
-            if(o is decimal) return (double)(decimal)o;
-
-            return 0;
-        }
+            sbyte @sbyte     => @sbyte,
+            byte b           => b,
+            short s          => s,
+            ushort @ushort   => @ushort,
+            int i            => i,
+            uint u           => u,
+            long l           => l,
+            ulong @ulong     => @ulong,
+            float f          => f,
+            double d         => d,
+            decimal @decimal => (double)@decimal,
+            _                => 0
+        };
 
         /// <summary>
         ///     Determines whether the specified <see cref="Claunia.PropertyList.NSObject" /> is equal to the current
@@ -523,127 +483,63 @@ namespace Claunia.PropertyList
         /// </returns>
         public override bool Equals(NSObject obj)
         {
-            if(!(obj is NSNumber)) return false;
+            if(obj is not NSNumber number)
+                return false;
 
-            if(((NSNumber)obj).GetNSNumberType() != type) return false;
+            if(number.GetNSNumberType() != type)
+                return false;
 
-            switch(type)
+            return type switch
             {
-                case INTEGER: return longValue   == ((NSNumber)obj).ToLong();
-                case REAL:    return doubleValue == ((NSNumber)obj).ToDouble();
-                case BOOLEAN: return boolValue   == ((NSNumber)obj).ToBool();
-                default:      return false;
-            }
+                INTEGER => longValue   == number.ToLong(),
+                REAL    => doubleValue == number.ToDouble(),
+                BOOLEAN => boolValue   == number.ToBool(),
+                _       => false
+            };
         }
 
-        public static explicit operator ulong(NSNumber value)
-        {
-            return (ulong)value.longValue;
-        }
+        public static explicit operator ulong(NSNumber value) => (ulong)value.longValue;
 
-        public static explicit operator long(NSNumber value)
-        {
-            return value.longValue;
-        }
+        public static explicit operator long(NSNumber value) => value.longValue;
 
-        public static explicit operator uint(NSNumber value)
-        {
-            return (uint)value.longValue;
-        }
+        public static explicit operator uint(NSNumber value) => (uint)value.longValue;
 
-        public static explicit operator int(NSNumber value)
-        {
-            return (int)value.longValue;
-        }
+        public static explicit operator int(NSNumber value) => (int)value.longValue;
 
-        public static explicit operator ushort(NSNumber value)
-        {
-            return (ushort)value.longValue;
-        }
+        public static explicit operator ushort(NSNumber value) => (ushort)value.longValue;
 
-        public static explicit operator short(NSNumber value)
-        {
-            return (short)value.longValue;
-        }
+        public static explicit operator short(NSNumber value) => (short)value.longValue;
 
-        public static explicit operator byte(NSNumber value)
-        {
-            return (byte)value.longValue;
-        }
+        public static explicit operator byte(NSNumber value) => (byte)value.longValue;
 
-        public static explicit operator sbyte(NSNumber value)
-        {
-            return (sbyte)value.longValue;
-        }
+        public static explicit operator sbyte(NSNumber value) => (sbyte)value.longValue;
 
-        public static explicit operator double(NSNumber value)
-        {
-            return value.doubleValue;
-        }
+        public static explicit operator double(NSNumber value) => value.doubleValue;
 
-        public static explicit operator float(NSNumber value)
-        {
-            return (float)value.doubleValue;
-        }
+        public static explicit operator float(NSNumber value) => (float)value.doubleValue;
 
-        public static explicit operator bool(NSNumber value)
-        {
-            return value.boolValue;
-        }
+        public static explicit operator bool(NSNumber value) => value.boolValue;
 
-        public static explicit operator NSNumber(ulong value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(ulong value) => new(value);
 
-        public static explicit operator NSNumber(long value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(long value) => new(value);
 
-        public static explicit operator NSNumber(uint value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(uint value) => new(value);
 
-        public static explicit operator NSNumber(int value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(int value) => new(value);
 
-        public static explicit operator NSNumber(ushort value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(ushort value) => new(value);
 
-        public static explicit operator NSNumber(short value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(short value) => new(value);
 
-        public static explicit operator NSNumber(byte value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(byte value) => new(value);
 
-        public static explicit operator NSNumber(sbyte value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(sbyte value) => new(value);
 
-        public static explicit operator NSNumber(double value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(double value) => new(value);
 
-        public static explicit operator NSNumber(float value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(float value) => new(value);
 
-        public static explicit operator NSNumber(bool value)
-        {
-            return new NSNumber(value);
-        }
+        public static explicit operator NSNumber(bool value) => new(value);
     }
 }
