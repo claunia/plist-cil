@@ -24,9 +24,15 @@ They originate from the NeXTSTEP programming environment and are now a basic par
 * Cocoa / NeXTSTEP / GNUstep ASCII
 
 ## Requirements
-.NET Framework 4.0, Mono or .NET Core.
-Targets .NET Framework 4.0, .NET Framework 4.5, .NET Standard 1.3, .NET Standard 1.4 and .NET Standard 1.6 so it should be compatible with Mono, Xamarin.iOS, Xamarin.Mac, UWP, etc.
-If you find an incompatibility, please create an issue.
+plist-cil targets:
+
+- .NET Framework 4.5,
+- .NET Standard 2.0
+- .NET Core 2.1
+- .NET Core 3.1.
+- .NET 5.0
+
+This means it should be compatible with Mono, Xamarin.iOS, Xamarin.Mac, UWP, etc. If you find an incompatibility, please create an issue.
 
 ## Download
 

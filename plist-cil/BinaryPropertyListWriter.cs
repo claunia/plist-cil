@@ -355,10 +355,10 @@ namespace Claunia.PropertyList
 
         internal void Write(Span<byte> bytes)
         {
-            #if SPAN_NATIVE
+            #if NATIVE_SPAN
             outStream.Write(bytes);
             count += bytes.Length;
-#else
+            #else
             Write(bytes.ToArray());
             #endif
         }
