@@ -93,7 +93,7 @@ try
 			{
 				case NSNumber.BOOLEAN:
 				{
-					boolean bool = num.ToBool();
+					bool boolean = num.ToBool();
 					// ...
 					break;
 				}
