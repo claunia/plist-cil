@@ -188,5 +188,22 @@ namespace plistcil.test
             Assert.IsType<double>(weight);
             Assert.Equal(10d, (double)weight);
         }
+
+        /// <summary>
+        ///     Makes sure that dictionaries serialize to XML with keys sorted ordinally when specified.
+        /// </summary>
+        [Fact]
+        public static void SortedSerializationOptionTest()
+        {
+            string expected = File.ReadAllText(@"test-files/SortedKeys.plist");
+            NSDictionary dictionary = new NSDictionary();
+            dictionary["b"] = new NSString("Middle string");
+            dictionary["c"] = new NSString("Last string");
+            dictionary["a"] = new NSString("First string");
+            
+            string actual = dictionary.ToXmlPropertyList(XmlSerializationOptions.SortDictionaries);
+
+            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
+        }
     }
 }
