@@ -320,7 +320,7 @@ namespace Claunia.PropertyList
             _       => base.ToString()
         };
 
-        internal override void ToXml(StringBuilder xml, int level)
+        internal override void ToXml(StringBuilder xml, int level, XmlSerializationOptions? _)
         {
             Indent(xml, level);
 

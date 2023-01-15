@@ -284,13 +284,26 @@ namespace Claunia.PropertyList
             return hash;
         }
 
-        internal override void ToXml(StringBuilder xml, int level)
+        internal override void ToXml(StringBuilder xml, int level, XmlSerializationOptions? options = null)
         {
             Indent(xml, level);
             xml.Append("<dict>");
             xml.Append(NEWLINE);
 
-            foreach(KeyValuePair<string, NSObject> kvp in dict)
+            IDictionary<string, NSObject> serializableDict;
+            if(
+                options is XmlSerializationOptions unwrappedOptions &&
+                unwrappedOptions.HasFlag(XmlSerializationOptions.SortDictionaries)
+            )
+            { 
+                serializableDict = new SortedDictionary<string, NSObject>(dict, StringComparer.Ordinal);
+            }
+            else
+            {
+                serializableDict = dict;
+            }
+
+            foreach(KeyValuePair<string, NSObject> kvp in serializableDict)
             {
                 Indent(xml, level + 1);
                 xml.Append("<key>");
@@ -310,7 +323,7 @@ namespace Claunia.PropertyList
 
                 xml.Append("</key>");
                 xml.Append(NEWLINE);
-                kvp.Value.ToXml(xml, level + 1);
+                kvp.Value.ToXml(xml, level + 1, options);
                 xml.Append(NEWLINE);
             }
 

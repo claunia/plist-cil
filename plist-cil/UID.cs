@@ -136,7 +136,7 @@ namespace Claunia.PropertyList
         /// </summary>
         /// <param name="xml">The xml StringBuilder</param>
         /// <param name="level">The indentation level</param>
-        internal override void ToXml(StringBuilder xml, int level)
+        internal override void ToXml(StringBuilder xml, int level, XmlSerializationOptions? _)
         {
             Indent(xml, level);
             xml.Append("<dict>");

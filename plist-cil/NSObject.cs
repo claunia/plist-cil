@@ -55,7 +55,8 @@ namespace Claunia.PropertyList
         /// <summary>Generates the XML representation of the object (without XML headers or enclosing plist-tags).</summary>
         /// <param name="xml">The StringBuilder onto which the XML representation is appended.</param>
         /// <param name="level">The indentation level of the object.</param>
-        internal abstract void ToXml(StringBuilder xml, int level);
+        /// <param name="options">Serialization options (nullable).</param>
+        internal abstract void ToXml(StringBuilder xml, int level, XmlSerializationOptions? options = null);
 
         /// <summary>Assigns IDs to all the objects in this NSObject subtree.</summary>
         /// <param name="outPlist">The writer object that handles the binary serialization.</param>
@@ -69,13 +70,21 @@ namespace Claunia.PropertyList
         /// <returns>The XML representation of the property list including XML header and doctype information.</returns>
         public string ToXmlPropertyList()
         {
+            return ToXmlPropertyList(null);
+        }
+
+        /// <summary>Generates a valid XML property list including headers using this object as root.</summary>
+        /// <param name="options">Serialization options (nullable).</param>
+        /// <returns>The XML representation of the property list including XML header and doctype information.</returns>
+        public string ToXmlPropertyList(XmlSerializationOptions? options = null)
+        {
             var xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             xml.Append(NEWLINE);
             xml.Append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">");
             xml.Append(NEWLINE);
             xml.Append("<plist version=\"1.0\">");
             xml.Append(NEWLINE);
-            ToXml(xml, 0);
+            ToXml(xml, 0, options);
             xml.Append(NEWLINE);
             xml.Append("</plist>");
             xml.Append(NEWLINE);
