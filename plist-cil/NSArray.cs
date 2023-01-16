@@ -190,7 +190,7 @@ namespace Claunia.PropertyList
             return hash;
         }
 
-        internal override void ToXml(StringBuilder xml, int level)
+        internal override void ToXml(StringBuilder xml, int level, XmlSerializationOptions? options = null)
         {
             Indent(xml, level);
             xml.Append("<array>");
@@ -198,7 +198,7 @@ namespace Claunia.PropertyList
 
             foreach(NSObject o in array)
             {
-                o.ToXml(xml, level + 1);
+                o.ToXml(xml, level + 1, options);
                 xml.Append(NEWLINE);
             }
 

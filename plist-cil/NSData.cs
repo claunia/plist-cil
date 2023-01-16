@@ -112,7 +112,7 @@ namespace Claunia.PropertyList
             return hash;
         }
 
-        internal override void ToXml(StringBuilder xml, int level)
+        internal override void ToXml(StringBuilder xml, int level, XmlSerializationOptions? _)
         {
             Indent(xml, level);
             xml.Append("<data>");
