@@ -8,5 +8,16 @@
 	<string>Middle string</string>
 	<key>c</key>
 	<string>Last string</string>
+	<key>d</key>
+	<array>
+		<dict>
+			<key>a</key>
+			<string>First string</string>
+			<key>b</key>
+			<string>Middle string</string>
+			<key>c</key>
+			<string>Last string</string>
+		</dict>
+	</array>
 </dict>
 </plist>
