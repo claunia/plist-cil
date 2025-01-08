@@ -1,0 +1,35 @@
+name: .NET
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.x
+    - name: Build
+      run: dotnet build -c Release
+    - name: Test
+      run: dotnet test
+    - name: Create NuGet packages
+      run: |
+        dotnet pack -c Release -o nuget/
+    - name: Publish NuGet packages as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: plist-cil
+        path: nuget/
+    - name: Publish NuGet packages to NuGet feed
+      run: |
+        dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+        dotnet nuget push "nuget/*.nupkg"  --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
