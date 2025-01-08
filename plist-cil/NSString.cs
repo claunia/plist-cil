@@ -1,4 +1,4 @@
-﻿// plist-cil - An open source library to parse and generate property lists for .NET
+// plist-cil - An open source library to parse and generate property lists for .NET
 // Copyright (C) 2015 Natalia Portillo
 //
 // This code is based on:
@@ -24,6 +24,7 @@
 // SOFTWARE.
 
 using System;
+using System.Security;
 using System.Text;
 
 namespace Claunia.PropertyList
@@ -136,16 +137,7 @@ namespace Claunia.PropertyList
 
             //According to http://www.w3.org/TR/REC-xml/#syntax node values must not
             //contain the characters < or &. Also the > character should be escaped.
-            if(Content.Contains("&") ||
-               Content.Contains("<") ||
-               Content.Contains(">"))
-            {
-                xml.Append("<![CDATA[");
-                xml.Append(Content.Replace("]]>", "]]]]><![CDATA[>"));
-                xml.Append("]]>");
-            }
-            else
-                xml.Append(Content);
+            xml.Append(SecurityElement.Escape(Content));
 
             xml.Append("</string>");
         }
