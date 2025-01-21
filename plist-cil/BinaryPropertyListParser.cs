@@ -204,12 +204,12 @@ namespace Claunia.PropertyList
                         case 0x8:
                         {
                             //false
-                            return new NSNumber(false);
+                            return new NSNumber(ValuePreprocessor.Preprocess(false, ValuePreprocessor.Types.BOOL));
                         }
                         case 0x9:
                         {
                             //true
-                            return new NSNumber(true);
+                            return new NSNumber(ValuePreprocessor.Preprocess(true, ValuePreprocessor.Types.BOOL));
                         }
                         case 0xC:
                         {
@@ -267,7 +267,7 @@ namespace Claunia.PropertyList
                     //Data
                     ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int dataoffset);
 
-                    return new NSData(CopyOfRange(bytes, offset + dataoffset, offset + dataoffset + length));
+                    return new NSData(ValuePreprocessor.Preprocess(CopyOfRange(bytes, offset + dataoffset, offset + dataoffset + length), ValuePreprocessor.Types.DATA));
                 }
                 case 0x5:
                 {

@@ -1,4 +1,4 @@
-﻿// plist-cil - An open source library to parse and generate property lists for .NET
+// plist-cil - An open source library to parse and generate property lists for .NET
 // Copyright (C) 2015 Natalia Portillo
 //
 // This code is based on:
@@ -146,6 +146,12 @@ namespace Claunia.PropertyList
 
             return type;
         }
+
+        /// <summary>Register preprocessing functions for for plist values.</summary>
+        /// <param name="preprocessor">A function that preprocesses the passed string and returns the adjusted value.</param>
+        /// <param name="type">The type of value preprocessor to use.</param>
+        public static void RegisterValuePreprocessor<T>(Func<T, T> preprocessor, ValuePreprocessor.Types type) => 
+            ValuePreprocessor.Register(preprocessor, type);
 
         /// <summary>Reads all bytes from an Stream and stores them in an array, up to a maximum count.</summary>
         /// <param name="fs">The Stream pointing to the data that should be stored in the array.</param>

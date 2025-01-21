@@ -23,6 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -173,13 +174,13 @@ namespace Claunia.PropertyList
 
                     return array;
                 }
-                case "true":    return new NSNumber(true);
-                case "false":   return new NSNumber(false);
-                case "integer": return new NSNumber(GetNodeTextContents(n), NSNumber.INTEGER);
-                case "real":    return new NSNumber(GetNodeTextContents(n), NSNumber.REAL);
-                case "string":  return new NSString(GetNodeTextContents(n));
-                case "data":    return new NSData(GetNodeTextContents(n));
-                default:        return n.Name.Equals("date") ? new NSDate(GetNodeTextContents(n)) : null;
+                case "true":    return new NSNumber(ValuePreprocessor.Preprocess(true, ValuePreprocessor.Types.BOOL));
+                case "false":   return new NSNumber(ValuePreprocessor.Preprocess(false, ValuePreprocessor.Types.BOOL));
+                case "integer": return new NSNumber(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Types.INTEGER));
+                case "real":    return new NSNumber(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Types.FLOATING_POINT));
+                case "string":  return new NSString(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Types.STRING));
+                case "data":    return new NSData(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Types.DATA));
+                default:        return n.Name.Equals("date") ? new NSDate(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Types.DATE)) : null;
             }
         }
 
