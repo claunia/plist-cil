@@ -20,20 +20,23 @@ namespace Claunia.PropertyList
 
         private static readonly Dictionary<TypeIdentifier, Delegate> _preprocessors = new()
         {
-            { new(Types.BOOL, typeof(bool)), NullPreprocessor<bool> },
-            { new(Types.BOOL, typeof(string)), NullPreprocessor<string> },
-            { new(Types.INTEGER, typeof(string)), NullPreprocessor<string> },
-            { new(Types.FLOATING_POINT, typeof(string)), NullPreprocessor<string> },
-            { new(Types.UNDEFINED_NUMBER, typeof(string)), NullPreprocessor<string> },
-            { new(Types.STRING, typeof(string)), NullPreprocessor<string> },
-            { new(Types.DATA, typeof(string)), NullPreprocessor<string> },
-            { new(Types.DATA, typeof(byte[])), NullPreprocessor<byte[]> },
-            { new(Types.DATE, typeof(string)), NullPreprocessor<string> },
-            { new(Types.DATE, typeof(double)), NullPreprocessor<double> },
+            { new TypeIdentifier(Types.BOOL, typeof(bool)), NullPreprocessor<bool> },
+            { new TypeIdentifier(Types.BOOL, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Types.INTEGER, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Types.FLOATING_POINT, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Types.UNDEFINED_NUMBER, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Types.STRING, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Types.DATA, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Types.DATA, typeof(byte[])), NullPreprocessor<byte[]> },
+            { new TypeIdentifier(Types.DATE, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Types.DATE, typeof(double)), NullPreprocessor<double> },
         };
 
         public static void Register<T>(Func<T, T> preprocessor, Types type) => 
             _preprocessors[new(type, typeof(T))] = preprocessor;
+
+        public static void Unregister<T>(Types type) =>
+            _preprocessors[new(type, typeof(T))] = NullPreprocessor<T>;
 
         public static T Preprocess<T>(T value, Types type) => 
             TryGetPreprocessor(type, out Func<T, T> preprocess)
