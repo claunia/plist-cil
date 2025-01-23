@@ -36,18 +36,18 @@ namespace plistcil.test
         [Fact]
         public static void TestPassiveDefaultPreprocessorsRegistered()
         {
-            Assert.Equal(ValuePreprocessor.Preprocess(true, ValuePreprocessor.Types.BOOL), true);
-            Assert.Equal(ValuePreprocessor.Preprocess(false, ValuePreprocessor.Types.BOOL), false);
-            Assert.Equal(ValuePreprocessor.Preprocess("true", ValuePreprocessor.Types.BOOL), "true");
-            Assert.Equal(ValuePreprocessor.Preprocess("42",ValuePreprocessor.Types.INTEGER), "42");
-            Assert.Equal(ValuePreprocessor.Preprocess("3.14159",ValuePreprocessor.Types.FLOATING_POINT), "3.14159");
-            Assert.Equal(ValuePreprocessor.Preprocess("2.71828", ValuePreprocessor.Types.UNDEFINED_NUMBER), "2.71828");
-            Assert.Equal(ValuePreprocessor.Preprocess("TestString",ValuePreprocessor.Types.STRING), "TestString");
-            Assert.Equal(ValuePreprocessor.Preprocess("TestData",ValuePreprocessor.Types.DATA), "TestData");
+            Assert.Equal(ValuePreprocessor.Preprocess(true, ValuePreprocessor.Type.BOOL), true);
+            Assert.Equal(ValuePreprocessor.Preprocess(false, ValuePreprocessor.Type.BOOL), false);
+            Assert.Equal(ValuePreprocessor.Preprocess("true", ValuePreprocessor.Type.BOOL), "true");
+            Assert.Equal(ValuePreprocessor.Preprocess("42",ValuePreprocessor.Type.INTEGER), "42");
+            Assert.Equal(ValuePreprocessor.Preprocess("3.14159",ValuePreprocessor.Type.FLOATING_POINT), "3.14159");
+            Assert.Equal(ValuePreprocessor.Preprocess("2.71828", ValuePreprocessor.Type.UNDEFINED_NUMBER), "2.71828");
+            Assert.Equal(ValuePreprocessor.Preprocess("TestString",ValuePreprocessor.Type.STRING), "TestString");
+            Assert.Equal(ValuePreprocessor.Preprocess("TestData",ValuePreprocessor.Type.DATA), "TestData");
             byte[] value = { 0x1, 0x2, 0x4, 0x8 };
-            Assert.Equal(ValuePreprocessor.Preprocess(value,ValuePreprocessor.Types.DATA), value);
-            Assert.Equal(ValuePreprocessor.Preprocess("01.02.1903",ValuePreprocessor.Types.DATE), "01.02.1903");
-            Assert.Equal(ValuePreprocessor.Preprocess(23.0, ValuePreprocessor.Types.DATE), 23.0);
+            Assert.Equal(ValuePreprocessor.Preprocess(value,ValuePreprocessor.Type.DATA), value);
+            Assert.Equal(ValuePreprocessor.Preprocess("01.02.1903",ValuePreprocessor.Type.DATE), "01.02.1903");
+            Assert.Equal(ValuePreprocessor.Preprocess(23.0, ValuePreprocessor.Type.DATE), 23.0);
         }
 
         [Fact]
@@ -57,12 +57,12 @@ namespace plistcil.test
             string testString = "TestString";
             string expected = "gnirtStseT";
 
-            ValuePreprocessor.Register(examplePreprocessor, ValuePreprocessor.Types.STRING);
-            string actual = ValuePreprocessor.Preprocess(testString, ValuePreprocessor.Types.STRING);
+            ValuePreprocessor.Register(examplePreprocessor, ValuePreprocessor.Type.STRING);
+            string actual = ValuePreprocessor.Preprocess(testString, ValuePreprocessor.Type.STRING);
 
             Assert.Equal(actual, expected);
 
-            ValuePreprocessor.Unregister<string>(ValuePreprocessor.Types.STRING);
+            ValuePreprocessor.Unregister<string>(ValuePreprocessor.Type.STRING);
         }
 
         [Fact]
@@ -71,13 +71,13 @@ namespace plistcil.test
             Func<string, string> examplePreprocessor = value => new string(value.Reverse().ToArray());
             string testString = "TestString";
 
-            ValuePreprocessor.Register(examplePreprocessor, ValuePreprocessor.Types.STRING);
-            string actual = ValuePreprocessor.Preprocess(testString, ValuePreprocessor.Types.DATA);
+            ValuePreprocessor.Register(examplePreprocessor, ValuePreprocessor.Type.STRING);
+            string actual = ValuePreprocessor.Preprocess(testString, ValuePreprocessor.Type.DATA);
 
             // assert unchanged, since the selected preprocessor != registered preprocessor
             Assert.Equal(actual, testString);
 
-            ValuePreprocessor.Unregister<string>(ValuePreprocessor.Types.STRING);
+            ValuePreprocessor.Unregister<string>(ValuePreprocessor.Type.STRING);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace plistcil.test
             byte[] testArray  = { 0x1, 0x2, 0x4, 0x8 };
 
             // there's no registered preprocessor for byte array arguments for STRING
-            Assert.Throws<ArgumentException>(() => ValuePreprocessor.Preprocess(testArray, ValuePreprocessor.Types.STRING));
+            Assert.Throws<ArgumentException>(() => ValuePreprocessor.Preprocess(testArray, ValuePreprocessor.Type.STRING));
         }
     }
 }

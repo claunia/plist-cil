@@ -48,9 +48,9 @@ namespace Claunia.PropertyList
         public NSString(ReadOnlySpan<byte> bytes, Encoding encoding)
         {
         #if NATIVE_SPAN
-            Content = ValuePreprocessor.Preprocess(encoding.GetString(bytes), ValuePreprocessor.Types.STRING);
+            Content = ValuePreprocessor.Preprocess(encoding.GetString(bytes), ValuePreprocessor.Type.STRING);
         #else
-            Content = ValuePreprocessor.Preprocess(encoding.GetString(bytes.ToArray()), ValuePreprocessor.Types.STRING);
+            Content = ValuePreprocessor.Preprocess(encoding.GetString(bytes.ToArray()), ValuePreprocessor.Type.STRING);
         #endif
         }
 

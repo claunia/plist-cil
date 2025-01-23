@@ -409,15 +409,15 @@ namespace Claunia.PropertyList
                        quotedString[4]     == DATE_DATE_FIELD_DELIMITER)
                         try
                         {
-                            return new NSDate(ValuePreprocessor.Preprocess(quotedString, ValuePreprocessor.Types.DATE));
+                            return new NSDate(ValuePreprocessor.Preprocess(quotedString, ValuePreprocessor.Type.DATE));
                         }
                         catch(Exception)
                         {
                             //not a date? --> return string
-                            return new NSString(ValuePreprocessor.Preprocess(quotedString, ValuePreprocessor.Types.STRING));
+                            return new NSString(ValuePreprocessor.Preprocess(quotedString, ValuePreprocessor.Type.STRING));
                         }
 
-                    return new NSString(ValuePreprocessor.Preprocess(quotedString, ValuePreprocessor.Types.STRING));
+                    return new NSString(ValuePreprocessor.Preprocess(quotedString, ValuePreprocessor.Type.STRING));
                 }
                 default:
                 {
@@ -429,7 +429,7 @@ namespace Claunia.PropertyList
                     //non-numerical -> string or boolean
                     string parsedString = ParseString();
 
-                    return new NSString(ValuePreprocessor.Preprocess(parsedString, ValuePreprocessor.Types.STRING));
+                    return new NSString(ValuePreprocessor.Preprocess(parsedString, ValuePreprocessor.Type.STRING));
                 }
             }
         }
@@ -529,9 +529,9 @@ namespace Claunia.PropertyList
                     Expect(DATA_GSBOOL_TRUE_TOKEN, DATA_GSBOOL_FALSE_TOKEN);
 
                     if(Accept(DATA_GSBOOL_TRUE_TOKEN))
-                        obj = new NSNumber(ValuePreprocessor.Preprocess(true, ValuePreprocessor.Types.BOOL));
+                        obj = new NSNumber(ValuePreprocessor.Preprocess(true, ValuePreprocessor.Type.BOOL));
                     else
-                        obj = new NSNumber(ValuePreprocessor.Preprocess(false, ValuePreprocessor.Types.BOOL));
+                        obj = new NSNumber(ValuePreprocessor.Preprocess(false, ValuePreprocessor.Type.BOOL));
 
                     //Skip the parsed boolean token
                     Skip();
@@ -541,14 +541,14 @@ namespace Claunia.PropertyList
                     //Date
                     Skip();
                     string dateString = ReadInputUntil(DATA_END_TOKEN);
-                    obj = new NSDate(ValuePreprocessor.Preprocess(dateString, ValuePreprocessor.Types.DATE));
+                    obj = new NSDate(ValuePreprocessor.Preprocess(dateString, ValuePreprocessor.Type.DATE));
                 }
                 else if(Accept(DATA_GSINT_BEGIN_TOKEN, DATA_GSREAL_BEGIN_TOKEN))
                 {
                     //Number
                     Skip();
                     string numberString = ReadInputUntil(DATA_END_TOKEN);
-                    obj = new NSNumber(ValuePreprocessor.Preprocess(numberString, ValuePreprocessor.Types.UNDEFINED_NUMBER));
+                    obj = new NSNumber(ValuePreprocessor.Preprocess(numberString, ValuePreprocessor.Type.UNDEFINED_NUMBER));
                 }
 
                 //parse data end token
@@ -569,7 +569,7 @@ namespace Claunia.PropertyList
                     bytes[i] = (byte)byteValue;
                 }
 
-                obj = new NSData(ValuePreprocessor.Preprocess(bytes, ValuePreprocessor.Types.DATA));
+                obj = new NSData(ValuePreprocessor.Preprocess(bytes, ValuePreprocessor.Type.DATA));
 
                 //skip end token
                 Skip();
@@ -586,18 +586,18 @@ namespace Claunia.PropertyList
 
             if(numericalString.Length <= 4 ||
                numericalString[4]     != DATE_DATE_FIELD_DELIMITER)
-                return new NSString(ValuePreprocessor.Preprocess(numericalString, ValuePreprocessor.Types.STRING));
+                return new NSString(ValuePreprocessor.Preprocess(numericalString, ValuePreprocessor.Type.STRING));
 
             try
             {
-                return new NSDate(ValuePreprocessor.Preprocess(numericalString, ValuePreprocessor.Types.DATE));
+                return new NSDate(ValuePreprocessor.Preprocess(numericalString, ValuePreprocessor.Type.DATE));
             }
             catch(Exception)
             {
                 //An exception occurs if the string is not a date but just a string
             }
 
-            return new NSString(ValuePreprocessor.Preprocess(numericalString, ValuePreprocessor.Types.STRING));
+            return new NSString(ValuePreprocessor.Preprocess(numericalString, ValuePreprocessor.Type.STRING));
         }
 
         /// <summary>

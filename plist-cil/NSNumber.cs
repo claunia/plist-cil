@@ -69,13 +69,13 @@ namespace Claunia.PropertyList
             switch(type)
             {
                 case INTEGER:
-                    doubleValue = longValue = ValuePreprocessor.Preprocess(BinaryPropertyListParser.ParseLong(bytes), ValuePreprocessor.Types.INTEGER);
+                    doubleValue = longValue = ValuePreprocessor.Preprocess(BinaryPropertyListParser.ParseLong(bytes), ValuePreprocessor.Type.INTEGER);
 
                     break;
 
                 case REAL:
-                    doubleValue = ValuePreprocessor.Preprocess(BinaryPropertyListParser.ParseDouble(bytes), ValuePreprocessor.Types.FLOATING_POINT);
-                    longValue   = ValuePreprocessor.Preprocess((long)Math.Round(doubleValue), ValuePreprocessor.Types.INTEGER);
+                    doubleValue = ValuePreprocessor.Preprocess(BinaryPropertyListParser.ParseDouble(bytes), ValuePreprocessor.Type.FLOATING_POINT);
+                    longValue   = ValuePreprocessor.Preprocess((long)Math.Round(doubleValue), ValuePreprocessor.Type.INTEGER);
 
                     break;
 

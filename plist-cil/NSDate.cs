@@ -52,7 +52,7 @@ namespace Claunia.PropertyList
         public NSDate(ReadOnlySpan<byte> bytes) =>
 
             //dates are 8 byte big-endian double, seconds since the epoch
-            Date = EPOCH.AddSeconds(ValuePreprocessor.Preprocess(BinaryPropertyListParser.ParseDouble(bytes), ValuePreprocessor.Types.DATE));
+            Date = EPOCH.AddSeconds(ValuePreprocessor.Preprocess(BinaryPropertyListParser.ParseDouble(bytes), ValuePreprocessor.Type.DATE));
 
         /// <summary>
         ///     Parses a date from its textual representation. That representation has the following pattern:
