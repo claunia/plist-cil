@@ -15,14 +15,16 @@ namespace Claunia.PropertyList
         /// </summary>
         public enum Type
         {
-            BOOL, INTEGER, FLOATING_POINT, UNDEFINED_NUMBER,
-            STRING, DATA, DATE
+            BOOL, INTEGER, FLOATING_POINT,
+            UNDEFINED_NUMBER, STRING, DATA,
+            DATE
         };
 
         /// <summary>
-        ///     A Null-Implementation of a preprocessor for registered, but passive, use cases.
+        ///     A null-implementation of a preprocessor for registered, but passive, use cases.
         /// </summary>
         private static T NullPreprocessor<T>(T value) => value;
+
         private record struct TypeIdentifier(Type ValueType, System.Type ProcessingType);
 
         /// <summary>
@@ -45,24 +47,22 @@ namespace Claunia.PropertyList
         /// <summary>
         ///     Register a custom preprocessor.
         /// </summary>
-        public static void Register<T>(Func<T, T> preprocessor, Type type) => 
+        public static void Register<T>(Func<T, T> preprocessor, Type type) =>
             _preprocessors[new(type, typeof(T))] = preprocessor;
 
         /// <summary>
-        ///     Unregister a specific preprocessor--replaces it with a null implementation
+        ///     Unregister a specific preprocessor--replaces it with a null-implementation
         ///     to prevent argument errors.
         /// </summary>
-        public static void Unregister<T>(Type type) =>
-            _preprocessors[new(type, typeof(T))] = NullPreprocessor<T>;
+        public static void Unregister<T>(Type type) => _preprocessors[new(type, typeof(T))] = NullPreprocessor<T>;
 
         /// <summary>
         ///     Preprocess the supplied data using the appropriate registered implementation.
         /// </summary>
-        /// <exception cref="ArgumentException">If no appropriate preprocessor--not even a default null implementation--was registered.</exception>
-        public static T Preprocess<T>(T value, Type type) => 
-            TryGetPreprocessor(type, out Func<T, T> preprocess)
-                ? preprocess(value)
-                : throw new ArgumentException($"Failed to find a preprocessor for value '{value}'.");
+        /// <exception cref="ArgumentException">If no appropriate preprocessor--not even a default null-implementation--was registered.</exception>
+        public static T Preprocess<T>(T value, Type type) => TryGetPreprocessor(type, out Func<T, T> preprocess)
+            ? preprocess(value)
+            : throw new ArgumentException($"Failed to find a preprocessor for value '{value}'.");
 
         /// <summary>
         ///     Gets the appropriate registered implementation--or null--and casts it back to the required type.
@@ -71,13 +71,14 @@ namespace Claunia.PropertyList
         {
             if(_preprocessors.TryGetValue(new TypeIdentifier(type, typeof(T)), out Delegate preprocessor))
             {
-                preprocess = (Func<T, T>) preprocessor;
+                preprocess = (Func<T, T>)preprocessor;
+
                 return true;
             }
 
             preprocess = default;
+
             return false;
         }
     }
-
 }
