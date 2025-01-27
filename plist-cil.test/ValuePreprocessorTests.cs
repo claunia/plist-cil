@@ -13,16 +13,27 @@ namespace plistcil.test
         [Fact]
         public static void TestPassiveDefaultPreprocessorsRegistered()
         {
+            byte[] testByteArray = [0x1, 0x2, 0x4, 0x8];
+
             Assert.Equal(true, ValuePreprocessor.Preprocess(true, ValuePreprocessor.Type.BOOL));
             Assert.Equal(false, ValuePreprocessor.Preprocess(false, ValuePreprocessor.Type.BOOL));
             Assert.Equal("true", ValuePreprocessor.Preprocess("true", ValuePreprocessor.Type.BOOL));
+
             Assert.Equal("42", ValuePreprocessor.Preprocess("42", ValuePreprocessor.Type.INTEGER));
+            Assert.Equal(testByteArray, ValuePreprocessor.Preprocess(testByteArray, ValuePreprocessor.Type.INTEGER));
+
             Assert.Equal("3.14159", ValuePreprocessor.Preprocess("3.14159", ValuePreprocessor.Type.FLOATING_POINT));
+            Assert.Equal(testByteArray, ValuePreprocessor.Preprocess(testByteArray, ValuePreprocessor.Type.FLOATING_POINT));
+
             Assert.Equal("2.71828", ValuePreprocessor.Preprocess("2.71828", ValuePreprocessor.Type.UNDEFINED_NUMBER));
+
             Assert.Equal("TestString", ValuePreprocessor.Preprocess("TestString", ValuePreprocessor.Type.STRING));
+            Assert.Equal(testByteArray, ValuePreprocessor.Preprocess(testByteArray, ValuePreprocessor.Type.STRING));
+
             Assert.Equal("TestData", ValuePreprocessor.Preprocess("TestData", ValuePreprocessor.Type.DATA));
-            byte[] value = [0x1, 0x2, 0x4, 0x8];
-            Assert.Equal(value, ValuePreprocessor.Preprocess(value, ValuePreprocessor.Type.DATA));
+            Assert.Equal(testByteArray, ValuePreprocessor.Preprocess(testByteArray, ValuePreprocessor.Type.DATA));
+
+            Assert.Equal(testByteArray, ValuePreprocessor.Preprocess(testByteArray, ValuePreprocessor.Type.DATE));
             Assert.Equal("01.02.1903", ValuePreprocessor.Preprocess("01.02.1903", ValuePreprocessor.Type.DATE));
             Assert.Equal(23.0, ValuePreprocessor.Preprocess(23.0, ValuePreprocessor.Type.DATE));
         }
@@ -105,7 +116,7 @@ namespace plistcil.test
         [Fact]
         public static void TestUnregisteredPreprocessorThrows()
         {
-            byte[] testArray = [0x1, 0x2, 0x4, 0x8];
+            int[] testArray = [1, 2, 4, 8];
 
             // there's no registered preprocessor for byte array arguments for STRING
             Assert.Throws<ArgumentException>(() => ValuePreprocessor.Preprocess(testArray, ValuePreprocessor.Type.STRING));

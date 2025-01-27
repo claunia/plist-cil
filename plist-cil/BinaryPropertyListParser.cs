@@ -260,7 +260,7 @@ namespace Claunia.PropertyList
                             PropertyListFormatException("The given binary property list contains a date object of an unknown type (" +
                                                         objInfo + ")");
 
-                    return new NSDate(bytes.Slice(offset + 1, 8));
+                    return new NSDate(ValuePreprocessor.Preprocess(bytes.Slice(offset + 1, 8).ToArray(), ValuePreprocessor.Type.DATE));
                 }
                 case 0x4:
                 {
@@ -274,7 +274,7 @@ namespace Claunia.PropertyList
                     //ASCII String, each character is 1 byte
                     ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int stroffset);
 
-                    return new NSString(bytes.Slice(offset + stroffset, length), Encoding.ASCII);
+                    return new NSString(ValuePreprocessor.Preprocess(bytes.Slice(offset + stroffset, length).ToArray(), ValuePreprocessor.Type.STRING), Encoding.ASCII);
                 }
                 case 0x6:
                 {

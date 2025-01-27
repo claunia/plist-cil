@@ -40,10 +40,12 @@ namespace Claunia.PropertyList
             { new TypeIdentifier(Type.FLOATING_POINT, typeof(byte[])), NullPreprocessor<byte[]> },
             { new TypeIdentifier(Type.UNDEFINED_NUMBER, typeof(string)), NullPreprocessor<string> },
             { new TypeIdentifier(Type.STRING, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Type.STRING, typeof(byte[])), NullPreprocessor<byte[]> },
             { new TypeIdentifier(Type.DATA, typeof(string)), NullPreprocessor<string> },
             { new TypeIdentifier(Type.DATA, typeof(byte[])), NullPreprocessor<byte[]> },
             { new TypeIdentifier(Type.DATE, typeof(string)), NullPreprocessor<string> },
             { new TypeIdentifier(Type.DATE, typeof(double)), NullPreprocessor<double> },
+            { new TypeIdentifier(Type.DATE, typeof(byte[])), NullPreprocessor<byte[]> },
         };
 
         /// <summary>
