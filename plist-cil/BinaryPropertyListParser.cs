@@ -243,14 +243,14 @@ namespace Claunia.PropertyList
                     //integer
                     int length = 1 << objInfo;
 
-                    return new NSNumber(bytes.Slice(offset + 1, length), NSNumber.INTEGER);
+                    return new NSNumber(ValuePreprocessor.Preprocess(bytes.Slice(offset + 1, length).ToArray(), ValuePreprocessor.Type.INTEGER), NSNumber.INTEGER);
                 }
                 case 0x2:
                 {
                     //real
                     int length = 1 << objInfo;
 
-                    return new NSNumber(bytes.Slice(offset + 1, length), NSNumber.REAL);
+                    return new NSNumber(ValuePreprocessor.Preprocess(bytes.Slice(offset + 1, length).ToArray(), ValuePreprocessor.Type.FLOATING_POINT), NSNumber.REAL);
                 }
                 case 0x3:
                 {

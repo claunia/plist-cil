@@ -25,7 +25,7 @@ namespace Claunia.PropertyList
         /// </summary>
         private static T NullPreprocessor<T>(T value) => value;
 
-        private record struct TypeIdentifier(Type ValueType, System.Type ProcessingType);
+        private record struct TypeIdentifier(Type ValueType, System.Type DataType);
 
         /// <summary>
         ///     Default preprocessors for all the standard cases.
@@ -35,7 +35,9 @@ namespace Claunia.PropertyList
             { new TypeIdentifier(Type.BOOL, typeof(bool)), NullPreprocessor<bool> },
             { new TypeIdentifier(Type.BOOL, typeof(string)), NullPreprocessor<string> },
             { new TypeIdentifier(Type.INTEGER, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Type.INTEGER, typeof(byte[])), NullPreprocessor<byte[]> },
             { new TypeIdentifier(Type.FLOATING_POINT, typeof(string)), NullPreprocessor<string> },
+            { new TypeIdentifier(Type.FLOATING_POINT, typeof(byte[])), NullPreprocessor<byte[]> },
             { new TypeIdentifier(Type.UNDEFINED_NUMBER, typeof(string)), NullPreprocessor<string> },
             { new TypeIdentifier(Type.STRING, typeof(string)), NullPreprocessor<string> },
             { new TypeIdentifier(Type.DATA, typeof(string)), NullPreprocessor<string> },
@@ -45,16 +47,32 @@ namespace Claunia.PropertyList
         };
 
         /// <summary>
-        ///     Register a custom preprocessor.
+        ///     Get a default preprocessor.
         /// </summary>
-        public static void Register<T>(Func<T, T> preprocessor, Type type) =>
-            _preprocessors[new(type, typeof(T))] = preprocessor;
+        public static Func<T, T> GetDefault<T>() => NullPreprocessor<T>;
 
         /// <summary>
-        ///     Unregister a specific preprocessor--replaces it with a null-implementation
+        ///     Set up a custom preprocessor.
+        /// </summary>
+        public static void Set<T>(Func<T, T> preprocessor, Type type) =>
+            _preprocessors[new(type, typeof(T))] = preprocessor;
+
+        
+        /// <summary>
+        ///     Unset a specific preprocessor--replaces it with a null-implementation
         ///     to prevent argument errors.
         /// </summary>
-        public static void Unregister<T>(Type type) => _preprocessors[new(type, typeof(T))] = NullPreprocessor<T>;
+        /// <exception cref="ArgumentException">If no appropriate preprocessor--not even a default null-implementation--was set up.</exception>
+        public static void Unset<T>(Type type) => 
+            _preprocessors[GetValidTypeIdentifier<T>(type)] = NullPreprocessor<T>;
+
+        /// <summary>
+        ///     Completely unregister a specific preprocessor--remove it instead of
+        ///     replacing it with a null-implementation.
+        /// </summary>
+        /// <exception cref="ArgumentException">If no appropriate preprocessor--not even a default null-implementation--was registered.</exception>
+        public static void Remove<T>(Type type) => 
+            _preprocessors.Remove(GetValidTypeIdentifier<T>(type));
 
         /// <summary>
         ///     Preprocess the supplied data using the appropriate registered implementation.
@@ -65,7 +83,8 @@ namespace Claunia.PropertyList
             : throw new ArgumentException($"Failed to find a preprocessor for value '{value}'.");
 
         /// <summary>
-        ///     Gets the appropriate registered implementation--or null--and casts it back to the required type.
+        ///     Gets the appropriate registered implementation--or null--and casts it back to
+        ///     the required type.
         /// </summary>
         private static bool TryGetPreprocessor<T>(Type type, out Func<T, T> preprocess)
         {
@@ -79,6 +98,22 @@ namespace Claunia.PropertyList
             preprocess = default;
 
             return false;
+        }
+
+        /// <summary>
+        ///     Gets a type identifier if a preprocessor exists for it.
+        /// </summary>
+        /// <exception cref="ArgumentException">If no appropriate preprocessor--not even a default null-implementation--was set up.</exception>
+        private static TypeIdentifier GetValidTypeIdentifier<T>(Type type)
+        {
+            var identifier = new TypeIdentifier(type, typeof(T));
+
+            if(!_preprocessors.ContainsKey(identifier))
+            {
+                throw new ArgumentException($"Failed to find a valid preprocessor type identifier.");
+            }
+
+            return identifier;
         }
     }
 }

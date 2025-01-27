@@ -147,11 +147,11 @@ namespace Claunia.PropertyList
             return type;
         }
 
-        /// <summary>Register preprocessing functions for for plist values.</summary>
+        /// <summary>Set up preprocessing functions for plist values.</summary>
         /// <param name="preprocessor">A function that preprocesses the passed string and returns the adjusted value.</param>
         /// <param name="type">The type of value preprocessor to use.</param>
-        public static void RegisterValuePreprocessor<T>(Func<T, T> preprocessor, ValuePreprocessor.Type type) =>
-            ValuePreprocessor.Register(preprocessor, type);
+        public static void SetValuePreprocessor<T>(Func<T, T> preprocessor, ValuePreprocessor.Type type) =>
+            ValuePreprocessor.Set(preprocessor, type);
 
         /// <summary>Reads all bytes from an Stream and stores them in an array, up to a maximum count.</summary>
         /// <param name="fs">The Stream pointing to the data that should be stored in the array.</param>

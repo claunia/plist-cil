@@ -1,28 +1,3 @@
-// plist-cil - An open source library to Parse and generate property lists for .NET
-// Copyright (C) 2015 Natalia Portillo
-//
-// This code is based on:
-// plist - An open source library to Parse and generate property lists
-// Copyright (C) 2014 Daniel Dreibrodt
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Linq;
 using Claunia.PropertyList;
@@ -30,60 +5,107 @@ using Xunit;
 
 namespace plistcil.test
 {
-
     public static class ValuePreprocessorTests
     {
+        // lock tests to make sure temporarily added / replaced preprocessors don't interfere with the other tests in this suite
+        private static readonly object _testLock = new();
+
         [Fact]
         public static void TestPassiveDefaultPreprocessorsRegistered()
         {
-            Assert.Equal(ValuePreprocessor.Preprocess(true, ValuePreprocessor.Type.BOOL), true);
-            Assert.Equal(ValuePreprocessor.Preprocess(false, ValuePreprocessor.Type.BOOL), false);
-            Assert.Equal(ValuePreprocessor.Preprocess("true", ValuePreprocessor.Type.BOOL), "true");
-            Assert.Equal(ValuePreprocessor.Preprocess("42",ValuePreprocessor.Type.INTEGER), "42");
-            Assert.Equal(ValuePreprocessor.Preprocess("3.14159",ValuePreprocessor.Type.FLOATING_POINT), "3.14159");
-            Assert.Equal(ValuePreprocessor.Preprocess("2.71828", ValuePreprocessor.Type.UNDEFINED_NUMBER), "2.71828");
-            Assert.Equal(ValuePreprocessor.Preprocess("TestString",ValuePreprocessor.Type.STRING), "TestString");
-            Assert.Equal(ValuePreprocessor.Preprocess("TestData",ValuePreprocessor.Type.DATA), "TestData");
-            byte[] value = { 0x1, 0x2, 0x4, 0x8 };
-            Assert.Equal(ValuePreprocessor.Preprocess(value,ValuePreprocessor.Type.DATA), value);
-            Assert.Equal(ValuePreprocessor.Preprocess("01.02.1903",ValuePreprocessor.Type.DATE), "01.02.1903");
-            Assert.Equal(ValuePreprocessor.Preprocess(23.0, ValuePreprocessor.Type.DATE), 23.0);
+            Assert.Equal(true, ValuePreprocessor.Preprocess(true, ValuePreprocessor.Type.BOOL));
+            Assert.Equal(false, ValuePreprocessor.Preprocess(false, ValuePreprocessor.Type.BOOL));
+            Assert.Equal("true", ValuePreprocessor.Preprocess("true", ValuePreprocessor.Type.BOOL));
+            Assert.Equal("42", ValuePreprocessor.Preprocess("42", ValuePreprocessor.Type.INTEGER));
+            Assert.Equal("3.14159", ValuePreprocessor.Preprocess("3.14159", ValuePreprocessor.Type.FLOATING_POINT));
+            Assert.Equal("2.71828", ValuePreprocessor.Preprocess("2.71828", ValuePreprocessor.Type.UNDEFINED_NUMBER));
+            Assert.Equal("TestString", ValuePreprocessor.Preprocess("TestString", ValuePreprocessor.Type.STRING));
+            Assert.Equal("TestData", ValuePreprocessor.Preprocess("TestData", ValuePreprocessor.Type.DATA));
+            byte[] value = [0x1, 0x2, 0x4, 0x8];
+            Assert.Equal(value, ValuePreprocessor.Preprocess(value, ValuePreprocessor.Type.DATA));
+            Assert.Equal("01.02.1903", ValuePreprocessor.Preprocess("01.02.1903", ValuePreprocessor.Type.DATE));
+            Assert.Equal(23.0, ValuePreprocessor.Preprocess(23.0, ValuePreprocessor.Type.DATE));
         }
 
         [Fact]
         public static void TestRegisterPreprocessor()
         {
-            Func<string, string> examplePreprocessor = value => new string(value.Reverse().ToArray());
-            string testString = "TestString";
-            string expected = "gnirtStseT";
+            lock(_testLock)
+            {
+                Func<string, string> examplePreprocessor = value => new string(value.Reverse().ToArray());
+                string               testString          = "TestString";
+                string               expected            = "gnirtStseT";
 
-            ValuePreprocessor.Register(examplePreprocessor, ValuePreprocessor.Type.STRING);
-            string actual = ValuePreprocessor.Preprocess(testString, ValuePreprocessor.Type.STRING);
+                var testType = (ValuePreprocessor.Type)42;
 
-            Assert.Equal(actual, expected);
+                ValuePreprocessor.Set(examplePreprocessor, testType);
+                string actual = ValuePreprocessor.Preprocess(testString, testType);
 
-            ValuePreprocessor.Unregister<string>(ValuePreprocessor.Type.STRING);
+                Assert.Equal(actual, expected);
+
+                ValuePreprocessor.Unset<string>(testType);
+            }
         }
 
         [Fact]
-        public static void TestRegisteredPreprocessorSelection()
+        public static void TestRegisteredPreprocessorSelection1()
         {
-            Func<string, string> examplePreprocessor = value => new string(value.Reverse().ToArray());
-            string testString = "TestString";
+            lock(_testLock)
+            {
+                Func<short, short> examplePreprocessor = value => (short)(value - 1);
+                short              testShort           = 42;
+                string             testString          = "TestString";
 
-            ValuePreprocessor.Register(examplePreprocessor, ValuePreprocessor.Type.STRING);
-            string actual = ValuePreprocessor.Preprocess(testString, ValuePreprocessor.Type.DATA);
+                var testType = (ValuePreprocessor.Type)42;
 
-            // assert unchanged, since the selected preprocessor != registered preprocessor
-            Assert.Equal(actual, testString);
+                // correct value type, differing data type
+                ValuePreprocessor.Set(examplePreprocessor, testType);
+                ValuePreprocessor.Set(ValuePreprocessor.GetDefault<string>(), testType);
 
-            ValuePreprocessor.Unregister<string>(ValuePreprocessor.Type.STRING);
+                string actual1 = ValuePreprocessor.Preprocess(testString, testType);
+                short  actual2 = ValuePreprocessor.Preprocess(testShort, testType);
+
+                // assert unchanged, since the selected preprocessor != tested preprocessor
+                Assert.Equal(actual1, testString);
+                Assert.NotEqual(actual2, testShort);
+
+                ValuePreprocessor.Remove<short>(testType);
+                ValuePreprocessor.Remove<string>(testType);
+            }
         }
 
         [Fact]
-        public static void TestUnregisterdPreprocessorThrows()
+        public static void TestRegisteredPreprocessorSelection2()
         {
-            byte[] testArray  = { 0x1, 0x2, 0x4, 0x8 };
+            lock(_testLock)
+            {
+                Func<string, string> examplePreprocessor = value => new string(value.Reverse().ToArray());
+                byte[]               testByteArray       = [0x42,];
+                string               testString          = "TestString";
+
+                var testType = (ValuePreprocessor.Type)42;
+
+                // correct value type, differing data type
+                ValuePreprocessor.Set(examplePreprocessor, testType);
+                ValuePreprocessor.Set(ValuePreprocessor.GetDefault<byte[]>(), testType);
+
+                string actual1 = ValuePreprocessor.Preprocess(testString, testType);
+                byte[] actual2 = ValuePreprocessor.Preprocess(testByteArray, testType);
+
+                Assert.NotEqual(actual1, testString);
+
+                // assert unchanged, since the selected preprocessor != tested preprocessor
+                Assert.Equal(actual2, testByteArray);
+
+                ValuePreprocessor.Unset<string>(testType);
+                ValuePreprocessor.Remove<byte[]>(testType);
+            }
+        }
+
+        [Fact]
+        public static void TestUnregisteredPreprocessorThrows()
+        {
+            byte[] testArray = [0x1, 0x2, 0x4, 0x8];
 
             // there's no registered preprocessor for byte array arguments for STRING
             Assert.Throws<ArgumentException>(() => ValuePreprocessor.Preprocess(testArray, ValuePreprocessor.Type.STRING));
