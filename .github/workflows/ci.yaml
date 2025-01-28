@@ -23,10 +23,13 @@ jobs:
     - name: Create NuGet packages
       run: |
         dotnet pack -c Release -o nuget/
+    - name: Get version information
+      uses: dotnet/nbgv@master
+      id: nbgv
     - name: Publish NuGet packages as artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: plist-cil
+        name: plist-cil-${{ steps.nbgv.outputs.SemVer2 }}
         path: nuget/
     - name: Publish NuGet packages to NuGet feed
       run: |
