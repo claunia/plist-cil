@@ -173,13 +173,13 @@ namespace Claunia.PropertyList
 
                     return array;
                 }
-                case "true":    return new NSNumber(true);
-                case "false":   return new NSNumber(false);
-                case "integer": return new NSNumber(GetNodeTextContents(n), NSNumber.INTEGER);
-                case "real":    return new NSNumber(GetNodeTextContents(n), NSNumber.REAL);
-                case "string":  return new NSString(GetNodeTextContents(n));
-                case "data":    return new NSData(GetNodeTextContents(n));
-                default:        return n.Name.Equals("date") ? new NSDate(GetNodeTextContents(n)) : null;
+                case "true":    return new NSNumber(ValuePreprocessor.Preprocess(true, ValuePreprocessor.Type.BOOL));
+                case "false":   return new NSNumber(ValuePreprocessor.Preprocess(false, ValuePreprocessor.Type.BOOL));
+                case "integer": return new NSNumber(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Type.INTEGER), NSNumber.INTEGER);
+                case "real":    return new NSNumber(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Type.FLOATING_POINT), NSNumber.REAL);
+                case "string":  return new NSString(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Type.STRING));
+                case "data":    return new NSData(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Type.DATA));
+                default:        return n.Name.Equals("date") ? new NSDate(ValuePreprocessor.Preprocess(GetNodeTextContents(n), ValuePreprocessor.Type.DATE)) : null;
             }
         }
 
