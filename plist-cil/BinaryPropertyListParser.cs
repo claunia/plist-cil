@@ -158,7 +158,7 @@ namespace Claunia.PropertyList
             //Read all bytes into a list
             byte[] buf = PropertyListParser.ReadAll(fs);
 
-            // Don't close the stream - that would be the responisibility of code that class
+            // Don't close the stream - that would be the responsibility of code that class
             // Parse
             return Parse(buf);
         }
@@ -204,12 +204,12 @@ namespace Claunia.PropertyList
                         case 0x8:
                         {
                             //false
-                            return new NSNumber(false);
+                            return new NSNumber(ValuePreprocessor.Preprocess(false, ValuePreprocessor.Type.BOOL));
                         }
                         case 0x9:
                         {
                             //true
-                            return new NSNumber(true);
+                            return new NSNumber(ValuePreprocessor.Preprocess(true, ValuePreprocessor.Type.BOOL));
                         }
                         case 0xC:
                         {
@@ -243,14 +243,14 @@ namespace Claunia.PropertyList
                     //integer
                     int length = 1 << objInfo;
 
-                    return new NSNumber(bytes.Slice(offset + 1, length), NSNumber.INTEGER);
+                    return new NSNumber(ValuePreprocessor.Preprocess(bytes.Slice(offset + 1, length).ToArray(), ValuePreprocessor.Type.INTEGER), NSNumber.INTEGER);
                 }
                 case 0x2:
                 {
                     //real
                     int length = 1 << objInfo;
 
-                    return new NSNumber(bytes.Slice(offset + 1, length), NSNumber.REAL);
+                    return new NSNumber(ValuePreprocessor.Preprocess(bytes.Slice(offset + 1, length).ToArray(), ValuePreprocessor.Type.FLOATING_POINT), NSNumber.REAL);
                 }
                 case 0x3:
                 {
@@ -260,21 +260,21 @@ namespace Claunia.PropertyList
                             PropertyListFormatException("The given binary property list contains a date object of an unknown type (" +
                                                         objInfo + ")");
 
-                    return new NSDate(bytes.Slice(offset + 1, 8));
+                    return new NSDate(ValuePreprocessor.Preprocess(bytes.Slice(offset + 1, 8).ToArray(), ValuePreprocessor.Type.DATE));
                 }
                 case 0x4:
                 {
                     //Data
                     ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int dataoffset);
 
-                    return new NSData(CopyOfRange(bytes, offset + dataoffset, offset + dataoffset + length));
+                    return new NSData(ValuePreprocessor.Preprocess(CopyOfRange(bytes, offset + dataoffset, offset + dataoffset + length), ValuePreprocessor.Type.DATA));
                 }
                 case 0x5:
                 {
                     //ASCII String, each character is 1 byte
                     ReadLengthAndOffset(bytes, objInfo, offset, out int length, out int stroffset);
 
-                    return new NSString(bytes.Slice(offset + stroffset, length), Encoding.ASCII);
+                    return new NSString(ValuePreprocessor.Preprocess(bytes.Slice(offset + stroffset, length).ToArray(), ValuePreprocessor.Type.STRING), Encoding.ASCII);
                 }
                 case 0x6:
                 {
