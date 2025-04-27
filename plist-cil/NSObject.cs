@@ -1,4 +1,4 @@
-﻿// plist-cil - An open source library to parse and generate property lists for .NET
+// plist-cil - An open source library to parse and generate property lists for .NET
 // Copyright (C) 2015 Natalia Portillo
 //
 // This code is based on:
@@ -320,6 +320,14 @@ namespace Claunia.PropertyList
 
             if(typeof(List<object>).IsAssignableFrom(c))
                 return Wrap(((List<object>)o).ToArray());
+
+            if(typeof(List<Dictionary<string, object>>).IsAssignableFrom(c))
+            {
+                var list = new NSArray();
+                foreach(Dictionary<string, object> dict in (List<Dictionary<string, object>>)o)
+                    list.Add(Wrap(dict));
+                return list;
+            }
 
             throw new PropertyListException($"Cannot wrap an object of type {o.GetType().Name}.");
         }
