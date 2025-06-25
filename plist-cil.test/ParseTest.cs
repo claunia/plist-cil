@@ -1,4 +1,4 @@
-﻿// plist-cil - An open source library to Parse and generate property lists for .NET
+// plist-cil - An open source library to Parse and generate property lists for .NET
 // Copyright (C) 2015 Natalia Portillo
 //
 // This code is based on:
@@ -209,6 +209,16 @@ namespace plistcil.test
             map.Add("long", lng);
             map.Add("date", date);
 
+            List<Dictionary<string,object>> listOfMaps = new()
+            {
+                new Dictionary<string, object>
+                {
+                    { "int", i },
+                    { "long", lng },
+                    { "date", date }
+                }
+            };
+
             var WrappedO = NSObject.Wrap((object)bl);
             Assert.True(WrappedO is (NSNumber));
             Assert.True(WrappedO.ToObject().Equals(bl));
@@ -273,6 +283,15 @@ namespace plistcil.test
             Assert.True(((NSNumber)dict.ObjectForKey("int")).ToLong()  == i);
             Assert.True(((NSNumber)dict.ObjectForKey("long")).ToLong() == lng);
             Assert.True(((NSDate)dict.ObjectForKey("date")).Date.Equals(date));
+
+            WrappedO = NSObject.Wrap((object)listOfMaps);
+            Assert.True(WrappedO is (NSArray));
+            var arrayOfMaps = (NSArray)WrappedO;
+            Assert.True(arrayOfMaps.Count == 1);
+            var firstMap = (NSDictionary)arrayOfMaps[0];
+            Assert.True(((NSNumber)firstMap.ObjectForKey("int")).ToLong() == i);
+            Assert.True(((NSNumber)firstMap.ObjectForKey("long")).ToLong() == lng);
+            Assert.True(((NSDate)firstMap.ObjectForKey("date")).Date.Equals(date));
 
             // TODO
             /*
