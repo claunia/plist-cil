@@ -57,7 +57,11 @@ namespace Claunia.PropertyList
 
             using FileStream raf = file.OpenRead();
 
+#if NET7_0_OR_GREATER
+            raf.ReadExactly(Bytes, 0, (int)file.Length);
+#else
             raf.Read(Bytes, 0, (int)file.Length);
+#endif
         }
 
         /// <summary>The bytes contained in this NSData object.</summary>
