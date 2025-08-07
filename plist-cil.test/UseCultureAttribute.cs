@@ -52,19 +52,19 @@ public class UseCultureAttribute : BeforeAfterTestAttribute
     /// <param name="methodUnderTest">The method under test</param>
     public override void Before(MethodInfo methodUnderTest)
     {
-    #if NETCORE
+#if NETCORE
         originalCulture = CultureInfo.CurrentCulture;
         originalUICulture = CultureInfo.CurrentUICulture;
 
         CultureInfo.CurrentCulture = Culture;
         CultureInfo.CurrentUICulture = Culture;
-    #else
+#else
         originalCulture   = Thread.CurrentThread.CurrentCulture;
         originalUICulture = Thread.CurrentThread.CurrentUICulture;
 
         Thread.CurrentThread.CurrentCulture   = Culture;
         Thread.CurrentThread.CurrentUICulture = UICulture;
-    #endif
+#endif
     }
 
     /// <summary>
@@ -74,12 +74,12 @@ public class UseCultureAttribute : BeforeAfterTestAttribute
     /// <param name="methodUnderTest">The method under test</param>
     public override void After(MethodInfo methodUnderTest)
     {
-    #if NETCORE
+#if NETCORE
         CultureInfo.CurrentCulture = originalCulture;
         CultureInfo.CurrentUICulture = originalUICulture;
-    #else
+#else
         Thread.CurrentThread.CurrentCulture   = originalCulture;
         Thread.CurrentThread.CurrentUICulture = originalUICulture;
-    #endif
+#endif
     }
 }

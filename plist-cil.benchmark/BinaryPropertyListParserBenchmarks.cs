@@ -2,22 +2,22 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 
-namespace Claunia.PropertyList.Benchmark
+namespace Claunia.PropertyList.Benchmark;
+
+[SimpleJob(RuntimeMoniker.NetCoreApp50)]
+[MemoryDiagnoser]
+public class BinaryPropertyListParserBenchmarks
 {
-    [SimpleJob(RuntimeMoniker.NetCoreApp50), MemoryDiagnoser]
-    public class BinaryPropertyListParserBenchmarks
+    byte[] data;
+
+    [GlobalSetup]
+    public void Setup() => data = File.ReadAllBytes("plist.bin");
+
+    [Benchmark]
+    public NSObject ReadLargePropertylistTest()
     {
-        byte[] data;
+        NSObject nsObject = PropertyListParser.Parse(data);
 
-        [GlobalSetup]
-        public void Setup() => data = File.ReadAllBytes("plist.bin");
-
-        [Benchmark]
-        public NSObject ReadLargePropertylistTest()
-        {
-            NSObject nsObject = PropertyListParser.Parse(data);
-
-            return nsObject;
-        }
+        return nsObject;
     }
 }

@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
+    <PackageReference Include="xunit" Version="2.9.3"/>
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\plist-cil\plist-cil.csproj" />
+    <ProjectReference Include="..\plist-cil\plist-cil.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -111,7 +111,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}"/>
   </ItemGroup>
 
   <ItemGroup>

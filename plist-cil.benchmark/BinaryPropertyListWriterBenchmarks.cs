@@ -1,17 +1,17 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 
-namespace Claunia.PropertyList.Benchmark
+namespace Claunia.PropertyList.Benchmark;
+
+[SimpleJob(RuntimeMoniker.NetCoreApp50)]
+[MemoryDiagnoser]
+public class BinaryPropertyListWriterBenchmarks
 {
-    [SimpleJob(RuntimeMoniker.NetCoreApp50), MemoryDiagnoser]
-    public class BinaryPropertyListWriterBenchmarks
-    {
-        NSObject data;
+    NSObject data;
 
-        [GlobalSetup]
-        public void Setup() => data = PropertyListParser.Parse("plist.bin");
+    [GlobalSetup]
+    public void Setup() => data = PropertyListParser.Parse("plist.bin");
 
-        [Benchmark]
-        public byte[] WriteLargePropertylistTest() => BinaryPropertyListWriter.WriteToArray(data);
-    }
+    [Benchmark]
+    public byte[] WriteLargePropertylistTest() => BinaryPropertyListWriter.WriteToArray(data);
 }

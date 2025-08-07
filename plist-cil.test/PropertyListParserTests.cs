@@ -2,19 +2,18 @@
 using Claunia.PropertyList;
 using Xunit;
 
-namespace plistcil.test
+namespace plistcil.test;
+
+public class PropertyListParserTests
 {
-    public class PropertyListParserTests
+    static void ParseEmptyStreamTestDelegate()
     {
-        static void ParseEmptyStreamTestDelegate()
-        {
-            using var stream = new MemoryStream();
+        using var stream = new MemoryStream();
 
-            PropertyListParser.Parse(stream);
-        }
-
-        [Fact]
-        public static void ParseEmptyStreamTest() =>
-            Assert.Throws<PropertyListFormatException>(ParseEmptyStreamTestDelegate);
+        PropertyListParser.Parse(stream);
     }
+
+    [Fact]
+    public static void ParseEmptyStreamTest() =>
+        Assert.Throws<PropertyListFormatException>(ParseEmptyStreamTestDelegate);
 }
