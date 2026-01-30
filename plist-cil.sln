@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "plist-cil.test", "plist-cil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plist-cil.benchmark", "plist-cil.benchmark\plist-cil.benchmark.csproj", "{2AE44841-2E54-4310-843C-8DEE786E5052}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plsit-cil.shell", "plsit-cil.shell\plsit-cil.shell.csproj", "{C0692A99-3407-4E84-BB87-651978165798}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plist-cil.shell", "plist-cil.shell\plist-cil.shell.csproj", "{C0692A99-3407-4E84-BB87-651978165798}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
