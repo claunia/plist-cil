@@ -14,12 +14,17 @@ public class ConvertFromPlist : PSCmdlet
 
     /// <summary>
     /// Gets or sets the InputObject property.
-    ///
     /// Represents the byte stream input to be converted.
     /// </summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [AllowEmptyString]
     public byte InputObject { get; set; }
+
+    /// <summary>
+    /// Whether to return the result as a Claunia.PropertyList.NSObject instance.
+    /// </summary>
+    [Parameter]
+    public SwitchParameter AsNSObject { get; set; }
 
     #endregion Parameters
 
@@ -38,14 +43,75 @@ public class ConvertFromPlist : PSCmdlet
     {
         WriteDebug($"Buffer length: [{_inputBuffer.Count}]");
         var dict = PropertyListParser.Parse(_inputBuffer.ToArray()) as NSDictionary;
-        WriteObject(dict);
+        if (AsNSObject.IsPresent)
+        {
+            WriteObject(dict);
+            return;
+        }
+
+        WriteObject(FromNSObject(dict!));
     }
 
     #endregion Overrides
+
+    PSObject FromNSObject(NSObject value)
+    {
+        var result = new PSObject();
+
+        if (value is NSDictionary dict)
+        {
+            foreach(var key in dict.Keys)
+            {
+                result.Properties.Add(new PSNoteProperty(key.ToString(), FromNSObject(dict.ObjectForKey(key))));
+            }
+        }
+        else if (value is NSArray array)
+        {
+            foreach (var element in array)
+            {
+                //TODO!
+            }
+        }
+        else if (value is NSNumber number)
+        {
+            switch(number.GetNSNumberType())
+            {
+                case NSNumber.BOOLEAN:
+                    result = new PSObject(number.ToBool());
+                    break;
+                case NSNumber.INTEGER:
+                    result = new PSObject(number.ToLong());
+                    break;
+                case NSNumber.REAL:
+                    result = new PSObject(number.ToDouble());
+                    break;
+                default:
+                    throw new NotSupportedException("Unsupported NSNumber type");
+            }
+        }
+        else if (value is NSString str)
+        {
+            result = new PSObject(str.ToString());
+        }
+        else if (value is NSDate date)
+        {
+            result = new PSObject(date.Date);
+        }
+        else if (value is NSData data)
+        {
+            result = new PSObject(data.Bytes);
+        }
+        else
+        {
+            throw new NotSupportedException($"Unsupported NSObject type: {value.GetType().FullName}");
+        }
+
+        return result;
+    }
 }
 
 [Cmdlet(VerbsData.ConvertFrom, "PlistWithPath")]
-[OutputType(typeof(NSDictionary))]
+[OutputType(typeof(NSObject))]
 public class ConvertFromPlistWithPath : PSCmdlet
 {
     private FileInfo? _path;
@@ -73,7 +139,7 @@ public class ConvertFromPlistWithPath : PSCmdlet
 
     protected override void ProcessRecord()
     {
-        var dict = PropertyListParser.Parse(Path!.FullName) as NSDictionary;
+        var dict = PropertyListParser.Parse(Path!.FullName) as NSObject;
 
         WriteObject(dict);
     }
