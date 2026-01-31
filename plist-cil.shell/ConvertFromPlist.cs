@@ -1,20 +1,29 @@
 namespace Claunia.PropertyList.Shell;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 
 [Cmdlet(VerbsData.ConvertFrom, "Plist")]
 public class ConvertFromPlist : PSCmdlet
 {
+    readonly List<byte> _inputBuffer = new();
+
+    #region Parameters
+
     /// <summary>
-    /// Gets or sets the InputString property.
+    /// Gets or sets the InputObject property.
+    ///
+    /// Represents the byte stream input to be converted.
     /// </summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [AllowEmptyString]
-    public string InputObject { get; set; }
+    public byte InputObject { get; set; }
 
-#region Overrides
+    #endregion Parameters
+
+    #region Overrides
 
     protected override void BeginProcessing()
     {
@@ -22,11 +31,14 @@ public class ConvertFromPlist : PSCmdlet
 
     protected override void ProcessRecord()
     {
-        WriteDebug($"Input type: [{InputObject.GetType()}]");
+        _inputBuffer.Add(InputObject);
     }
 
     protected override void EndProcessing()
     {
+        WriteDebug($"Buffer length: [{_inputBuffer.Count}]");
+        var dict = PropertyListParser.Parse(_inputBuffer.ToArray()) as NSDictionary;
+        WriteObject(dict);
     }
 
     #endregion Overrides
