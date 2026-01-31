@@ -5,8 +5,36 @@ using System.IO;
 using System.Management.Automation;
 
 [Cmdlet(VerbsData.ConvertFrom, "Plist")]
-[OutputType(typeof(NSDictionary))]
 public class ConvertFromPlist : PSCmdlet
+{
+    /// <summary>
+    /// Gets or sets the InputString property.
+    /// </summary>
+    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    [AllowEmptyString]
+    public string InputObject { get; set; }
+
+#region Overrides
+
+    protected override void BeginProcessing()
+    {
+    }
+
+    protected override void ProcessRecord()
+    {
+        WriteDebug($"Input type: [{InputObject.GetType()}]");
+    }
+
+    protected override void EndProcessing()
+    {
+    }
+
+    #endregion Overrides
+}
+
+[Cmdlet(VerbsData.ConvertFrom, "PlistWithPath")]
+[OutputType(typeof(NSDictionary))]
+public class ConvertFromPlistWithPath : PSCmdlet
 {
     private FileInfo? _path;
 
