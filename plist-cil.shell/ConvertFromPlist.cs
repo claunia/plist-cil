@@ -15,6 +15,9 @@ public class ConvertFromPlist : PSCmdlet
     /// <summary>
     /// Gets or sets the InputObject property.
     /// Represents the byte stream input to be converted.
+    ///
+    /// Sample usage:
+    ///     Get-Content -AsByteStream 'file.plist' | ConvertFrom-Plist
     /// </summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     [AllowEmptyString]
