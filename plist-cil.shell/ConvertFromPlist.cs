@@ -56,61 +56,48 @@ public class ConvertFromPlist : PSCmdlet
 
     PSObject FromNSObject(NSObject value)
     {
-        var result = new PSObject();
+        if (value == null)
+            return new(null);
 
-        if (value is NSDictionary dict)
+        switch(value)
         {
-            foreach(var key in dict.Keys)
-            {
-                result.Properties.Add(new PSNoteProperty(key.ToString(), FromNSObject(dict.ObjectForKey(key))));
-            }
-        }
-        else if (value is NSArray array)
-        {
-            var psArray = new object[array.Count];
-            int i = 0;
-            foreach (var element in array)
-            {
-                psArray[i++] = FromNSObject(element);
-            }
+            case NSDictionary dict:
+                var result = new PSObject();
+                foreach(var key in dict.Keys)
+                {
+                    result.Properties.Add(new PSNoteProperty(key.ToString(), FromNSObject(dict.ObjectForKey(key))));
+                }
+                return result;
+            case NSArray array:
+                var psArray = new object[array.Count];
+                int i = 0;
+                foreach (var element in array)
+                {
+                    psArray[i++] = FromNSObject(element);
+                }
 
-            result = new PSObject(psArray[..i]);
+                return new PSObject(psArray[..i]);
+            case NSNumber number:
+                switch(number.GetNSNumberType())
+                {
+                    case NSNumber.BOOLEAN:
+                        return new PSObject(number.ToBool());
+                    case NSNumber.INTEGER:
+                        return new PSObject(number.ToLong());
+                    case NSNumber.REAL:
+                        return new PSObject(number.ToDouble());
+                    default:
+                        throw new NotSupportedException("Unsupported NSNumber type");
+                }
+            case NSString:
+                return new PSObject(value.ToString());
+            case NSDate date:
+                return new PSObject(date.Date);
+            case NSData data:
+                return new PSObject(data.Bytes);
+            default:
+                throw new NotSupportedException($"Unsupported NSObject type: {value.GetType().FullName}");
         }
-        else if (value is NSNumber number)
-        {
-            switch(number.GetNSNumberType())
-            {
-                case NSNumber.BOOLEAN:
-                    result = new PSObject(number.ToBool());
-                    break;
-                case NSNumber.INTEGER:
-                    result = new PSObject(number.ToLong());
-                    break;
-                case NSNumber.REAL:
-                    result = new PSObject(number.ToDouble());
-                    break;
-                default:
-                    throw new NotSupportedException("Unsupported NSNumber type");
-            }
-        }
-        else if (value is NSString str)
-        {
-            result = new PSObject(str.ToString());
-        }
-        else if (value is NSDate date)
-        {
-            result = new PSObject(date.Date);
-        }
-        else if (value is NSData data)
-        {
-            result = new PSObject(data.Bytes);
-        }
-        else
-        {
-            throw new NotSupportedException($"Unsupported NSObject type: {value.GetType().FullName}");
-        }
-
-        return result;
     }
 }
 
