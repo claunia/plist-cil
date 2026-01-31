@@ -42,14 +42,14 @@ public class ConvertFromPlist : PSCmdlet
     protected override void EndProcessing()
     {
         WriteDebug($"Buffer length: [{_inputBuffer.Count}]");
-        var dict = PropertyListParser.Parse(_inputBuffer.ToArray()) as NSDictionary;
+        var result = PropertyListParser.Parse(_inputBuffer.ToArray());
         if (AsNSObject.IsPresent)
         {
-            WriteObject(dict);
+            WriteObject(result);
             return;
         }
 
-        WriteObject(FromNSObject(dict!));
+        WriteObject(FromNSObject(result));
     }
 
     #endregion Overrides
@@ -67,10 +67,14 @@ public class ConvertFromPlist : PSCmdlet
         }
         else if (value is NSArray array)
         {
+            var psArray = new object[array.Count];
+            int i = 0;
             foreach (var element in array)
             {
-                //TODO!
+                psArray[i++] = FromNSObject(element);
             }
+
+            result = new PSObject(psArray[..i]);
         }
         else if (value is NSNumber number)
         {
@@ -110,6 +114,7 @@ public class ConvertFromPlist : PSCmdlet
     }
 }
 
+//TODO: Integrate into main cmdlet
 [Cmdlet(VerbsData.ConvertFrom, "PlistWithPath")]
 [OutputType(typeof(NSObject))]
 public class ConvertFromPlistWithPath : PSCmdlet
