@@ -19,9 +19,31 @@ public class ConvertFromPlist : PSCmdlet
     /// Sample usage:
     ///     Get-Content -AsByteStream 'file.plist' | ConvertFrom-Plist
     /// </summary>
-    [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+    [Parameter(
+        Position = 0,
+        Mandatory = true,
+        ValueFromPipeline = true,
+        ParameterSetName = "FromObject")]
     [AllowEmptyString]
     public byte InputObject { get; set; }
+
+        private FileInfo? _path;
+
+    [Parameter(
+        Position = 0,
+        Mandatory = true,
+        ValueFromPipeline = true,
+        ValueFromPipelineByPropertyName = true,
+        ParameterSetName = "FromPath")]
+    public FileInfo? Path
+    {
+        get => _path;
+
+        set
+        {
+            _path = new FileInfo(System.IO.Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, value!.ToString()));
+        }
+    }
 
     /// <summary>
     /// Whether to return the result as a Claunia.PropertyList.NSObject instance.
@@ -35,24 +57,49 @@ public class ConvertFromPlist : PSCmdlet
 
     protected override void BeginProcessing()
     {
+        WriteDebug($"Parameter set: {ParameterSetName}");
+
+        if (ParameterSetName != "FromPath")
+            return;
+
+        WriteDebug($"Setting current directory: {SessionState.Path.CurrentFileSystemLocation.Path}");
+        Environment.CurrentDirectory = SessionState.Path.CurrentFileSystemLocation.Path;
+        WriteDebug($"Current directory: {Environment.CurrentDirectory}");
     }
 
     protected override void ProcessRecord()
     {
+        if (ParameterSetName != "FromObject")
+            return;
+
         _inputBuffer.Add(InputObject);
     }
 
     protected override void EndProcessing()
     {
-        WriteDebug($"Buffer length: [{_inputBuffer.Count}]");
-        var result = PropertyListParser.Parse(_inputBuffer.ToArray());
+        NSObject plist;
+        switch (ParameterSetName)
+        {
+            case "FromPath":
+                plist = PropertyListParser.Parse(Path!.FullName);
+                break;
+
+            case "FromObject":
+                WriteDebug($"Buffer length: [{_inputBuffer.Count}]");
+                plist = PropertyListParser.Parse(_inputBuffer.ToArray());
+                break;
+
+            default:
+                throw new InvalidOperationException("Unknown parameter set");
+        }
+
         if (AsNSObject.IsPresent)
         {
-            WriteObject(result);
+            WriteObject(plist);
             return;
         }
 
-        WriteObject(FromNSObject(result));
+        WriteObject(FromNSObject(plist));
     }
 
     #endregion Overrides
@@ -101,46 +148,5 @@ public class ConvertFromPlist : PSCmdlet
             default:
                 throw new NotSupportedException($"Unsupported NSObject type: {value.GetType().FullName}");
         }
-    }
-}
-
-//TODO: Integrate into main cmdlet
-[Cmdlet(VerbsData.ConvertFrom, "PlistWithPath")]
-[OutputType(typeof(NSObject))]
-public class ConvertFromPlistWithPath : PSCmdlet
-{
-    private FileInfo? _path;
-
-    [Parameter(Position = 0,
-        Mandatory = true,
-        ValueFromPipeline = true,
-        ValueFromPipelineByPropertyName = true)]
-    public FileInfo? Path
-    {
-        get => _path;
-
-        set
-        {
-            _path = new FileInfo(System.IO.Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, value!.ToString()));
-        }
-    }
-
-    protected override void BeginProcessing()
-    {
-        WriteDebug($"Setting current directory: {SessionState.Path.CurrentFileSystemLocation.Path}");
-        Environment.CurrentDirectory = SessionState.Path.CurrentFileSystemLocation.Path;
-        WriteDebug($"Current directory: {Environment.CurrentDirectory}");
-    }
-
-    protected override void ProcessRecord()
-    {
-        var dict = PropertyListParser.Parse(Path!.FullName) as NSObject;
-
-        WriteObject(dict);
-    }
-
-    protected override void EndProcessing()
-    {
-
     }
 }
