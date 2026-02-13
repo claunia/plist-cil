@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.2"/>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\plist-cil\plist-cil.csproj"/>
+    <ProjectReference Include="..\plist-cil\plist-cil.csproj" />
   </ItemGroup>
 
   <ItemGroup>

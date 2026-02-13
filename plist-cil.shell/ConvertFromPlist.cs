@@ -1,0 +1,152 @@
+namespace Claunia.PropertyList.Shell;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Management.Automation;
+
+[Cmdlet(VerbsData.ConvertFrom, "Plist")]
+public class ConvertFromPlist : PSCmdlet
+{
+    readonly List<byte> _inputBuffer = new();
+
+    #region Parameters
+
+    /// <summary>
+    /// Gets or sets the InputObject property.
+    /// Represents the byte stream input to be converted.
+    ///
+    /// Sample usage:
+    ///     Get-Content -AsByteStream 'file.plist' | ConvertFrom-Plist
+    /// </summary>
+    [Parameter(
+        Position = 0,
+        Mandatory = true,
+        ValueFromPipeline = true,
+        ParameterSetName = "FromObject")]
+    [AllowEmptyString]
+    public byte InputObject { get; set; }
+
+        private FileInfo? _path;
+
+    [Parameter(
+        Position = 0,
+        Mandatory = true,
+        ValueFromPipeline = true,
+        ValueFromPipelineByPropertyName = true,
+        ParameterSetName = "FromPath")]
+    public FileInfo? Path
+    {
+        get => _path;
+
+        set
+        {
+            _path = new FileInfo(System.IO.Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, value!.ToString()));
+        }
+    }
+
+    /// <summary>
+    /// Whether to return the result as a Claunia.PropertyList.NSObject instance.
+    /// </summary>
+    [Parameter]
+    public SwitchParameter AsNSObject { get; set; }
+
+    #endregion Parameters
+
+    #region Overrides
+
+    protected override void BeginProcessing()
+    {
+        WriteDebug($"Parameter set: {ParameterSetName}");
+
+        if (ParameterSetName != "FromPath")
+            return;
+
+        WriteDebug($"Setting current directory: {SessionState.Path.CurrentFileSystemLocation.Path}");
+        Environment.CurrentDirectory = SessionState.Path.CurrentFileSystemLocation.Path;
+        WriteDebug($"Current directory: {Environment.CurrentDirectory}");
+    }
+
+    protected override void ProcessRecord()
+    {
+        if (ParameterSetName != "FromObject")
+            return;
+
+        _inputBuffer.Add(InputObject);
+    }
+
+    protected override void EndProcessing()
+    {
+        NSObject plist;
+        switch (ParameterSetName)
+        {
+            case "FromPath":
+                plist = PropertyListParser.Parse(Path!.FullName);
+                break;
+
+            case "FromObject":
+                WriteDebug($"Buffer length: [{_inputBuffer.Count}]");
+                plist = PropertyListParser.Parse(_inputBuffer.ToArray());
+                break;
+
+            default:
+                throw new InvalidOperationException("Unknown parameter set");
+        }
+
+        if (AsNSObject.IsPresent)
+        {
+            WriteObject(plist);
+            return;
+        }
+
+        WriteObject(FromNSObject(plist));
+    }
+
+    #endregion Overrides
+
+    PSObject FromNSObject(NSObject value)
+    {
+        if (value == null)
+            return new(null);
+
+        switch(value)
+        {
+            case NSDictionary dict:
+                var result = new PSObject();
+                foreach(var key in dict.Keys)
+                {
+                    result.Properties.Add(new PSNoteProperty(key.ToString(), FromNSObject(dict.ObjectForKey(key))));
+                }
+                return result;
+            case NSArray array:
+                var psArray = new object[array.Count];
+                int i = 0;
+                foreach (var element in array)
+                {
+                    psArray[i++] = FromNSObject(element);
+                }
+
+                return new PSObject(psArray[..i]);
+            case NSNumber number:
+                switch(number.GetNSNumberType())
+                {
+                    case NSNumber.BOOLEAN:
+                        return new PSObject(number.ToBool());
+                    case NSNumber.INTEGER:
+                        return new PSObject(number.ToLong());
+                    case NSNumber.REAL:
+                        return new PSObject(number.ToDouble());
+                    default:
+                        throw new NotSupportedException("Unsupported NSNumber type");
+                }
+            case NSString:
+                return new PSObject(value.ToString());
+            case NSDate date:
+                return new PSObject(date.Date);
+            case NSData data:
+                return new PSObject(data.Bytes);
+            default:
+                throw new NotSupportedException($"Unsupported NSObject type: {value.GetType().FullName}");
+        }
+    }
+}

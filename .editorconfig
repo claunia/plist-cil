@@ -730,6 +730,9 @@ ij_scss_value_alignment                     = 0
 indent_size                         = 2
 ij_slim_keep_indents_on_empty_lines = false
 
+[*.sln]
+end_of_line = crlf
+
 [*.twig]
 ij_twig_keep_indents_on_empty_lines       = false
 ij_twig_spaces_inside_comments_delimiters = true
